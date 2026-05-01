@@ -1,9 +1,10 @@
-import { Link } from "react-router-dom";
+"use client";
+
+import Link from "next/link";
 import {
   ArrowRight, Sparkles, Cloud, LineChart, Database, Stethoscope,
   ShieldCheck, Cpu, Zap, Check, X, AlertTriangle, BarChart3, Server, TrendingDown, Activity,
 } from "lucide-react";
-import { Layout } from "@/components/site/Layout";
 import { Section, SectionHeading, Eyebrow } from "@/components/site/Section";
 import { Counter } from "@/components/site/Counter";
 import { Button } from "@/components/ui/button";
@@ -62,7 +63,7 @@ const compare = [
 
 const Index = () => {
   return (
-    <Layout>
+    <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-background text-foreground">
         {/* Minimal accent area */}
@@ -95,10 +96,10 @@ const Index = () => {
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
-                <Link to="/contact">Get Free Cloud Cost Audit <ArrowRight className="ml-1" /></Link>
+                <Link href="/contact">Get Free Cloud Cost Audit <ArrowRight className="ml-1" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-border bg-secondary text-foreground hover:bg-muted hover:text-foreground">
-                <Link to="/drgodly">Explore DrGodly Platform</Link>
+                <Link href="/drgodly">Explore DrGodly Platform</Link>
               </Button>
             </div>
 
@@ -168,7 +169,7 @@ const Index = () => {
                 ))}
               </ul>
               <Button asChild variant="ghost" className="px-0 hover:bg-transparent text-primary">
-                <Link to="/services">Learn more <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
+                <Link href="/services">Learn more <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
               </Button>
             </div>
           ))}
@@ -196,8 +197,8 @@ const Index = () => {
                 ))}
               </ul>
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Button asChild size="lg" variant="hero"><Link to="/drgodly">Explore DrGodly <ArrowRight className="ml-1" /></Link></Button>
-                <Button asChild size="lg" variant="outline" className="border-border bg-secondary text-foreground hover:bg-muted"><Link to="/contact">Request Demo</Link></Button>
+                <Button asChild size="lg" variant="hero"><Link href="/drgodly">Explore DrGodly <ArrowRight className="ml-1" /></Link></Button>
+                <Button asChild size="lg" variant="outline" className="border-border bg-secondary text-foreground hover:bg-muted"><Link href="/contact">Request Demo</Link></Button>
               </div>
             </div>
             <ol className="space-y-4">
@@ -239,7 +240,7 @@ const Index = () => {
           ))}
         </div>
         <div className="text-center mt-12">
-          <Button asChild size="lg" variant="hero"><Link to="/contact">Get Free Cost Audit <ArrowRight className="ml-1" /></Link></Button>
+          <Button asChild size="lg" variant="hero"><Link href="/contact">Get Free Cost Audit <ArrowRight className="ml-1" /></Link></Button>
         </div>
       </Section>
 
@@ -297,13 +298,13 @@ const Index = () => {
               Talk to an engineer in 24 hours. Walk away with a roadmap — whether or not you work with us.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Book Strategy Call</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"><Link to="/contact">Get Free Assessment</Link></Button>
+              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link href="/contact">Book Strategy Call</Link></Button>
+              <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"><Link href="/contact">Get Free Assessment</Link></Button>
             </div>
           </div>
         </div>
       </Section>
-    </Layout>
+    </>
   );
 };
 
