@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 import { Logo } from "./Logo";
 
 export const Footer = () => (
@@ -13,23 +13,23 @@ export const Footer = () => (
       <div>
         <h4 className="font-semibold mb-4 text-sm">Services</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
-          <li><Link to="/services" className="hover:text-foreground">AI Consulting</Link></li>
-          <li><Link to="/services" className="hover:text-foreground">FinOps & Cost Optimization</Link></li>
-          <li><Link to="/services" className="hover:text-foreground">Cloud Migration</Link></li>
-          <li><Link to="/services" className="hover:text-foreground">Databricks</Link></li>
+          <li><Link href="/services" className="hover:text-foreground">AI Consulting</Link></li>
+          <li><Link href="/services" className="hover:text-foreground">FinOps & Cost Optimization</Link></li>
+          <li><Link href="/services" className="hover:text-foreground">Cloud Migration</Link></li>
+          <li><Link href="/services" className="hover:text-foreground">Databricks</Link></li>
         </ul>
       </div>
       <div>
         <h4 className="font-semibold mb-4 text-sm">Products</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
-          <li><Link to="/drgodly" className="hover:text-foreground">DrGodly</Link></li>
+          <li><Link href="/drgodly" className="hover:text-foreground">DrGodly</Link></li>
         </ul>
       </div>
       <div>
         <h4 className="font-semibold mb-4 text-sm">Company</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
-          <li><Link to="/about" className="hover:text-foreground">About</Link></li>
-          <li><Link to="/contact" className="hover:text-foreground">Contact</Link></li>
+          <li><Link href="/about" className="hover:text-foreground">About</Link></li>
+          <li><Link href="/contact" className="hover:text-foreground">Contact</Link></li>
         </ul>
       </div>
     </div>
