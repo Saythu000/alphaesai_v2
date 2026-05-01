@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import {
   ArrowRight, Sparkles, Cloud, LineChart, Database, Stethoscope,
-  ShieldCheck, Cpu, Zap, Check, X, AlertTriangle, BarChart3, Server,
+  ShieldCheck, Cpu, Zap, Check, X, AlertTriangle, BarChart3, Server, TrendingDown, Activity,
 } from "lucide-react";
 import { Layout } from "@/components/site/Layout";
 import { Section, SectionHeading, Eyebrow } from "@/components/site/Section";
@@ -36,8 +36,10 @@ const services = [
   },
 ];
 
-const trustBadges = [
-  "Databricks Certified", "HIPAA Ready", "50+ AI Systems", "30–50% Cost Savings",
+const heroTrust = [
+  { icon: Sparkles, label: "50+ AI Systems Deployed" },
+  { icon: TrendingDown, label: "30–50% Cloud Cost Savings" },
+  { icon: ShieldCheck, label: "HIPAA-ready Architecture" },
 ];
 
 const leaks = [
@@ -62,37 +64,91 @@ const Index = () => {
   return (
     <Layout>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-hero">
-        <div className="absolute inset-0 bg-grid opacity-60" aria-hidden />
-        <div className="container relative pt-20 pb-24 md:pt-28 md:pb-32">
-          <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in-up">
-            <Eyebrow>AI · Cloud · FinOps · Healthcare</Eyebrow>
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.05]">
-              Enterprise AI & Cloud Efficiency{" "}
-              <span className="text-gradient">Without the Enterprise Risk</span>
-            </h1>
-            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-              Deploy intelligent systems and AI-powered platforms like DrGodly on scalable,
-              cost-optimized cloud infrastructure. Reduce cloud costs by up to{" "}
-              <span className="font-semibold text-foreground">50%</span> with built-in FinOps.
+      <section className="relative overflow-hidden bg-gradient-to-b from-secondary via-[hsl(240_55%_12%)] to-[hsl(270_60%_14%)] text-white">
+        {/* Ambient glows */}
+        <div className="absolute inset-0 bg-grid opacity-[0.07]" aria-hidden />
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[1100px] rounded-full bg-primary/30 blur-[140px] opacity-70" aria-hidden />
+        <div className="absolute -bottom-40 -right-20 h-[500px] w-[500px] rounded-full bg-accent/40 blur-[140px] opacity-60" aria-hidden />
+        <div className="absolute -bottom-40 -left-20 h-[420px] w-[420px] rounded-full bg-[hsl(var(--accent-cyan))]/20 blur-[140px]" aria-hidden />
+
+        {/* Floating UI cards */}
+        <div className="hidden lg:block absolute top-32 left-8 xl:left-16 animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>
+          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl w-56">
+            <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
+              <TrendingDown className="h-3.5 w-3.5 text-success" /> Cloud Spend
+            </div>
+            <div className="text-2xl font-bold text-white">−<Counter to={47} suffix="%" /></div>
+            <div className="mt-3 h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
+              <div className="h-full w-[53%] bg-gradient-to-r from-primary to-accent" />
+            </div>
+            <div className="mt-2 text-[11px] text-white/50">Q4 vs Q3 — FinOps engaged</div>
+          </div>
+        </div>
+        <div className="hidden lg:block absolute top-48 right-8 xl:right-16 animate-fade-in-up" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
+          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl w-60">
+            <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
+              <Activity className="h-3.5 w-3.5 text-primary-glow animate-glow-pulse" /> DrGodly · live
+            </div>
+            <div className="text-sm font-semibold text-white">AI consult routed</div>
+            <div className="text-[11px] text-white/50 mt-1">Triage → Clinician in 1.2s</div>
+            <div className="mt-3 flex items-center gap-1.5">
+              <span className="h-2 w-2 rounded-full bg-success animate-glow-pulse" />
+              <span className="text-[11px] text-white/60">99.97% uptime</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="container relative pt-24 pb-28 md:pt-36 md:pb-40">
+          <div className="max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur px-3.5 py-1.5 text-xs font-medium text-white/80">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-glow-pulse" />
+              AI · Cloud · FinOps · Healthcare
+            </div>
+
+            <div className="relative">
+              {/* headline glow */}
+              <div className="absolute inset-x-0 -inset-y-6 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-3xl opacity-60 -z-10" aria-hidden />
+              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-white">
+                Cut Cloud Costs by{" "}
+                <span className="bg-gradient-to-r from-primary-glow via-white to-accent bg-clip-text text-transparent">
+                  50%
+                </span>{" "}
+                While Building AI Platforms Like{" "}
+                <span className="bg-gradient-to-r from-primary-glow to-accent bg-clip-text text-transparent">
+                  DrGodly
+                </span>
+              </h1>
+            </div>
+
+            <p className="text-lg md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
+              AI-first systems combined with FinOps-driven cloud architecture.{" "}
+              <span className="text-white">Built for production, not experiments.</span>
             </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button asChild size="lg" variant="hero">
-                <Link to="/contact">Get Free AI & Cloud Assessment <ArrowRight className="ml-1" /></Link>
+
+            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
+              <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
+                <Link to="/contact">Get Free Cloud Cost Audit <ArrowRight className="ml-1" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline">
-                <Link to="/drgodly">Explore Platforms</Link>
+              <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white">
+                <Link to="/drgodly">Explore DrGodly Platform</Link>
               </Button>
             </div>
-            <div className="flex flex-wrap items-center justify-center gap-2 pt-6">
-              {trustBadges.map((b) => (
-                <span key={b} className="text-xs font-medium px-3 py-1.5 rounded-full bg-card border border-border shadow-sm">
-                  {b}
-                </span>
+
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 pt-8 text-sm text-white/70">
+              {heroTrust.map((t) => (
+                <div key={t.label} className="inline-flex items-center gap-2">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/5 border border-white/10">
+                    <t.icon className="h-3.5 w-3.5 text-primary-glow" />
+                  </span>
+                  <span className="font-medium">{t.label}</span>
+                </div>
               ))}
             </div>
           </div>
         </div>
+
+        {/* fade to page bg */}
+        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" aria-hidden />
       </section>
 
       {/* STATS */}
