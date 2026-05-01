@@ -50,7 +50,12 @@ const leaks = [
   { icon: AlertTriangle, title: "No cost visibility", desc: "No per-team, per-feature or per-customer attribution." },
 ];
 
-const clouds = ["AWS", "Azure", "GCP", "Oracle Cloud"];
+const clouds = [
+  { name: "AWS", logo: "/logos/aws.svg" },
+  { name: "Azure", logo: "/logos/azure.svg" },
+  { name: "GCP", logo: "/logos/gcp.svg" },
+  { name: "Oracle Cloud", logo: "/logos/oracle.svg" },
+];
 
 const compare = [
   { feat: "Strategy + build + deploy in one team", us: true, them: false },
@@ -122,13 +127,13 @@ const Index = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
             { v: 50, suf: "+", l: "AI Systems Deployed" },
-            { v: 100, suf: "+", l: "Cloud Workloads" },
+            { v: 100, suf: "+", l: "Cloud Workloads Optimized" },
             { v: 50, suf: "%", l: "Max Cost Reduction" },
             { v: 99.9, suf: "%", l: "Uptime", float: true },
           ].map((s) => (
             <div key={s.l} className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-card hover-lift">
               <div className="text-3xl md:text-5xl font-bold text-primary">
-                {s.float ? "99.9%" : <Counter to={s.v} suffix={s.suf} />}
+                {s.float ? <Counter to={99.9} suffix="%" decimals={1} /> : <Counter to={s.v} suffix={s.suf} />}
               </div>
               <div className="mt-2 text-sm md:text-base text-muted-foreground">{s.l}</div>
             </div>
@@ -137,7 +142,7 @@ const Index = () => {
       </Section>
 
       {/* SERVICES */}
-      <Section id="services">
+      <Section id="services" className="bg-[#F9FAFB]">
         <SectionHeading
           eyebrow="What we do"
           title={<>Four core practices, <span className="text-primary">one execution team</span></>}
@@ -156,8 +161,8 @@ const Index = () => {
                   Most requested
                 </div>
               )}
-              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20">
-                <s.icon className="h-6 w-6 text-primary" />
+              <div className="h-12 w-12 rounded-xl bg-transparent flex items-center justify-center mb-6 border border-primary/30">
+                <s.icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">{s.title}</h3>
               <p className="text-muted-foreground mb-5">{s.desc}</p>
@@ -201,22 +206,26 @@ const Index = () => {
                 <Button asChild size="lg" variant="outline" className="border-border bg-secondary text-foreground hover:bg-muted"><Link href="/contact">Request Demo</Link></Button>
               </div>
             </div>
-            <ol className="space-y-4">
-              {[
-                { t: "AI symptom consultation", d: "Patient chats with our AI doctor for an instant intake." },
-                { t: "AI clinical summary", d: "The model produces a structured handoff for the physician." },
-                { t: "Real doctor consult", d: "Video or voice consult with a licensed clinician." },
-                { t: "Prescription & follow-up", d: "EMR-stored records, e-prescriptions and follow-ups." },
-              ].map((s, i) => (
-                <li key={s.t} className="flex gap-4 rounded-2xl border border-border bg-secondary p-5 hover-lift">
-                  <div className="h-10 w-10 shrink-0 rounded-xl bg-primary text-white flex items-center justify-center font-semibold text-sm">{i + 1}</div>
-                  <div>
-                    <div className="font-semibold text-foreground">{s.t}</div>
-                    <div className="text-sm text-muted-foreground">{s.d}</div>
-                  </div>
-                </li>
-              ))}
-            </ol>
+            <div className="relative">
+              {/* Timeline line */}
+              <div className="absolute left-5 top-8 bottom-8 w-0.5 bg-primary/20 hidden lg:block" aria-hidden />
+              <ol className="space-y-4">
+                {[
+                  { t: "AI symptom consultation", d: "Patient chats with our AI doctor for an instant intake." },
+                  { t: "AI clinical summary", d: "The model produces a structured handoff for the physician." },
+                  { t: "Real doctor consult", d: "Video or voice consult with a licensed clinician." },
+                  { t: "Prescription & follow-up", d: "EMR-stored records, e-prescriptions and follow-ups." },
+                ].map((s, i) => (
+                  <li key={s.t} className="relative flex gap-4 rounded-2xl border border-border bg-secondary p-5 hover-lift">
+                    <div className="h-10 w-10 shrink-0 rounded-full bg-white border-2 border-primary text-primary flex items-center justify-center font-bold text-lg relative z-10">{i + 1}</div>
+                    <div>
+                      <div className="font-semibold text-foreground">{s.t}</div>
+                      <div className="text-sm text-muted-foreground">{s.d}</div>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </div>
         </div>
       </Section>
@@ -231,8 +240,8 @@ const Index = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {leaks.map((l) => (
             <div key={l.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4 border border-primary/20">
-                <l.icon className="h-5 w-5" />
+              <div className="h-10 w-10 rounded-lg bg-transparent text-primary flex items-center justify-center mb-4 border border-primary/30">
+                <l.icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
               <div className="font-semibold mb-1 text-foreground">{l.title}</div>
               <p className="text-sm text-muted-foreground">{l.desc}</p>
@@ -253,9 +262,13 @@ const Index = () => {
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {clouds.map((c) => (
-            <div key={c} className="rounded-2xl border border-border bg-card p-8 text-center shadow-card hover-lift">
-              <Cloud className="h-8 w-8 mx-auto mb-3 text-primary" />
-              <div className="font-semibold text-foreground">{c}</div>
+            <div key={c.name} className="rounded-2xl border border-border bg-card p-8 text-center shadow-card hover-lift flex flex-col items-center justify-center">
+              <img 
+                src={c.logo} 
+                alt={c.name} 
+                className="h-10 w-auto mx-auto mb-3 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
+              />
+              <div className="font-semibold text-foreground">{c.name}</div>
             </div>
           ))}
         </div>
@@ -267,7 +280,8 @@ const Index = () => {
           eyebrow="Why AlpheasAI"
           title={<>Traditional vendors vs. <span className="text-primary">AlpheasAI</span></>}
         />
-        <div className="rounded-2xl border border-border bg-card shadow-card overflow-hidden">
+        {/* Desktop table view */}
+        <div className="hidden md:block rounded-2xl border border-border bg-card shadow-card overflow-hidden">
           <div className="grid grid-cols-3 text-sm font-semibold bg-secondary px-6 py-4 text-foreground">
             <div>Capability</div>
             <div className="text-center">Traditional vendor</div>
@@ -281,6 +295,24 @@ const Index = () => {
               </div>
               <div className="text-center font-medium text-foreground">
                 {typeof row.us === "boolean" ? (row.us ? <Check className="inline h-5 w-5 text-primary" /> : <X className="inline h-5 w-5" />) : <span className="text-primary">{row.us}</span>}
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* Mobile card view */}
+        <div className="md:hidden space-y-4">
+          {compare.map((row) => (
+            <div key={row.feat} className="rounded-2xl border border-border bg-card p-5 shadow-card">
+              <div className="font-medium text-foreground mb-3">{row.feat}</div>
+              <div className="grid grid-cols-2 gap-3 text-sm">
+                <div className="flex items-center gap-2">
+                  <span className="text-muted-foreground">Traditional:</span>
+                  {typeof row.them === "boolean" ? (row.them ? <Check className="h-4 w-4 text-primary" /> : <X className="h-4 w-4 text-muted-foreground/60" />) : <span className="text-muted-foreground">{row.them}</span>}
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-primary font-medium">AlpheasAI:</span>
+                  {typeof row.us === "boolean" ? (row.us ? <Check className="h-5 w-5 text-primary" /> : <X className="h-5 w-5" />) : <span className="text-primary font-medium">{row.us}</span>}
+                </div>
               </div>
             </div>
           ))}
