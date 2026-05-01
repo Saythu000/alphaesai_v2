@@ -28,8 +28,8 @@ export const Navbar = () => {
 
   return (
     <header
-      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-background/80 backdrop-blur-xl border-b border-border" : "bg-transparent"
+      className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 bg-background border-b border-border ${
+        scrolled ? "shadow-md" : ""
       }`}
     >
       <div className="container flex h-16 items-center justify-between">
@@ -67,7 +67,7 @@ export const Navbar = () => {
         </button>
       </div>
       {open && (
-        <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl animate-fade-in">
+        <div className="md:hidden border-t border-border bg-background shadow-md animate-fade-in">
           <div className="container py-4 flex flex-col gap-1">
             {links.map((l) => (
               <NavLink

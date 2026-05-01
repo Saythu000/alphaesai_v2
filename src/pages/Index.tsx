@@ -64,91 +64,56 @@ const Index = () => {
   return (
     <Layout>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-secondary via-[hsl(240_55%_12%)] to-[hsl(270_60%_14%)] text-white">
-        {/* Ambient glows */}
-        <div className="absolute inset-0 bg-grid opacity-[0.07]" aria-hidden />
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[1100px] rounded-full bg-primary/30 blur-[140px] opacity-70" aria-hidden />
-        <div className="absolute -bottom-40 -right-20 h-[500px] w-[500px] rounded-full bg-accent/40 blur-[140px] opacity-60" aria-hidden />
-        <div className="absolute -bottom-40 -left-20 h-[420px] w-[420px] rounded-full bg-[hsl(var(--accent-cyan))]/20 blur-[140px]" aria-hidden />
-
-        {/* Floating UI cards */}
-        <div className="hidden lg:block absolute top-32 left-8 xl:left-16 animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl w-56">
-            <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
-              <TrendingDown className="h-3.5 w-3.5 text-success" /> Cloud Spend
-            </div>
-            <div className="text-2xl font-bold text-white">−<Counter to={47} suffix="%" /></div>
-            <div className="mt-3 h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full w-[53%] bg-gradient-to-r from-primary to-accent" />
-            </div>
-            <div className="mt-2 text-[11px] text-white/50">Q4 vs Q3 — FinOps engaged</div>
-          </div>
-        </div>
-        <div className="hidden lg:block absolute top-48 right-8 xl:right-16 animate-fade-in-up" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl w-60">
-            <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
-              <Activity className="h-3.5 w-3.5 text-primary-glow animate-glow-pulse" /> DrGodly · live
-            </div>
-            <div className="text-sm font-semibold text-white">AI consult routed</div>
-            <div className="text-[11px] text-white/50 mt-1">Triage → Clinician in 1.2s</div>
-            <div className="mt-3 flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-success animate-glow-pulse" />
-              <span className="text-[11px] text-white/60">99.97% uptime</span>
-            </div>
-          </div>
-        </div>
+      <section className="relative overflow-hidden bg-background text-foreground">
+        {/* Minimal accent area */}
+        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20" aria-hidden />
 
         <div className="container relative pt-24 pb-28 md:pt-36 md:pb-40">
-          <div className="max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur px-3.5 py-1.5 text-xs font-medium text-white/80">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-glow-pulse" />
+          <div className="max-w-5xl mx-auto text-center space-y-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3.5 py-1.5 text-xs font-medium text-foreground">
+              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               AI · Cloud · FinOps · Healthcare
             </div>
 
             <div className="relative">
-              {/* headline glow */}
-              <div className="absolute inset-x-0 -inset-y-6 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-3xl opacity-60 -z-10" aria-hidden />
-              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-white">
+              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-foreground">
                 Cut Cloud Costs by{" "}
-                <span className="bg-gradient-to-r from-primary-glow via-white to-accent bg-clip-text text-transparent">
+                <span className="text-primary">
                   50%
                 </span>{" "}
                 While Building AI Platforms Like{" "}
-                <span className="bg-gradient-to-r from-primary-glow to-accent bg-clip-text text-transparent">
+                <span className="text-primary">
                   DrGodly
                 </span>
               </h1>
             </div>
 
-            <p className="text-lg md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
               AI-first systems combined with FinOps-driven cloud architecture.{" "}
-              <span className="text-white">Built for production, not experiments.</span>
+              <span className="text-foreground font-medium">Built for production, not experiments.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
                 <Link to="/contact">Get Free Cloud Cost Audit <ArrowRight className="ml-1" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white">
+              <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-border bg-secondary text-foreground hover:bg-muted hover:text-foreground">
                 <Link to="/drgodly">Explore DrGodly Platform</Link>
               </Button>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 pt-8 text-sm text-white/70">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 pt-8 text-sm text-muted-foreground">
               {heroTrust.map((t) => (
                 <div key={t.label} className="inline-flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/5 border border-white/10">
-                    <t.icon className="h-3.5 w-3.5 text-primary-glow" />
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-secondary border border-border">
+                    <t.icon className="h-3.5 w-3.5 text-primary" />
                   </span>
-                  <span className="font-medium">{t.label}</span>
+                  <span className="font-medium text-foreground">{t.label}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
-
-        {/* fade to page bg */}
-        <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" aria-hidden />
       </section>
 
       {/* STATS */}
@@ -161,7 +126,7 @@ const Index = () => {
             { v: 99.9, suf: "%", l: "Uptime", float: true },
           ].map((s) => (
             <div key={s.l} className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-card hover-lift">
-              <div className="text-3xl md:text-5xl font-bold text-gradient">
+              <div className="text-3xl md:text-5xl font-bold text-primary">
                 {s.float ? "99.9%" : <Counter to={s.v} suffix={s.suf} />}
               </div>
               <div className="mt-2 text-sm md:text-base text-muted-foreground">{s.l}</div>
@@ -174,7 +139,7 @@ const Index = () => {
       <Section id="services">
         <SectionHeading
           eyebrow="What we do"
-          title={<>Four core practices, <span className="text-gradient">one execution team</span></>}
+          title={<>Four core practices, <span className="text-primary">one execution team</span></>}
           subtitle="From AI strategy and engineering to multi-cloud architecture and FinOps — delivered end to end."
         />
         <div className="grid md:grid-cols-2 gap-6">
@@ -182,22 +147,22 @@ const Index = () => {
             <div
               key={s.title}
               className={`group rounded-2xl border bg-card p-8 shadow-card hover-lift relative overflow-hidden ${
-                s.highlight ? "border-primary/40" : "border-border"
+                s.highlight ? "border-primary/50 bg-primary/5" : "border-border"
               }`}
             >
               {s.highlight && (
-                <div className="absolute top-4 right-4 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-primary/10 text-primary">
+                <div className="absolute top-4 right-4 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-primary/15 text-primary">
                   Most requested
                 </div>
               )}
-              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow mb-6">
-                <s.icon className="h-6 w-6 text-primary-foreground" />
+              <div className="h-12 w-12 rounded-xl bg-primary/10 flex items-center justify-center mb-6 border border-primary/20">
+                <s.icon className="h-6 w-6 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{s.title}</h3>
+              <h3 className="text-xl font-semibold mb-2 text-foreground">{s.title}</h3>
               <p className="text-muted-foreground mb-5">{s.desc}</p>
               <ul className="space-y-2 mb-6">
                 {s.points.map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm">
+                  <li key={p} className="flex items-center gap-2 text-sm text-foreground">
                     <Check className="h-4 w-4 text-primary" /> {p}
                   </li>
                 ))}
@@ -212,29 +177,27 @@ const Index = () => {
 
       {/* PRODUCT SPOTLIGHT — DRGODLY */}
       <Section className="relative">
-        <div className="rounded-3xl bg-gradient-to-br from-secondary to-[hsl(222_47%_4%)] text-secondary-foreground p-8 md:p-16 overflow-hidden relative shadow-lg">
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-accent/30 blur-3xl" />
+        <div className="rounded-3xl bg-white border border-border p-8 md:p-16 overflow-hidden relative shadow-md">
           <div className="relative grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-medium">
+              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground">
                 <Stethoscope className="h-3 w-3" /> Our flagship product
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                Meet <span className="text-gradient">DrGodly</span> — AI-Powered Telemedicine Platform
+              <h2 className="text-3xl md:text-5xl font-bold leading-tight text-foreground">
+                Meet <span className="text-primary">DrGodly</span> — AI-Powered Telemedicine Platform
               </h2>
-              <p className="text-white/70 text-lg">
+              <p className="text-muted-foreground text-lg">
                 AI doctor + real doctor in one seamless experience. Built on the same AI and cloud
                 infrastructure we deploy for our enterprise clients.
               </p>
               <ul className="grid sm:grid-cols-2 gap-3 text-sm">
                 {["AI symptom checker","Doctor consultations","EMR records","AI clinical summaries","Secure platform","HIPAA-ready"].map((f) => (
-                  <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4 text-primary-glow" />{f}</li>
+                  <li key={f} className="flex items-center gap-2 text-foreground"><Check className="h-4 w-4 text-primary" />{f}</li>
                 ))}
               </ul>
               <div className="flex flex-col sm:flex-row gap-3 pt-2">
                 <Button asChild size="lg" variant="hero"><Link to="/drgodly">Explore DrGodly <ArrowRight className="ml-1" /></Link></Button>
-                <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10"><Link to="/contact">Request Demo</Link></Button>
+                <Button asChild size="lg" variant="outline" className="border-border bg-secondary text-foreground hover:bg-muted"><Link to="/contact">Request Demo</Link></Button>
               </div>
             </div>
             <ol className="space-y-4">
@@ -244,11 +207,11 @@ const Index = () => {
                 { t: "Real doctor consult", d: "Video or voice consult with a licensed clinician." },
                 { t: "Prescription & follow-up", d: "EMR-stored records, e-prescriptions and follow-ups." },
               ].map((s, i) => (
-                <li key={s.t} className="flex gap-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5 hover-lift">
-                  <div className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-semibold">{i + 1}</div>
+                <li key={s.t} className="flex gap-4 rounded-2xl border border-border bg-secondary p-5 hover-lift">
+                  <div className="h-10 w-10 shrink-0 rounded-xl bg-primary text-white flex items-center justify-center font-semibold text-sm">{i + 1}</div>
                   <div>
-                    <div className="font-semibold">{s.t}</div>
-                    <div className="text-sm text-white/60">{s.d}</div>
+                    <div className="font-semibold text-foreground">{s.t}</div>
+                    <div className="text-sm text-muted-foreground">{s.d}</div>
                   </div>
                 </li>
               ))}
@@ -258,19 +221,19 @@ const Index = () => {
       </Section>
 
       {/* CLOUD LEAK */}
-      <Section className="bg-muted/30">
+      <Section className="bg-secondary/30">
         <SectionHeading
           eyebrow="FinOps"
-          title={<>Where your cloud budget is <span className="text-gradient">leaking</span></>}
+          title={<>Where your cloud budget is <span className="text-primary">leaking</span></>}
           subtitle="Most enterprises overspend by 30–45% on cloud. Here's where it happens — and what we fix."
         />
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {leaks.map((l) => (
             <div key={l.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center mb-4">
+              <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center mb-4 border border-primary/20">
                 <l.icon className="h-5 w-5" />
               </div>
-              <div className="font-semibold mb-1">{l.title}</div>
+              <div className="font-semibold mb-1 text-foreground">{l.title}</div>
               <p className="text-sm text-muted-foreground">{l.desc}</p>
             </div>
           ))}
@@ -284,38 +247,38 @@ const Index = () => {
       <Section>
         <SectionHeading
           eyebrow="Multi-cloud"
-          title={<>Cloud-agnostic architecture, <span className="text-gradient">no vendor lock-in</span></>}
+          title={<>Cloud-agnostic architecture, <span className="text-primary">no vendor lock-in</span></>}
           subtitle="We design and deploy on every major hyperscaler — and across them when it matters."
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {clouds.map((c) => (
             <div key={c} className="rounded-2xl border border-border bg-card p-8 text-center shadow-card hover-lift">
               <Cloud className="h-8 w-8 mx-auto mb-3 text-primary" />
-              <div className="font-semibold">{c}</div>
+              <div className="font-semibold text-foreground">{c}</div>
             </div>
           ))}
         </div>
       </Section>
 
       {/* COMPARISON */}
-      <Section className="bg-muted/30">
+      <Section className="bg-secondary/30">
         <SectionHeading
           eyebrow="Why AlpheasAI"
-          title={<>Traditional vendors vs. <span className="text-gradient">AlpheasAI</span></>}
+          title={<>Traditional vendors vs. <span className="text-primary">AlpheasAI</span></>}
         />
         <div className="rounded-2xl border border-border bg-card shadow-card overflow-hidden">
-          <div className="grid grid-cols-3 text-sm font-semibold bg-muted/50 px-6 py-4">
+          <div className="grid grid-cols-3 text-sm font-semibold bg-secondary px-6 py-4 text-foreground">
             <div>Capability</div>
             <div className="text-center">Traditional vendor</div>
             <div className="text-center text-primary">AlpheasAI</div>
           </div>
           {compare.map((row, i) => (
-            <div key={row.feat} className={`grid grid-cols-3 items-center px-6 py-4 text-sm ${i % 2 ? "bg-muted/20" : ""}`}>
-              <div className="font-medium">{row.feat}</div>
+            <div key={row.feat} className={`grid grid-cols-3 items-center px-6 py-4 text-sm ${i % 2 ? "bg-secondary/30" : ""}`}>
+              <div className="font-medium text-foreground">{row.feat}</div>
               <div className="text-center text-muted-foreground">
-                {typeof row.them === "boolean" ? (row.them ? <Check className="inline h-4 w-4 text-success" /> : <X className="inline h-4 w-4 text-muted-foreground/60" />) : row.them}
+                {typeof row.them === "boolean" ? (row.them ? <Check className="inline h-4 w-4 text-primary" /> : <X className="inline h-4 w-4 text-muted-foreground/60" />) : row.them}
               </div>
-              <div className="text-center font-medium">
+              <div className="text-center font-medium text-foreground">
                 {typeof row.us === "boolean" ? (row.us ? <Check className="inline h-5 w-5 text-primary" /> : <X className="inline h-5 w-5" />) : <span className="text-primary">{row.us}</span>}
               </div>
             </div>
@@ -325,18 +288,17 @@ const Index = () => {
 
       {/* FINAL CTA */}
       <Section>
-        <div className="rounded-3xl bg-gradient-to-br from-primary to-accent text-primary-foreground p-10 md:p-16 text-center shadow-glow relative overflow-hidden">
-          <div className="absolute inset-0 bg-grid opacity-20" aria-hidden />
+        <div className="rounded-3xl bg-primary text-primary-foreground p-10 md:p-16 text-center shadow-md relative overflow-hidden">
           <div className="relative space-y-6">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
               Ready to build scalable AI platforms <br className="hidden md:block" />and reduce cloud costs?
             </h2>
-            <p className="text-white/80 max-w-2xl mx-auto">
+            <p className="text-primary-foreground/85 max-w-2xl mx-auto">
               Talk to an engineer in 24 hours. Walk away with a roadmap — whether or not you work with us.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
               <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Book Strategy Call</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20"><Link to="/contact">Get Free Assessment</Link></Button>
+              <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"><Link to="/contact">Get Free Assessment</Link></Button>
             </div>
           </div>
         </div>

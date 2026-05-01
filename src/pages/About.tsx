@@ -13,11 +13,11 @@ const values = [
 
 const About = () => (
   <Layout>
-    <section className="bg-hero">
-      <div className="container py-20 md:py-28 max-w-3xl mx-auto text-center space-y-6 animate-fade-in-up">
+    <section className="bg-background">
+      <div className="container py-20 md:py-28 max-w-3xl mx-auto text-center space-y-6">
         <Eyebrow>About AlpheasAI</Eyebrow>
-        <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-          A product company that <span className="text-gradient">consults</span> — not the other way around.
+        <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight text-foreground">
+          A product company that <span className="text-primary">consults</span> — not the other way around.
         </h1>
         <p className="text-lg text-muted-foreground">
           We build our own AI products, like DrGodly. The same engineers help our clients ship
@@ -29,7 +29,7 @@ const About = () => (
     <Section>
       <div className="grid lg:grid-cols-2 gap-12 items-center">
         <div className="space-y-5">
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Why we exist</h2>
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-foreground">Why we exist</h2>
           <p className="text-muted-foreground text-lg">
             Most AI and cloud projects fail in production — burning budget on PoCs that never ship,
             on infrastructure no one understands, and on cloud bills no one can explain.
@@ -43,10 +43,10 @@ const About = () => (
         <div className="grid sm:grid-cols-2 gap-5">
           {values.map((v) => (
             <div key={v.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-3 shadow-glow">
-                <v.icon className="h-5 w-5 text-primary-foreground" />
+              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center mb-3 border border-primary/20">
+                <v.icon className="h-5 w-5 text-primary" />
               </div>
-              <div className="font-semibold mb-1">{v.title}</div>
+              <div className="font-semibold mb-1 text-foreground">{v.title}</div>
               <p className="text-sm text-muted-foreground">{v.desc}</p>
             </div>
           ))}
@@ -54,7 +54,7 @@ const About = () => (
       </div>
     </Section>
 
-    <Section className="bg-muted/30">
+    <Section className="bg-secondary/30">
       <SectionHeading eyebrow="By the numbers" title="A small team. Real outcomes." />
       <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
         {[
@@ -64,7 +64,7 @@ const About = () => (
           { v: "99.9%", l: "Platform uptime" },
         ].map((s) => (
           <div key={s.l} className="rounded-2xl border border-border bg-card p-8 text-center shadow-card">
-            <div className="text-3xl md:text-4xl font-bold text-gradient">{s.v}</div>
+            <div className="text-3xl md:text-4xl font-bold text-primary">{s.v}</div>
             <div className="text-sm text-muted-foreground mt-2">{s.l}</div>
           </div>
         ))}
@@ -72,7 +72,7 @@ const About = () => (
     </Section>
 
     <Section>
-      <div className="rounded-3xl bg-gradient-to-br from-primary to-accent text-primary-foreground p-10 md:p-16 text-center shadow-glow">
+      <div className="rounded-3xl bg-primary text-primary-foreground p-10 md:p-16 text-center shadow-md">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Work with engineers, not account managers</h2>
         <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Book Strategy Call</Link></Button>
       </div>

@@ -4,63 +4,62 @@
 
 @layer base {
   :root {
-    --background: 220 30% 99%;
-    --foreground: 222 47% 8%;
+    --background: 0 0% 100%;          /* Pure white */
+    --foreground: 217 32% 17%;        /* Near-black */
 
-    --card: 0 0% 100%;
-    --card-foreground: 222 47% 8%;
+    --card: 0 0% 100%;                /* White cards */
+    --card-foreground: 217 32% 17%;   /* Near-black text */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222 47% 8%;
+    --popover-foreground: 217 32% 17%;
 
-    --primary: 217 100% 50%;          /* #0066FF */
+    --primary: 10 86% 57%;            /* Databricks Red/Orange #FF5A3C */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 217 100% 65%;
+    --primary-glow: 10 86% 57%;
 
-    --secondary: 222 47% 11%;
-    --secondary-foreground: 0 0% 100%;
+    --secondary: 0 0% 95%;            /* Light gray */
+    --secondary-foreground: 217 32% 17%;
 
-    --muted: 220 20% 96%;
-    --muted-foreground: 220 10% 40%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 217 32% 40%;
 
-    --accent: 270 90% 60%;            /* purple */
+    --accent: 10 86% 57%;             /* Red accent */
     --accent-foreground: 0 0% 100%;
-    --accent-cyan: 190 95% 55%;
+    --accent-cyan: 10 86% 57%;
 
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
     --success: 152 70% 40%;
 
-    --border: 220 20% 90%;
-    --input: 220 20% 90%;
-    --ring: 217 100% 50%;
+    --border: 0 0% 92%;               /* Light border */
+    --input: 0 0% 93%;
+    --ring: 10 86% 57%;               /* Red ring */
 
     --radius: 1rem;
 
-    --gradient-hero: radial-gradient(ellipse at top, hsl(217 100% 50% / 0.12), transparent 60%),
-                     radial-gradient(ellipse at bottom right, hsl(270 90% 60% / 0.08), transparent 60%);
-    --gradient-primary: linear-gradient(135deg, hsl(217 100% 50%), hsl(270 90% 60%));
-    --gradient-glow: linear-gradient(135deg, hsl(217 100% 50% / 0.15), hsl(270 90% 60% / 0.15));
-    --gradient-text: linear-gradient(135deg, hsl(217 100% 50%), hsl(270 90% 60%));
-    --gradient-dark: linear-gradient(135deg, hsl(222 47% 11%), hsl(222 47% 6%));
+    --gradient-hero: none;
+    --gradient-primary: none;
+    --gradient-glow: none;
+    --gradient-text: none;
+    --gradient-dark: none;
 
-    --shadow-sm: 0 1px 2px hsl(222 47% 8% / 0.04);
-    --shadow-md: 0 4px 16px -4px hsl(222 47% 8% / 0.08);
-    --shadow-lg: 0 20px 50px -20px hsl(222 47% 8% / 0.15);
-    --shadow-glow: 0 20px 60px -20px hsl(217 100% 50% / 0.35);
-    --shadow-card: 0 1px 3px hsl(222 47% 8% / 0.04), 0 8px 30px -12px hsl(222 47% 8% / 0.08);
+    --shadow-sm: 0 1px 2px hsl(217 32% 17% / 0.04);
+    --shadow-md: 0 1px 3px hsl(217 32% 17% / 0.08);
+    --shadow-lg: 0 4px 6px hsl(217 32% 17% / 0.06);
+    --shadow-glow: none;
+    --shadow-card: 0 1px 3px hsl(217 32% 17% / 0.04);
 
     --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
-    --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 217 32% 17%;
+    --sidebar-primary: 10 86% 57%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 94%;
+    --sidebar-accent-foreground: 217 32% 17%;
+    --sidebar-border: 0 0% 92%;
+    --sidebar-ring: 10 86% 57%;
   }
 
   .dark {
@@ -101,28 +100,21 @@
 
 @layer utilities {
   .text-gradient {
-    background: var(--gradient-text);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
+    @apply text-foreground;
   }
   .bg-hero {
-    background-image: var(--gradient-hero);
+    @apply bg-background;
   }
   .bg-grid {
-    background-image:
-      linear-gradient(to right, hsl(var(--border) / 0.6) 1px, transparent 1px),
-      linear-gradient(to bottom, hsl(var(--border) / 0.6) 1px, transparent 1px);
-    background-size: 48px 48px;
-    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black, transparent);
+    @apply bg-background;
   }
   .shadow-card { box-shadow: var(--shadow-card); }
-  .shadow-glow { box-shadow: var(--shadow-glow); }
+  .shadow-glow { box-shadow: none; }
   .hover-lift {
     transition: transform 0.3s var(--transition-smooth), box-shadow 0.3s var(--transition-smooth);
   }
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
   }
 }
