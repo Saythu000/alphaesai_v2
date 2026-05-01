@@ -6,9 +6,9 @@ import { Logo } from "./Logo";
 
 const links = [
   { to: "/", label: "Home" },
-  { to: "/about", label: "About" },
   { to: "/services", label: "Services" },
-  { to: "/blog", label: "Blog" },
+  { to: "/drgodly", label: "DrGodly" },
+  { to: "/about", label: "About" },
   { to: "/contact", label: "Contact" },
 ];
 
@@ -51,8 +51,11 @@ export const Navbar = () => {
           ))}
         </nav>
         <div className="hidden md:flex items-center gap-2">
+          <Button asChild variant="ghost" size="sm">
+            <Link to="/contact">Sign in</Link>
+          </Button>
           <Button asChild size="sm" variant="hero">
-            <Link to="/contact">Apply for Internship</Link>
+            <Link to="/contact">Get Free Assessment</Link>
           </Button>
         </div>
         <button
@@ -81,7 +84,7 @@ export const Navbar = () => {
               </NavLink>
             ))}
             <Button asChild className="mt-2" variant="hero">
-              <Link to="/contact">Apply for Internship</Link>
+              <Link to="/contact">Get Free Assessment</Link>
             </Button>
           </div>
         </div>

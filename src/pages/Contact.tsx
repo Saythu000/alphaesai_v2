@@ -23,10 +23,10 @@ const Contact = () => {
         <div className="container py-20 md:py-28 max-w-3xl mx-auto text-center space-y-6 animate-fade-in-up">
           <Eyebrow>Contact</Eyebrow>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-            Apply for an <span className="text-gradient">internship</span>
+            Get a <span className="text-gradient">free assessment</span>
           </h1>
           <p className="text-lg text-muted-foreground">
-            Tell us a bit about you and the track you're interested in. We'll get back within 24 hours.
+            Tell us a bit about your project. A senior engineer will respond within 24 hours.
           </p>
         </div>
       </section>
@@ -56,22 +56,23 @@ const Contact = () => {
                 </div>
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-2">
-                    <Label htmlFor="company">College / Company</Label>
-                    <Input id="company" placeholder="Your college or workplace" />
+                    <Label htmlFor="company">Company</Label>
+                    <Input id="company" placeholder="Acme Inc." />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="topic">I'm interested in</Label>
                     <select id="topic" className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm">
-                      <option>Frontend Development internship</option>
-                      <option>Full Stack Development internship</option>
-                      <option>AI & ML internship</option>
-                      <option>General questions</option>
+                      <option>AI consulting & development</option>
+                      <option>Cloud cost optimization (FinOps)</option>
+                      <option>Cloud migration & architecture</option>
+                      <option>Databricks consulting</option>
+                      <option>DrGodly demo</option>
                     </select>
                   </div>
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="msg">Project details</Label>
-                  <Textarea id="msg" rows={5} placeholder="Tell us about your background, goals and any questions." />
+                  <Textarea id="msg" rows={5} placeholder="What are you building, and what does success look like?" />
                 </div>
                 <Button type="submit" size="lg" variant="hero" className="w-full sm:w-auto">Send message</Button>
               </form>
@@ -80,8 +81,8 @@ const Contact = () => {
 
           <div className="space-y-4">
             {[
-              { icon: Calendar, title: "Book a call", desc: "Quick chat with a mentor about the right track." },
-              { icon: Mail, title: "Email us", desc: "alphaesai@gmail.com" },
+              { icon: Calendar, title: "Book a strategy call", desc: "30-min intro with a senior engineer." },
+              { icon: Mail, title: "Email us", desc: "hello@alpheasai.com" },
               { icon: MessageCircle, title: "Response time", desc: "Within 24 hours, every business day." },
             ].map((c) => (
               <div key={c.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
