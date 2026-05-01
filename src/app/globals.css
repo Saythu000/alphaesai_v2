@@ -114,7 +114,14 @@
     transition: transform 0.3s var(--transition-smooth), box-shadow 0.3s var(--transition-smooth);
   }
   .hover-lift:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 20px hsl(217 32% 17% / 0.12);
+  }
+  @keyframes pulse-subtle {
+    0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
+    50% { box-shadow: 0 0 0 6px hsl(var(--primary) / 0); }
+  }
+  .animate-pulse-subtle {
+    animation: pulse-subtle 2s ease-in-out infinite;
   }
 }
