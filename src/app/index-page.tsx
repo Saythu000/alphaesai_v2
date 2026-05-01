@@ -57,13 +57,13 @@ const clouds = [
   { name: "Oracle Cloud", logo: "/logos/oracle.svg" },
 ];
 
-const compare = [
+const compare: { feat: string; us: boolean | string; them: boolean | string }[] = [
   { feat: "Strategy + build + deploy in one team", us: true, them: false },
   { feat: "Built-in FinOps from day one", us: true, them: false },
-  { feat: "Production-grade AI (not POCs)", us: true, them: "Sometimes" as any },
+  { feat: "Production-grade AI (not POCs)", us: true, them: "Sometimes" },
   { feat: "Multi-cloud, no vendor lock-in", us: true, them: false },
   { feat: "Own AI products (DrGodly)", us: true, them: false },
-  { feat: "Faster delivery cycles", us: "2–6 weeks", them: "3–9 months" as any },
+  { feat: "Faster delivery cycles", us: "2–6 weeks", them: "3–9 months" },
 ];
 
 const Index = () => {
