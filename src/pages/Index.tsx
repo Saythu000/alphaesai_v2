@@ -1,136 +1,82 @@
 import { Link } from "react-router-dom";
-import {
-  ArrowRight, Sparkles, Cloud, LineChart, Database, Stethoscope,
-  ShieldCheck, Cpu, Zap, Check, X, AlertTriangle, BarChart3, Server, TrendingDown, Activity,
-} from "lucide-react";
+import { ArrowRight, Code2, Layers, Cpu, GraduationCap, Briefcase, Sparkles, Check, Users, Trophy } from "lucide-react";
 import { Layout } from "@/components/site/Layout";
 import { Section, SectionHeading, Eyebrow } from "@/components/site/Section";
 import { Counter } from "@/components/site/Counter";
 import { Button } from "@/components/ui/button";
 
-const services = [
+const programs = [
   {
-    icon: Sparkles,
-    title: "AI Consulting & Development",
-    desc: "GenAI applications, autonomous agents and ML systems shipped to production — not prototypes.",
-    points: ["LLM applications & RAG", "Agentic workflows", "MLOps & evaluation"],
+    icon: Code2,
+    title: "Frontend Development",
+    desc: "Master HTML, CSS, JavaScript and React to build modern, responsive user interfaces.",
+    points: ["UI & UX fundamentals", "React + Tailwind", "Real client projects"],
   },
   {
-    icon: LineChart,
-    title: "Cloud Cost Optimization & FinOps",
-    desc: "Cut cloud spend by 30–50% with rightsizing, savings plans, K8s cost control and live dashboards.",
-    points: ["Cost audits", "K8s cost control", "Savings plans & RIs"],
+    icon: Layers,
+    title: "Full Stack Development",
+    desc: "Go end-to-end — from pixel-perfect frontends to APIs, databases and deployments.",
+    points: ["Node.js & databases", "REST & auth", "Deploy to production"],
     highlight: true,
   },
   {
-    icon: Cloud,
-    title: "Cloud Migration & Architecture",
-    desc: "Multi-cloud architectures across AWS, Azure, GCP and Oracle — fully codified with IaC.",
-    points: ["AWS · Azure · GCP · OCI", "Infrastructure as Code", "Zero vendor lock-in"],
-  },
-  {
-    icon: Database,
-    title: "Databricks Consulting",
-    desc: "Lakehouse pipelines, ML workflows and performance tuning by certified Databricks engineers.",
-    points: ["Delta Lake pipelines", "ML workflows", "Performance + cost"],
+    icon: Cpu,
+    title: "AI & ML",
+    desc: "Learn the maths and tooling behind modern AI — and ship your first ML-powered app.",
+    points: ["Python & data science", "Classic ML + LLMs", "Capstone AI project"],
   },
 ];
 
 const heroTrust = [
-  { icon: Sparkles, label: "50+ AI Systems Deployed" },
-  { icon: TrendingDown, label: "30–50% Cloud Cost Savings" },
-  { icon: ShieldCheck, label: "HIPAA-ready Architecture" },
+  { icon: GraduationCap, label: "Real-world projects from Day 1" },
+  { icon: Briefcase, label: "Internship + Certificate" },
+  { icon: Users, label: "Mentor-led learning" },
 ];
 
-const leaks = [
-  { icon: Server, title: "Idle resources", desc: "Forgotten dev clusters, unused volumes and zombie load balancers." },
-  { icon: BarChart3, title: "Overprovisioned systems", desc: "Workloads sized for peak that runs 2 hours per week." },
-  { icon: Cpu, title: "Inefficient AI workloads", desc: "GPU instances running 24/7 for batch jobs that need 2 hours." },
-  { icon: AlertTriangle, title: "No cost visibility", desc: "No per-team, per-feature or per-customer attribution." },
-];
-
-const clouds = ["AWS", "Azure", "GCP", "Oracle Cloud"];
-
-const compare = [
-  { feat: "Strategy + build + deploy in one team", us: true, them: false },
-  { feat: "Built-in FinOps from day one", us: true, them: false },
-  { feat: "Production-grade AI (not POCs)", us: true, them: "Sometimes" as any },
-  { feat: "Multi-cloud, no vendor lock-in", us: true, them: false },
-  { feat: "Own AI products (DrGodly)", us: true, them: false },
-  { feat: "Faster delivery cycles", us: "2–6 weeks", them: "3–9 months" as any },
+const why = [
+  { icon: Sparkles, title: "Self Learning", desc: "Structured paths that teach you how to learn — long after the program ends." },
+  { icon: Users, title: "Comfort", desc: "Friendly mentors, small cohorts and a community of learners just like you." },
+  { icon: Trophy, title: "Opportunity", desc: "Hands-on internships and project experience you can put on your resume." },
 ];
 
 const Index = () => {
   return (
     <Layout>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-secondary via-[hsl(240_55%_12%)] to-[hsl(270_60%_14%)] text-white">
-        {/* Ambient glows */}
+      <section className="relative overflow-hidden bg-gradient-to-b from-secondary via-[hsl(240_55%_12%)] to-[hsl(225_60%_14%)] text-white">
         <div className="absolute inset-0 bg-grid opacity-[0.07]" aria-hidden />
         <div className="absolute top-0 left-1/2 -translate-x-1/2 h-[600px] w-[1100px] rounded-full bg-primary/30 blur-[140px] opacity-70" aria-hidden />
         <div className="absolute -bottom-40 -right-20 h-[500px] w-[500px] rounded-full bg-accent/40 blur-[140px] opacity-60" aria-hidden />
-        <div className="absolute -bottom-40 -left-20 h-[420px] w-[420px] rounded-full bg-[hsl(var(--accent-cyan))]/20 blur-[140px]" aria-hidden />
-
-        {/* Floating UI cards */}
-        <div className="hidden lg:block absolute top-32 left-8 xl:left-16 animate-fade-in-up" style={{ animationDelay: "0.4s", animationFillMode: "both" }}>
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl w-56">
-            <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
-              <TrendingDown className="h-3.5 w-3.5 text-success" /> Cloud Spend
-            </div>
-            <div className="text-2xl font-bold text-white">−<Counter to={47} suffix="%" /></div>
-            <div className="mt-3 h-1.5 w-full rounded-full bg-white/10 overflow-hidden">
-              <div className="h-full w-[53%] bg-gradient-to-r from-primary to-accent" />
-            </div>
-            <div className="mt-2 text-[11px] text-white/50">Q4 vs Q3 — FinOps engaged</div>
-          </div>
-        </div>
-        <div className="hidden lg:block absolute top-48 right-8 xl:right-16 animate-fade-in-up" style={{ animationDelay: "0.6s", animationFillMode: "both" }}>
-          <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl p-4 shadow-2xl w-60">
-            <div className="flex items-center gap-2 text-xs text-white/60 mb-2">
-              <Activity className="h-3.5 w-3.5 text-primary-glow animate-glow-pulse" /> DrGodly · live
-            </div>
-            <div className="text-sm font-semibold text-white">AI consult routed</div>
-            <div className="text-[11px] text-white/50 mt-1">Triage → Clinician in 1.2s</div>
-            <div className="mt-3 flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-success animate-glow-pulse" />
-              <span className="text-[11px] text-white/60">99.97% uptime</span>
-            </div>
-          </div>
-        </div>
 
         <div className="container relative pt-24 pb-28 md:pt-36 md:pb-40">
           <div className="max-w-5xl mx-auto text-center space-y-8 animate-fade-in-up">
             <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 backdrop-blur px-3.5 py-1.5 text-xs font-medium text-white/80">
               <span className="h-1.5 w-1.5 rounded-full bg-primary-glow animate-glow-pulse" />
-              AI · Cloud · FinOps · Healthcare
+              Tech education · Internships · Mentorship
             </div>
 
             <div className="relative">
-              {/* headline glow */}
               <div className="absolute inset-x-0 -inset-y-6 bg-gradient-to-r from-primary/20 via-accent/20 to-primary/20 blur-3xl opacity-60 -z-10" aria-hidden />
               <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-white">
-                Cut Cloud Costs by{" "}
+                Start Your{" "}
                 <span className="bg-gradient-to-r from-primary-glow via-white to-accent bg-clip-text text-transparent">
-                  50%
+                  Tech Journey
                 </span>{" "}
-                While Building AI Platforms Like{" "}
-                <span className="bg-gradient-to-r from-primary-glow to-accent bg-clip-text text-transparent">
-                  DrGodly
-                </span>
+                Here
               </h1>
             </div>
 
             <p className="text-lg md:text-2xl text-white/70 max-w-3xl mx-auto leading-relaxed font-light">
-              AI-first systems combined with FinOps-driven cloud architecture.{" "}
-              <span className="text-white">Built for production, not experiments.</span>
+              Hands-on training in Frontend, Full Stack and AI/ML — taught by mentors,
+              <span className="text-white"> built around real projects.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
-                <Link to="/contact">Get Free Cloud Cost Audit <ArrowRight className="ml-1" /></Link>
+                <Link to="/contact">Apply for Internship <ArrowRight className="ml-1" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-white/25 bg-white/5 text-white hover:bg-white/10 hover:text-white">
-                <Link to="/drgodly">Explore DrGodly Platform</Link>
+                <Link to="/services">Explore Programs</Link>
               </Button>
             </div>
 
@@ -147,7 +93,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* fade to page bg */}
         <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-transparent to-background" aria-hidden />
       </section>
 
@@ -155,14 +100,14 @@ const Index = () => {
       <Section className="!py-16">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
-            { v: 50, suf: "+", l: "AI Systems Deployed" },
-            { v: 100, suf: "+", l: "Cloud Workloads" },
-            { v: 50, suf: "%", l: "Max Cost Reduction" },
-            { v: 99.9, suf: "%", l: "Uptime", float: true },
+            { v: 500, suf: "+", l: "Learners trained" },
+            { v: 30, suf: "+", l: "Mentor-led projects" },
+            { v: 90, suf: "%", l: "Internship completion" },
+            { v: 3, suf: "", l: "Specialization tracks" },
           ].map((s) => (
             <div key={s.l} className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-card hover-lift">
               <div className="text-3xl md:text-5xl font-bold text-gradient">
-                {s.float ? "99.9%" : <Counter to={s.v} suffix={s.suf} />}
+                <Counter to={s.v} suffix={s.suf} />
               </div>
               <div className="mt-2 text-sm md:text-base text-muted-foreground">{s.l}</div>
             </div>
@@ -170,35 +115,100 @@ const Index = () => {
         </div>
       </Section>
 
-      {/* SERVICES */}
-      <Section id="services">
+      {/* ABOUT */}
+      <Section>
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="space-y-5">
+            <Eyebrow>About Us</Eyebrow>
+            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
+              Who <span className="text-gradient">we are</span>?
+            </h2>
+            <p className="text-muted-foreground text-lg">
+              At alphaesAI, we're pioneering the future of tech education by offering
+              comprehensive training in Frontend Development, Full Stack Development and
+              Artificial Intelligence.
+            </p>
+            <p className="text-muted-foreground text-lg">
+              Our mission is to empower aspiring developers and AI enthusiasts with
+              industry-ready skills that make a real impact.
+            </p>
+            <ul className="grid sm:grid-cols-2 gap-2 pt-2">
+              {["Frontend Development", "Full Stack Development", "ML & AI"].map((f) => (
+                <li key={f} className="flex items-center gap-2 text-sm font-medium">
+                  <Check className="h-4 w-4 text-primary" /> {f}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div className="rounded-3xl border border-border bg-gradient-to-br from-primary/10 via-card to-accent/10 p-10 shadow-card">
+            <div className="grid grid-cols-2 gap-4">
+              {[
+                { icon: Code2, label: "Frontend" },
+                { icon: Layers, label: "Full Stack" },
+                { icon: Cpu, label: "AI / ML" },
+                { icon: Briefcase, label: "Internship" },
+              ].map((c) => (
+                <div key={c.label} className="rounded-2xl border border-border bg-card p-6 text-center hover-lift">
+                  <div className="h-12 w-12 mx-auto rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow mb-3">
+                    <c.icon className="h-6 w-6 text-primary-foreground" />
+                  </div>
+                  <div className="font-semibold text-sm">{c.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* WHY CHOOSE US */}
+      <Section className="bg-muted/30">
         <SectionHeading
-          eyebrow="What we do"
-          title={<>Four core practices, <span className="text-gradient">one execution team</span></>}
-          subtitle="From AI strategy and engineering to multi-cloud architecture and FinOps — delivered end to end."
+          eyebrow="Why Choose Us"
+          title={<>Real World Learning <span className="text-gradient">From Day 01</span></>}
+          subtitle="We don't believe in passive tutorials. Every learner ships projects, gets mentor feedback and walks out with a portfolio."
         />
-        <div className="grid md:grid-cols-2 gap-6">
-          {services.map((s) => (
+        <div className="grid md:grid-cols-3 gap-6">
+          {why.map((w) => (
+            <div key={w.title} className="rounded-2xl border border-border bg-card p-7 shadow-card hover-lift">
+              <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow mb-5">
+                <w.icon className="h-6 w-6 text-primary-foreground" />
+              </div>
+              <h3 className="text-xl font-semibold mb-2">{w.title}</h3>
+              <p className="text-muted-foreground">{w.desc}</p>
+            </div>
+          ))}
+        </div>
+      </Section>
+
+      {/* PROGRAMS / SERVICES */}
+      <Section id="programs">
+        <SectionHeading
+          eyebrow="Our Services"
+          title={<>Unleash your talents with <span className="text-gradient">hands-on internships</span></>}
+          subtitle="Three focused tracks. Pick the one that matches your goals — or combine them."
+        />
+        <div className="grid md:grid-cols-3 gap-6">
+          {programs.map((p) => (
             <div
-              key={s.title}
+              key={p.title}
               className={`group rounded-2xl border bg-card p-8 shadow-card hover-lift relative overflow-hidden ${
-                s.highlight ? "border-primary/40" : "border-border"
+                p.highlight ? "border-primary/40" : "border-border"
               }`}
             >
-              {s.highlight && (
+              {p.highlight && (
                 <div className="absolute top-4 right-4 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-primary/10 text-primary">
-                  Most requested
+                  Most popular
                 </div>
               )}
               <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-glow mb-6">
-                <s.icon className="h-6 w-6 text-primary-foreground" />
+                <p.icon className="h-6 w-6 text-primary-foreground" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">{s.title}</h3>
-              <p className="text-muted-foreground mb-5">{s.desc}</p>
+              <h3 className="text-xl font-semibold mb-2">{p.title}</h3>
+              <p className="text-muted-foreground mb-5">{p.desc}</p>
               <ul className="space-y-2 mb-6">
-                {s.points.map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm">
-                    <Check className="h-4 w-4 text-primary" /> {p}
+                {p.points.map((pt) => (
+                  <li key={pt} className="flex items-center gap-2 text-sm">
+                    <Check className="h-4 w-4 text-primary" /> {pt}
                   </li>
                 ))}
               </ul>
@@ -210,133 +220,20 @@ const Index = () => {
         </div>
       </Section>
 
-      {/* PRODUCT SPOTLIGHT — DRGODLY */}
-      <Section className="relative">
-        <div className="rounded-3xl bg-gradient-to-br from-secondary to-[hsl(222_47%_4%)] text-secondary-foreground p-8 md:p-16 overflow-hidden relative shadow-lg">
-          <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-primary/30 blur-3xl" />
-          <div className="absolute -bottom-32 -left-32 h-96 w-96 rounded-full bg-accent/30 blur-3xl" />
-          <div className="relative grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3 py-1 text-xs font-medium">
-                <Stethoscope className="h-3 w-3" /> Our flagship product
-              </div>
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight">
-                Meet <span className="text-gradient">DrGodly</span> — AI-Powered Telemedicine Platform
-              </h2>
-              <p className="text-white/70 text-lg">
-                AI doctor + real doctor in one seamless experience. Built on the same AI and cloud
-                infrastructure we deploy for our enterprise clients.
-              </p>
-              <ul className="grid sm:grid-cols-2 gap-3 text-sm">
-                {["AI symptom checker","Doctor consultations","EMR records","AI clinical summaries","Secure platform","HIPAA-ready"].map((f) => (
-                  <li key={f} className="flex items-center gap-2"><Check className="h-4 w-4 text-primary-glow" />{f}</li>
-                ))}
-              </ul>
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Button asChild size="lg" variant="hero"><Link to="/drgodly">Explore DrGodly <ArrowRight className="ml-1" /></Link></Button>
-                <Button asChild size="lg" variant="outline" className="border-white/30 bg-white/5 text-white hover:bg-white/10"><Link to="/contact">Request Demo</Link></Button>
-              </div>
-            </div>
-            <ol className="space-y-4">
-              {[
-                { t: "AI symptom consultation", d: "Patient chats with our AI doctor for an instant intake." },
-                { t: "AI clinical summary", d: "The model produces a structured handoff for the physician." },
-                { t: "Real doctor consult", d: "Video or voice consult with a licensed clinician." },
-                { t: "Prescription & follow-up", d: "EMR-stored records, e-prescriptions and follow-ups." },
-              ].map((s, i) => (
-                <li key={s.t} className="flex gap-4 rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-5 hover-lift">
-                  <div className="h-10 w-10 shrink-0 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center font-semibold">{i + 1}</div>
-                  <div>
-                    <div className="font-semibold">{s.t}</div>
-                    <div className="text-sm text-white/60">{s.d}</div>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </div>
-      </Section>
-
-      {/* CLOUD LEAK */}
-      <Section className="bg-muted/30">
-        <SectionHeading
-          eyebrow="FinOps"
-          title={<>Where your cloud budget is <span className="text-gradient">leaking</span></>}
-          subtitle="Most enterprises overspend by 30–45% on cloud. Here's where it happens — and what we fix."
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {leaks.map((l) => (
-            <div key={l.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-destructive/10 text-destructive flex items-center justify-center mb-4">
-                <l.icon className="h-5 w-5" />
-              </div>
-              <div className="font-semibold mb-1">{l.title}</div>
-              <p className="text-sm text-muted-foreground">{l.desc}</p>
-            </div>
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Button asChild size="lg" variant="hero"><Link to="/contact">Get Free Cost Audit <ArrowRight className="ml-1" /></Link></Button>
-        </div>
-      </Section>
-
-      {/* MULTI-CLOUD */}
-      <Section>
-        <SectionHeading
-          eyebrow="Multi-cloud"
-          title={<>Cloud-agnostic architecture, <span className="text-gradient">no vendor lock-in</span></>}
-          subtitle="We design and deploy on every major hyperscaler — and across them when it matters."
-        />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {clouds.map((c) => (
-            <div key={c} className="rounded-2xl border border-border bg-card p-8 text-center shadow-card hover-lift">
-              <Cloud className="h-8 w-8 mx-auto mb-3 text-primary" />
-              <div className="font-semibold">{c}</div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* COMPARISON */}
-      <Section className="bg-muted/30">
-        <SectionHeading
-          eyebrow="Why AlpheasAI"
-          title={<>Traditional vendors vs. <span className="text-gradient">AlpheasAI</span></>}
-        />
-        <div className="rounded-2xl border border-border bg-card shadow-card overflow-hidden">
-          <div className="grid grid-cols-3 text-sm font-semibold bg-muted/50 px-6 py-4">
-            <div>Capability</div>
-            <div className="text-center">Traditional vendor</div>
-            <div className="text-center text-primary">AlpheasAI</div>
-          </div>
-          {compare.map((row, i) => (
-            <div key={row.feat} className={`grid grid-cols-3 items-center px-6 py-4 text-sm ${i % 2 ? "bg-muted/20" : ""}`}>
-              <div className="font-medium">{row.feat}</div>
-              <div className="text-center text-muted-foreground">
-                {typeof row.them === "boolean" ? (row.them ? <Check className="inline h-4 w-4 text-success" /> : <X className="inline h-4 w-4 text-muted-foreground/60" />) : row.them}
-              </div>
-              <div className="text-center font-medium">
-                {typeof row.us === "boolean" ? (row.us ? <Check className="inline h-5 w-5 text-primary" /> : <X className="inline h-5 w-5" />) : <span className="text-primary">{row.us}</span>}
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
       {/* FINAL CTA */}
       <Section>
         <div className="rounded-3xl bg-gradient-to-br from-primary to-accent text-primary-foreground p-10 md:p-16 text-center shadow-glow relative overflow-hidden">
           <div className="absolute inset-0 bg-grid opacity-20" aria-hidden />
           <div className="relative space-y-6">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Ready to build scalable AI platforms <br className="hidden md:block" />and reduce cloud costs?
+              Ready to start your <br className="hidden md:block" /> tech journey?
             </h2>
             <p className="text-white/80 max-w-2xl mx-auto">
-              Talk to an engineer in 24 hours. Walk away with a roadmap — whether or not you work with us.
+              Apply for an internship today and learn directly from mentors who've shipped real products.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Book Strategy Call</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20"><Link to="/contact">Get Free Assessment</Link></Button>
+              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Apply for Internship</Link></Button>
+              <Button asChild size="lg" variant="outline" className="border-white/40 bg-white/10 text-white hover:bg-white/20"><Link to="/services">View Programs</Link></Button>
             </div>
           </div>
         </div>

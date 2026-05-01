@@ -7,22 +7,22 @@ export const Footer = () => (
       <div className="space-y-4">
         <Logo />
         <p className="text-sm text-muted-foreground max-w-xs">
-          Enterprise AI, multi-cloud architecture, and FinOps — delivered as production-ready systems.
+          Start Your Tech Journey Here — hands-on tech education and internships in Frontend, Full Stack and AI/ML.
         </p>
       </div>
       <div>
-        <h4 className="font-semibold mb-4 text-sm">Services</h4>
+        <h4 className="font-semibold mb-4 text-sm">Programs</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
-          <li><Link to="/services" className="hover:text-foreground">AI Consulting</Link></li>
-          <li><Link to="/services" className="hover:text-foreground">FinOps & Cost Optimization</Link></li>
-          <li><Link to="/services" className="hover:text-foreground">Cloud Migration</Link></li>
-          <li><Link to="/services" className="hover:text-foreground">Databricks</Link></li>
+          <li><Link to="/services" className="hover:text-foreground">Frontend Development</Link></li>
+          <li><Link to="/services" className="hover:text-foreground">Full Stack Development</Link></li>
+          <li><Link to="/services" className="hover:text-foreground">AI & ML</Link></li>
         </ul>
       </div>
       <div>
-        <h4 className="font-semibold mb-4 text-sm">Products</h4>
+        <h4 className="font-semibold mb-4 text-sm">Resources</h4>
         <ul className="space-y-2 text-sm text-muted-foreground">
-          <li><Link to="/drgodly" className="hover:text-foreground">DrGodly</Link></li>
+          <li><Link to="/blog" className="hover:text-foreground">Blog</Link></li>
+          <li><Link to="/about" className="hover:text-foreground">About</Link></li>
         </ul>
       </div>
       <div>
@@ -35,8 +35,8 @@ export const Footer = () => (
     </div>
     <div className="border-t border-border">
       <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} AlpheasAI. All rights reserved.</p>
-        <p>Databricks Certified · HIPAA Ready · Multi-cloud</p>
+        <p>© {new Date().getFullYear()} alphaesAI. All rights reserved.</p>
+        <p>Start Your Tech Journey Here</p>
       </div>
     </div>
   </footer>

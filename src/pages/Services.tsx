@@ -1,62 +1,48 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Sparkles, LineChart, Cloud, Database, Check } from "lucide-react";
+import { ArrowRight, Code2, Layers, Cpu, Check } from "lucide-react";
 import { Layout } from "@/components/site/Layout";
-import { Section, SectionHeading, Eyebrow } from "@/components/site/Section";
+import { Section, Eyebrow } from "@/components/site/Section";
 import { Button } from "@/components/ui/button";
 
 const services = [
   {
-    id: "ai",
-    icon: Sparkles,
-    title: "AI Development",
-    tagline: "Production-grade GenAI, agents and ML systems.",
+    id: "frontend",
+    icon: Code2,
+    title: "Frontend Development",
+    tagline: "Build beautiful, responsive interfaces users love.",
     bullets: [
-      "LLM applications, RAG and search",
-      "Agentic workflows and tool use",
-      "Custom model fine-tuning",
-      "MLOps, evaluation and observability",
-      "AI safety, guardrails and red-teaming",
+      "HTML, CSS & modern JavaScript",
+      "React, Tailwind CSS and component design",
+      "UI / UX foundations and accessibility",
+      "Responsive layouts for mobile and desktop",
+      "Hands-on portfolio projects",
     ],
   },
   {
-    id: "finops",
-    icon: LineChart,
-    title: "Cloud Cost Optimization & FinOps",
-    tagline: "Cut cloud spend by 30–50% — without slowing engineering down.",
+    id: "fullstack",
+    icon: Layers,
+    title: "Full Stack Development",
+    tagline: "Go end-to-end — client, server and database.",
     highlight: true,
     bullets: [
-      "Full cost audit across AWS, Azure, GCP, OCI",
-      "Rightsizing, savings plans, RIs, spot strategy",
-      "Kubernetes cost control (Karpenter, Kubecost)",
-      "GPU & AI workload optimization",
-      "Per-team / per-feature cost attribution",
-      "Live FinOps dashboards & alerts",
+      "Node.js, Express and REST APIs",
+      "Databases (SQL & NoSQL)",
+      "Authentication, sessions and security",
+      "Deploying real apps to production",
+      "Capstone full-stack project",
     ],
   },
   {
-    id: "migration",
-    icon: Cloud,
-    title: "Cloud Migration & Architecture",
-    tagline: "Multi-cloud architectures with no vendor lock-in.",
+    id: "ai",
+    icon: Cpu,
+    title: "AI & ML",
+    tagline: "Learn the maths, tools and projects behind modern AI.",
     bullets: [
-      "AWS · Azure · GCP · Oracle Cloud",
-      "Landing zones and account/subscription design",
-      "Zero-downtime migration playbooks",
-      "Infrastructure as Code (Terraform, Pulumi)",
-      "Networking, security and compliance",
-    ],
-  },
-  {
-    id: "databricks",
-    icon: Database,
-    title: "Databricks Consulting",
-    tagline: "Lakehouse, ML and performance — by certified engineers.",
-    bullets: [
-      "Delta Lake architecture and pipelines",
-      "ML workflows on Databricks",
-      "Performance tuning & cost optimization",
-      "Unity Catalog & data governance",
-      "Migration from Snowflake / EMR / HDP",
+      "Python for data science",
+      "Classical ML: regression, trees, clustering",
+      "Deep learning & intro to LLMs",
+      "Build & deploy an ML-powered app",
+      "Career guidance for AI roles",
     ],
   },
 ];
@@ -65,12 +51,12 @@ const Services = () => (
   <Layout>
     <section className="bg-hero">
       <div className="container py-20 md:py-28 text-center max-w-3xl mx-auto space-y-6 animate-fade-in-up">
-        <Eyebrow>Services</Eyebrow>
+        <Eyebrow>Our Services</Eyebrow>
         <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight">
-          End-to-end <span className="text-gradient">AI, Cloud & FinOps</span> engineering
+          Hands-on <span className="text-gradient">programs & internships</span>
         </h1>
         <p className="text-lg text-muted-foreground">
-          One team for strategy, build and operations — across every major cloud.
+          Three focused tracks designed to take you from beginner to job-ready, with mentor support every step.
         </p>
         <div className="flex flex-wrap gap-3 justify-center pt-2">
           {services.map((s) => (
@@ -92,13 +78,13 @@ const Services = () => (
               </div>
               {s.highlight && (
                 <span className="text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-primary/10 text-primary">
-                  Flagship practice
+                  Most popular
                 </span>
               )}
             </div>
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{s.title}</h2>
             <p className="text-lg text-muted-foreground">{s.tagline}</p>
-            <Button asChild variant="hero"><Link to="/contact">Talk to an engineer <ArrowRight className="ml-1" /></Link></Button>
+            <Button asChild variant="hero"><Link to="/contact">Apply for Internship <ArrowRight className="ml-1" /></Link></Button>
           </div>
           <div className="rounded-2xl border border-border bg-card p-8 shadow-card">
             <ul className="space-y-3">
@@ -118,9 +104,9 @@ const Services = () => (
 
     <Section>
       <div className="rounded-3xl bg-gradient-to-br from-primary to-accent text-primary-foreground p-10 md:p-16 text-center shadow-glow">
-        <h2 className="text-3xl md:text-4xl font-bold mb-4">Not sure where to start?</h2>
-        <p className="text-white/80 max-w-2xl mx-auto mb-8">Get a free 60-minute assessment with a senior engineer.</p>
-        <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Get Free Assessment</Link></Button>
+        <h2 className="text-3xl md:text-4xl font-bold mb-4">Not sure which track to pick?</h2>
+        <p className="text-white/80 max-w-2xl mx-auto mb-8">Tell us about your background and goals — we'll help you choose.</p>
+        <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link to="/contact">Talk to a mentor</Link></Button>
       </div>
     </Section>
   </Layout>
