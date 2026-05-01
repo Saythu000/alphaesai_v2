@@ -1,3 +1,4 @@
+// AlpheasAI Homepage
 import { Metadata } from "next";
 import Layout from "@/components/site/Layout";
 import Index from "./index-page";
