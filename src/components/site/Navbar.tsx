@@ -30,6 +30,7 @@ export const Navbar = () => {
   useEffect(() => setOpen(false), [pathname]);
 
   const isActive = (href: string) => {
+    if (!pathname) return false;
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
