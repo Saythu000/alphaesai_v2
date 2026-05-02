@@ -54,7 +54,7 @@ const clouds = [
   { name: "AWS", logo: "/logos/aws.svg" },
   { name: "Azure", logo: "/logos/azure.svg" },
   { name: "GCP", logo: "/logos/gcp.svg" },
-  { name: "Oracle Cloud", logo: "/logos/oracle.svg" },
+  { name: "Oracle Cloud Infrastructure (OCI)", logo: "/logos/oracle.svg" },
 ];
 
 const compare: { feat: string; us: boolean | string; them: boolean | string }[] = [
@@ -71,6 +71,51 @@ const Index = () => {
     <>
       {/* HERO */}
       <section className="relative overflow-hidden bg-background text-foreground">
+        {/* Video Background */}
+        <div className="absolute inset-0 -z-10">
+          {/* Desktop video - hidden on mobile for performance */}
+          <div className="hidden md:block absolute inset-0">
+            <video
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover"
+              poster="/videos/hero-fallback.jpg"
+            >
+              <source src="/videos/hero-background.webm" type="video/webm" />
+              <source src="/videos/hero-background.mp4" type="video/mp4" />
+            </video>
+          </div>
+          
+          {/* Mobile fallback image - always visible on mobile */}
+          <img 
+            src="/videos/hero-fallback.jpg" 
+            alt="Abstract data visualization" 
+            className="absolute inset-0 w-full h-full object-cover md:hidden" 
+          />
+          
+          {/* Desktop fallback image - shows if video fails */}
+          <img 
+            src="/videos/hero-fallback.jpg" 
+            alt="Abstract data visualization" 
+            className="absolute inset-0 w-full h-full object-cover hidden md:block" 
+          />
+          
+          {/* Maroon overlay at 40% opacity with subtle animation */}
+          <div className="absolute inset-0 bg-maroon/60 animate-overlay-pulse" aria-hidden />
+        </div>
+        
+        {/* Geometric grid pattern */}
+        <div className="absolute inset-0 opacity-[0.03]" aria-hidden>
+          <div className="absolute inset-0" style={{
+            backgroundImage: `
+              linear-gradient(to right, #800020 1px, transparent 1px),
+              linear-gradient(to bottom, #800020 1px, transparent 1px)
+            `,
+            backgroundSize: '40px 40px'
+          }} />
+        </div>
         {/* Minimal accent area */}
         <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20" aria-hidden />
 
@@ -82,7 +127,7 @@ const Index = () => {
             </div>
 
             <div className="relative">
-              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-foreground">
+              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-maroon">
                 Cut Cloud Costs by{" "}
                 <span className="text-primary">
                   50%
@@ -96,7 +141,7 @@ const Index = () => {
 
             <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
               AI-first systems combined with FinOps-driven cloud architecture.{" "}
-              <span className="text-foreground font-medium">Built for production, not experiments.</span>
+              <span className="text-maroon font-medium">Built for production, not experiments.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
@@ -131,8 +176,8 @@ const Index = () => {
             { v: 50, suf: "%", l: "Max Cost Reduction" },
             { v: 99.9, suf: "%", l: "Uptime", float: true },
           ].map((s) => (
-            <div key={s.l} className="rounded-2xl border border-border bg-card p-6 md:p-8 shadow-card hover-lift">
-              <div className="text-3xl md:text-5xl font-bold text-primary">
+            <div key={s.l} className="rounded-2xl border border-border bg-card p-6 md:p-8 hover-lift">
+              <div className="text-3xl md:text-5xl font-bold text-gold">
                 {s.float ? <Counter to={99.9} suffix="%" decimals={1} /> : <Counter to={s.v} suffix={s.suf} />}
               </div>
               <div className="mt-2 text-sm md:text-base text-muted-foreground">{s.l}</div>
@@ -152,7 +197,7 @@ const Index = () => {
           {services.map((s) => (
             <div
               key={s.title}
-              className={`group rounded-2xl border bg-card p-8 shadow-card hover-lift relative overflow-hidden ${
+              className={`group rounded-2xl border bg-card p-8 hover-lift relative overflow-hidden ${
                 s.highlight ? "border-primary/50 bg-primary/5" : "border-border"
               }`}
             >
@@ -161,7 +206,7 @@ const Index = () => {
                   Most requested
                 </div>
               )}
-              <div className="h-12 w-12 rounded-xl bg-transparent flex items-center justify-center mb-6 border border-primary/30">
+              <div className="h-12 w-12 rounded-xl bg-transparent flex items-center justify-center mb-6 border border-aqua/20">
                 <s.icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">{s.title}</h3>
@@ -183,13 +228,13 @@ const Index = () => {
 
       {/* PRODUCT SPOTLIGHT — DRGODLY */}
       <Section className="relative">
-        <div className="rounded-3xl bg-white border border-border p-8 md:p-16 overflow-hidden relative shadow-md">
+        <div className="rounded-3xl bg-white border border-border p-8 md:p-16 overflow-hidden relative">
           <div className="relative grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground">
                 <Stethoscope className="h-3 w-3" /> Our flagship product
               </div>
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight text-foreground">
+              <h2 className="text-3xl md:text-5xl font-bold leading-tight text-maroon">
                 Meet <span className="text-primary">DrGodly</span> — AI-Powered Telemedicine Platform
               </h2>
               <p className="text-muted-foreground text-lg">
@@ -207,24 +252,59 @@ const Index = () => {
               </div>
             </div>
             <div className="relative">
-              {/* Timeline line */}
-              <div className="absolute left-5 top-8 bottom-8 w-0.5 bg-primary/20 hidden lg:block" aria-hidden />
-              <ol className="space-y-4">
-                {[
-                  { t: "AI symptom consultation", d: "Patient chats with our AI doctor for an instant intake." },
-                  { t: "AI clinical summary", d: "The model produces a structured handoff for the physician." },
-                  { t: "Real doctor consult", d: "Video or voice consult with a licensed clinician." },
-                  { t: "Prescription & follow-up", d: "EMR-stored records, e-prescriptions and follow-ups." },
-                ].map((s, i) => (
-                  <li key={s.t} className="relative flex gap-4 rounded-2xl border border-border bg-secondary p-5 hover-lift">
-                    <div className="h-10 w-10 shrink-0 rounded-full bg-white border-2 border-primary text-primary flex items-center justify-center font-bold text-lg relative z-10">{i + 1}</div>
-                    <div>
-                      <div className="font-semibold text-foreground">{s.t}</div>
-                      <div className="text-sm text-muted-foreground">{s.d}</div>
+              {/* High-Fidelity UI Mockup with Browser Frame */}
+              <div className="relative rounded-2xl border-2 border-gold overflow-hidden shadow-lg" style={{ boxShadow: '0 20px 50px rgba(128, 0, 32, 0.15)' }}>
+                {/* Browser Title Bar */}
+                <div className="bg-maroon/90 px-4 py-2 flex items-center justify-between border-b border-gold/30">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1.5">
+                      <div className="h-3 w-3 rounded-full bg-red-500" />
+                      <div className="h-3 w-3 rounded-full bg-yellow-500" />
+                      <div className="h-3 w-3 rounded-full bg-green-500" />
                     </div>
-                  </li>
-                ))}
-              </ol>
+                    <div className="ml-4 text-xs text-white/80 font-mono">drgodly.alpheas.ai</div>
+                  </div>
+                  <div className="text-xs text-white/60">DrGodly Platform</div>
+                </div>
+                
+                {/* Mockup Content */}
+                <div className="relative bg-black">
+                  <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-primary/20 pointer-events-none" />
+                  <img 
+                    src="/mockups/drgodly-ui-dark.png" 
+                    alt="DrGodly AI Platform Interface - Dark theme with gold and orange accents showing active AI processing"
+                    className="w-full h-auto"
+                  />
+                  {/* Active processing indicator */}
+                  <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/90 text-white text-xs font-medium animate-glow-aqua">
+                    <div className="h-2 w-2 rounded-full bg-aqua" style={{ animation: 'pulse 3s ease-in-out infinite' }} />
+                    Active AI Processing
+                  </div>
+                </div>
+              </div>
+              
+              {/* Technical diagram with aqua accents */}
+              <div className="mt-6 p-4 rounded-xl border border-aqua/20 bg-secondary/30">
+                <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
+                  <span>System Architecture</span>
+                  <div className="flex items-center gap-1">
+                    <div className="h-2 w-2 rounded-full bg-aqua" style={{ animation: 'pulse 3s ease-in-out infinite' }} />
+                    <span>Live Data Flow</span>
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-2">
+                  {[1, 2, 3, 4, 5, 6].map((node) => (
+                    <div key={node} className="relative">
+                      <div className="h-8 rounded border border-aqua/30 bg-secondary/50 flex items-center justify-center">
+                        <div className={`h-1.5 w-1.5 rounded-full ${node <= 3 ? 'bg-aqua' : 'bg-muted-foreground/40'}`} style={node <= 3 ? { animation: 'pulse 4s ease-in-out infinite' } : {}} />
+                      </div>
+                      {node < 6 && (
+                        <div className="absolute top-1/2 -right-2 h-0.5 w-2 bg-aqua/40" />
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -240,7 +320,7 @@ const Index = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {leaks.map((l) => (
             <div key={l.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-transparent text-primary flex items-center justify-center mb-4 border border-primary/30">
+              <div className="h-10 w-10 rounded-lg bg-transparent text-primary flex items-center justify-center mb-4 border border-aqua/20">
                 <l.icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
               <div className="font-semibold mb-1 text-foreground">{l.title}</div>
@@ -262,11 +342,11 @@ const Index = () => {
         />
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {clouds.map((c) => (
-            <div key={c.name} className="rounded-2xl border border-border bg-card p-8 text-center shadow-card hover-lift flex flex-col items-center justify-center">
+            <div key={c.name} className="rounded-2xl border border-border bg-card p-8 text-center hover-lift flex flex-col items-center justify-center group">
               <img 
                 src={c.logo} 
                 alt={c.name} 
-                className="h-10 w-auto mx-auto mb-3 grayscale opacity-70 hover:grayscale-0 hover:opacity-100 transition-all duration-300" 
+                className="h-10 w-auto mx-auto mb-3 filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 ease-in-out" 
               />
               <div className="font-semibold text-foreground">{c.name}</div>
             </div>
@@ -281,7 +361,7 @@ const Index = () => {
           title={<>Traditional vendors vs. <span className="text-primary">AlpheasAI</span></>}
         />
         {/* Desktop table view */}
-        <div className="hidden md:block rounded-2xl border border-border bg-card shadow-card overflow-hidden">
+        <div className="hidden md:block rounded-2xl border border-border bg-card overflow-hidden">
           <div className="grid grid-cols-3 text-sm font-semibold bg-secondary px-6 py-4 text-foreground">
             <div>Capability</div>
             <div className="text-center">Traditional vendor</div>
@@ -302,7 +382,7 @@ const Index = () => {
         {/* Mobile card view */}
         <div className="md:hidden space-y-4">
           {compare.map((row) => (
-            <div key={row.feat} className="rounded-2xl border border-border bg-card p-5 shadow-card">
+            <div key={row.feat} className="rounded-2xl border border-border bg-card p-5">
               <div className="font-medium text-foreground mb-3">{row.feat}</div>
               <div className="grid grid-cols-2 gap-3 text-sm">
                 <div className="flex items-center gap-2">
@@ -321,7 +401,7 @@ const Index = () => {
 
       {/* FINAL CTA */}
       <Section>
-        <div className="rounded-3xl bg-primary text-primary-foreground p-10 md:p-16 text-center shadow-md relative overflow-hidden">
+        <div className="rounded-3xl bg-primary text-primary-foreground p-10 md:p-16 text-center relative overflow-hidden">
           <div className="relative space-y-6">
             <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
               Ready to build scalable AI platforms <br className="hidden md:block" />and reduce cloud costs?

@@ -4,37 +4,38 @@
 
 @layer base {
   :root {
+    /* AlpheasAI Enterprise Color System */
     --background: 0 0% 100%;          /* Pure white */
-    --foreground: 217 32% 17%;        /* Near-black */
+    --foreground: 0 50% 25%;          /* Maroon #800020 */
 
     --card: 0 0% 100%;                /* White cards */
-    --card-foreground: 217 32% 17%;   /* Near-black text */
+    --card-foreground: 0 50% 25%;     /* Maroon text */
 
     --popover: 0 0% 100%;
-    --popover-foreground: 217 32% 17%;
+    --popover-foreground: 0 50% 25%;
 
-    --primary: 10 86% 57%;            /* Databricks Red/Orange #FF5A3C */
+    --primary: 12 100% 56%;            /* Orange #F05A28 */
     --primary-foreground: 0 0% 100%;
-    --primary-glow: 10 86% 57%;
+    --primary-glow: 12 100% 56%;
 
-    --secondary: 0 0% 95%;            /* Light gray */
-    --secondary-foreground: 217 32% 17%;
+    --secondary: 0 50% 25% / 0.1;    /* Light maroon */
+    --secondary-foreground: 0 50% 25%;
 
-    --muted: 0 0% 94%;
-    --muted-foreground: 217 32% 40%;
+    --muted: 0 50% 25% / 0.05;
+    --muted-foreground: 0 50% 25% / 0.7;
 
-    --accent: 10 86% 57%;             /* Red accent */
-    --accent-foreground: 0 0% 100%;
-    --accent-cyan: 10 86% 57%;
+    --accent: 51 100% 71%;            /* Gold #D4AF37 */
+    --accent-foreground: 0 50% 25%;
+    --accent-cyan: 180 100% 100%;     /* Aqua #00FFFF */
 
-    --destructive: 0 84% 60%;
+    --destructive: 0 50% 25%;         /* Maroon */
     --destructive-foreground: 0 0% 100%;
 
-    --success: 152 70% 40%;
+    --success: 51 100% 71%;            /* Gold */
 
-    --border: 0 0% 92%;               /* Light border */
-    --input: 0 0% 93%;
-    --ring: 10 86% 57%;               /* Red ring */
+    --border: 0 50% 25% / 0.1;        /* Light maroon border */
+    --input: 0 50% 25% / 0.1;
+    --ring: 12 100% 56%;               /* Orange ring */
 
     --radius: 1rem;
 
@@ -44,22 +45,23 @@
     --gradient-text: none;
     --gradient-dark: none;
 
-    --shadow-sm: 0 1px 2px hsl(217 32% 17% / 0.04);
-    --shadow-md: 0 1px 3px hsl(217 32% 17% / 0.08);
-    --shadow-lg: 0 4px 6px hsl(217 32% 17% / 0.06);
+    /* Enterprise shadows - more subtle */
+    --shadow-sm: 0 1px 2px hsl(0 50% 25% / 0.04);
+    --shadow-md: 0 1px 3px hsl(0 50% 25% / 0.08);
+    --shadow-lg: 0 4px 6px hsl(0 50% 25% / 0.06);
     --shadow-glow: none;
-    --shadow-card: 0 1px 3px hsl(217 32% 17% / 0.04);
+    --shadow-card: 0 1px 3px hsl(0 50% 25% / 0.04);
 
     --transition-smooth: cubic-bezier(0.4, 0, 0.2, 1);
 
     --sidebar-background: 0 0% 100%;
-    --sidebar-foreground: 217 32% 17%;
-    --sidebar-primary: 10 86% 57%;
+    --sidebar-foreground: 0 50% 25%;
+    --sidebar-primary: 12 100% 56%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 0 0% 94%;
-    --sidebar-accent-foreground: 217 32% 17%;
-    --sidebar-border: 0 0% 92%;
-    --sidebar-ring: 10 86% 57%;
+    --sidebar-accent: 0 50% 25% / 0.1;
+    --sidebar-accent-foreground: 0 50% 25%;
+    --sidebar-border: 0 50% 25% / 0.1;
+    --sidebar-ring: 12 100% 56%;
   }
 
   .dark {
@@ -115,7 +117,7 @@
   }
   .hover-lift:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 20px hsl(217 32% 17% / 0.12);
+    box-shadow: 0 8px 20px hsl(0 50% 25% / 0.12);
   }
   @keyframes pulse-subtle {
     0%, 100% { box-shadow: 0 0 0 0 hsl(var(--primary) / 0.4); }
@@ -123,5 +125,37 @@
   }
   .animate-pulse-subtle {
     animation: pulse-subtle 2s ease-in-out infinite;
+  }
+  
+  /* Palantir-style visual enhancements */
+  @keyframes glow-aqua {
+    0%, 100% { 
+      box-shadow: 0 0 5px hsl(180 100% 100% / 0.6),
+                  0 0 10px hsl(180 100% 100% / 0.4);
+    }
+    50% { 
+      box-shadow: 0 0 10px hsl(180 100% 100% / 0.8),
+                  0 0 20px hsl(180 100% 100% / 0.6);
+    }
+  }
+  .animate-glow-aqua {
+    animation: glow-aqua 3s ease-in-out infinite;
+  }
+  
+  @keyframes float-slow {
+    0%, 100% { transform: translateY(0px) scale(1); }
+    50% { transform: translateY(-10px) scale(1.02); }
+  }
+  .animate-float-slow {
+    animation: float-slow 8s ease-in-out infinite;
+  }
+  
+  /* Video overlay animation */
+  @keyframes overlay-pulse {
+    0%, 100% { opacity: 0.6; }
+    50% { opacity: 0.65; }
+  }
+  .animate-overlay-pulse {
+    animation: overlay-pulse 4s ease-in-out infinite;
   }
 }
