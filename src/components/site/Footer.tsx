@@ -37,6 +37,11 @@ export const Footer = () => (
         <ul className="space-y-2 text-sm text-muted-foreground">
           <li><a href="tel:+918220850596" className="hover:text-foreground">+91 8220850596</a></li>
           <li><a href="mailto:contact@alphaesai.com" className="hover:text-foreground">contact@alphaesai.com</a></li>
+          <li className="pt-2">
+            <p className="text-xs leading-relaxed">
+              No. 472/7 Balaji Arcade, 2nd & 3rd Floor, A.V.S. Compound, 20th L Cross Road, AVS Layout, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095
+            </p>
+          </li>
         </ul>
       </div>
     </div>
