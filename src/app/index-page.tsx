@@ -12,28 +12,28 @@ import { Button } from "@/components/ui/button";
 const services = [
   {
     icon: Sparkles,
-    title: "AI Consulting & Development",
-    desc: "GenAI applications, autonomous agents and ML systems shipped to production — not prototypes.",
-    points: ["LLM applications & RAG", "Agentic workflows", "MLOps & evaluation"],
+    title: "Embedded AI Systems Engineering",
+    desc: "Production-grade GenAI applications, autonomous agents and ML systems deployed directly into client infrastructure. No prototypes, no handoffs.",
+    points: ["LLM applications & RAG systems", "Agentic workflows & autonomous agents", "MLOps infrastructure & evaluation frameworks"],
   },
   {
     icon: LineChart,
-    title: "Cloud Cost Optimization & FinOps",
-    desc: "Cut cloud spend by 30–50% with rightsizing, savings plans, K8s cost control and live dashboards.",
-    points: ["Cost audits", "K8s cost control", "Savings plans & RIs"],
+    title: "FinOps Architecture & Optimization",
+    desc: "Cloud cost reduction through embedded cost-optimization engineering. 30–50% savings via rightsizing, architectural redesign, and real-time visibility.",
+    points: ["Cost optimization architecture", "Real-time cost attribution", "K8s & workload optimization"],
     highlight: true,
   },
   {
     icon: Cloud,
-    title: "Cloud Migration & Architecture",
-    desc: "Multi-cloud architectures across AWS, Azure, GCP and Oracle — fully codified with IaC.",
-    points: ["AWS · Azure · GCP · OCI", "Infrastructure as Code", "Zero vendor lock-in"],
+    title: "Multi-Cloud Infrastructure Engineering",
+    desc: "Cloud-agnostic architecture and migrations across AWS, Azure, GCP, and OCI. Fully Infrastructure-as-Code with zero vendor lock-in.",
+    points: ["Multi-cloud architecture design", "Infrastructure-as-Code (IaC)", "Zero vendor lock-in deployment"],
   },
   {
     icon: Database,
-    title: "Databricks Consulting",
-    desc: "Lakehouse pipelines, ML workflows and performance tuning by certified Databricks engineers.",
-    points: ["Delta Lake pipelines", "ML workflows", "Performance + cost"],
+    title: "Data Platform & Lakehouse Engineering",
+    desc: "Lakehouse architecture, data pipeline engineering and ML platform optimization. Embedded execution from design through production.",
+    points: ["Delta Lake & data pipelines", "ML platform engineering", "Performance optimization & cost efficiency"],
   },
 ];
 
@@ -58,12 +58,12 @@ const clouds = [
 ];
 
 const compare: { feat: string; us: boolean | string; them: boolean | string }[] = [
-  { feat: "Strategy + build + deploy in one team", us: true, them: false },
-  { feat: "Built-in FinOps from day one", us: true, them: false },
-  { feat: "Production-grade AI (not POCs)", us: true, them: "Sometimes" },
-  { feat: "Multi-cloud, no vendor lock-in", us: true, them: false },
-  { feat: "Own AI products (DrGodly)", us: true, them: false },
-  { feat: "Faster delivery cycles", us: "2–6 weeks", them: "3–9 months" },
+  { feat: "Embedded systems engineers on client teams", us: true, them: false },
+  { feat: "Cost optimization architected from day one", us: true, them: false },
+  { feat: "Production-grade AI systems (not POCs)", us: true, them: "Sometimes" },
+  { feat: "Cloud-agnostic, multi-cloud capable", us: true, them: false },
+  { feat: "Accountable for production outcomes", us: true, them: false },
+  { feat: "End-to-end delivery timelines", us: "2–6 weeks", them: "3–9 months" },
 ];
 
 const Index = () => {
@@ -128,28 +128,21 @@ const Index = () => {
 
             <div className="relative">
               <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-maroon">
-                Cut Cloud Costs by{" "}
-                <span className="text-primary">
-                  50%
-                </span>{" "}
-                While Building AI Platforms Like{" "}
-                <span className="text-primary">
-                  DrGodly
-                </span>
+                Embedded AI & Cloud Systems Engineering
               </h1>
             </div>
 
             <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
-              AI-first systems combined with FinOps-driven cloud architecture.{" "}
-              <span className="text-maroon font-medium">Built for production, not experiments.</span>
+              Our engineers embed directly into your teams as operating members. We architect and ship production-grade AI systems, multi-cloud infrastructure, and FinOps optimization in{" "}
+              <span className="text-maroon font-medium">2–6 weeks, not quarters.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
-                <Link href="/contact">Get Free Cloud Cost Audit <ArrowRight className="ml-1" /></Link>
+                <Link href="/contact">Start FDE Engagement <ArrowRight className="ml-1" /></Link>
               </Button>
               <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-border bg-secondary text-foreground hover:bg-muted hover:text-foreground">
-                <Link href="/drgodly">Explore DrGodly Platform</Link>
+                <Link href="/contact">Get Strategic Assessment</Link>
               </Button>
             </div>
 
@@ -189,9 +182,9 @@ const Index = () => {
       {/* SERVICES */}
       <Section id="services" className="bg-[#F9FAFB]">
         <SectionHeading
-          eyebrow="What we do"
-          title={<>Four core practices, <span className="text-primary">one execution team</span></>}
-          subtitle="From AI strategy and engineering to multi-cloud architecture and FinOps — delivered end to end."
+          eyebrow="The FDE Paradigm"
+          title={<>Embedded Systems Engineering<span className="text-primary"> Vectors</span></>}
+          subtitle="Our engineers operate as embedded systems architects across AI, cloud infrastructure, data platforms, and FinOps optimization."
         />
         <div className="grid md:grid-cols-2 gap-6">
           {services.map((s) => (
@@ -357,8 +350,8 @@ const Index = () => {
       {/* COMPARISON */}
       <Section className="bg-secondary/30">
         <SectionHeading
-          eyebrow="Why AlpheasAI"
-          title={<>Traditional vendors vs. <span className="text-primary">AlpheasAI</span></>}
+          eyebrow="FDE Model Advantage"
+          title={<>Forward Deployed vs. <span className="text-primary">Traditional Consulting</span></>}
         />
         {/* Desktop table view */}
         <div className="hidden md:block rounded-2xl border border-border bg-card overflow-hidden">
