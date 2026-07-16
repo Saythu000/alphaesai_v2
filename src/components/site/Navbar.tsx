@@ -30,6 +30,7 @@ export const Navbar = () => {
   useEffect(() => setOpen(false), [pathname]);
 
   const isActive = (href: string) => {
+    if (!pathname) return false;
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
@@ -59,7 +60,7 @@ export const Navbar = () => {
           <Button asChild variant="ghost" size="sm">
             <Link href="/contact">Sign in</Link>
           </Button>
-          <Button asChild size="sm" variant="hero">
+          <Button asChild size="sm" variant="hero" className="animate-pulse-subtle hover:animate-none hover:scale-105 transition-transform">
             <Link href="/contact">Get Free Assessment</Link>
           </Button>
         </div>
