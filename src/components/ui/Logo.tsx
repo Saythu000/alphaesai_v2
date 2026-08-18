@@ -30,17 +30,17 @@ const Logo = ({ size = "md", className = "" }: LogoProps) => {
 
       <svg
         viewBox="0 0 40 40"
-        className={`${sizeClasses[size]} flex-shrink-0`}
+        className={`${sizeClasses[size]} flex-shrink-0 text-maroon dark:text-white`}
         xmlns="http://www.w3.org/2000/svg"
       >
         {/* Left Pillar */}
-        <path d="M12 32 L20 8 L24 18" stroke="#800020" strokeWidth="4" fill="none" strokeLinecap="square" />
+        <path d="M12 32 L20 8" stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="square" />
         
         {/* Right Pillar */}
-        <path d="M28 32 L20 8" stroke="#800020" strokeWidth="4" fill="none" strokeLinecap="square" />
+        <path d="M28 32 L20 8" stroke="currentColor" strokeWidth="4" fill="none" strokeLinecap="square" />
         
         {/* Crossbar */}
-        <path d="M16 24 H24" stroke="#800020" strokeWidth="4" strokeLinecap="square" />
+        <path d="M16 24 H24" stroke="currentColor" strokeWidth="4" strokeLinecap="square" />
 
         {/* The Orange Data Node / Spark */}
         <circle
@@ -54,7 +54,7 @@ const Logo = ({ size = "md", className = "" }: LogoProps) => {
       
       {/* Typography */}
       <div className="flex items-baseline font-bold tracking-tight" style={{ fontFamily: 'Inter, sans-serif' }}>
-        <span style={{ color: '#800020', fontSize: size === 'lg' ? '1.5rem' : '1.25rem' }}>
+        <span className="text-maroon dark:text-white" style={{ fontSize: size === 'lg' ? '1.5rem' : '1.25rem' }}>
           Alphaes
         </span>
         <span style={{ color: '#D4AF37', fontSize: size === 'lg' ? '1.5rem' : '1.25rem', marginLeft: '2px' }}>

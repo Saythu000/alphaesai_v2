@@ -118,38 +118,38 @@ const Index = () => {
 
         <div className="container relative pt-24 pb-28 md:pt-36 md:pb-40">
           <div className="max-w-5xl mx-auto text-center space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3.5 py-1.5 text-xs font-medium text-foreground">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/90">
               <span className="h-1.5 w-1.5 rounded-full bg-primary" />
               AI · Cloud · FinOps · Healthcare
             </div>
 
             <div className="relative">
-              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-maroon">
+              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-white">
                 Embedded AI & Cloud Systems Engineering
               </h1>
             </div>
 
-            <p className="text-lg md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed font-light">
+            <p className="text-lg md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed font-light">
               Our engineers embed directly into your teams as operating members. We architect and ship production-grade AI systems, multi-cloud infrastructure, and FinOps optimization in{" "}
-              <span className="text-maroon font-medium">2–6 weeks, not quarters.</span>
+              <span className="text-amber-400 font-medium">2–6 weeks, not quarters.</span>
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
               <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
                 <Link href="/contact">Start FDE Engagement <ArrowRight className="ml-1" /></Link>
               </Button>
-              <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-border bg-secondary text-foreground hover:bg-muted hover:text-foreground">
+              <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white hover:border-white/30">
                 <Link href="/contact">Get Strategic Assessment</Link>
               </Button>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 pt-8 text-sm text-muted-foreground">
+            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 pt-8 text-sm text-white/70">
               {heroTrust.map((t) => (
                 <div key={t.label} className="inline-flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-secondary border border-border">
+                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/5 border border-white/10">
                     <t.icon className="h-3.5 w-3.5 text-primary" />
                   </span>
-                  <span className="font-medium text-foreground">{t.label}</span>
+                  <span className="font-medium text-white">{t.label}</span>
                 </div>
               ))}
             </div>
@@ -196,7 +196,7 @@ const Index = () => {
                   Most requested
                 </div>
               )}
-              <div className="h-12 w-12 rounded-xl bg-transparent flex items-center justify-center mb-6 border border-aqua/20">
+              <div className="h-12 w-12 rounded-xl bg-transparent flex items-center justify-center mb-6 border border-primary/20">
                 <s.icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
               </div>
               <h3 className="text-xl font-semibold mb-2 text-foreground">{s.title}</h3>
@@ -225,7 +225,7 @@ const Index = () => {
                 <Stethoscope className="h-3 w-3" /> Our flagship product
               </div>
               <h2 className="text-3xl md:text-5xl font-bold leading-tight text-maroon">
-                Meet <span className="text-primary">DrGodly</span> — AI-Powered Telemedicine Platform
+                Meet <span className="text-orange-700">DrGodly</span> — AI-Powered Telemedicine Platform
               </h2>
               <p className="text-muted-foreground text-lg">
                 AI doctor + real doctor in one seamless experience. Built on the same AI and cloud
@@ -266,30 +266,30 @@ const Index = () => {
                     className="w-full h-auto"
                   />
                   {/* Active processing indicator */}
-                  <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/90 text-white text-xs font-medium animate-glow-aqua">
-                    <div className="h-2 w-2 rounded-full bg-aqua" style={{ animation: 'pulse 3s ease-in-out infinite' }} />
+                  <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/90 text-white text-xs font-medium animate-pulse-subtle">
+                    <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                     Active AI Processing
                   </div>
                 </div>
               </div>
               
-              {/* Technical diagram with aqua accents */}
-              <div className="mt-6 p-4 rounded-xl border border-aqua/20 bg-secondary/30">
+              {/* Technical diagram with brand accents */}
+              <div className="mt-6 p-4 rounded-xl border border-primary/20 bg-secondary/30">
                 <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
                   <span>System Architecture</span>
                   <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-full bg-aqua" style={{ animation: 'pulse 3s ease-in-out infinite' }} />
+                    <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                     <span>Live Data Flow</span>
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-2">
                   {[1, 2, 3, 4, 5, 6].map((node) => (
                     <div key={node} className="relative">
-                      <div className="h-8 rounded border border-aqua/30 bg-secondary/50 flex items-center justify-center">
-                        <div className={`h-1.5 w-1.5 rounded-full ${node <= 3 ? 'bg-aqua' : 'bg-muted-foreground/40'}`} style={node <= 3 ? { animation: 'pulse 4s ease-in-out infinite' } : {}} />
+                      <div className="h-8 rounded border border-primary/20 bg-secondary/50 flex items-center justify-center">
+                        <div className={`h-1.5 w-1.5 rounded-full ${node <= 3 ? 'bg-primary' : 'bg-muted-foreground/40'}`} style={node <= 3 ? { animation: 'pulse 4s ease-in-out infinite' } : {}} />
                       </div>
                       {node < 6 && (
-                        <div className="absolute top-1/2 -right-2 h-0.5 w-2 bg-aqua/40" />
+                        <div className="absolute top-1/2 -right-2 h-0.5 w-2 bg-primary/20" />
                       )}
                     </div>
                   ))}
@@ -310,7 +310,7 @@ const Index = () => {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {leaks.map((l) => (
             <div key={l.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-transparent text-primary flex items-center justify-center mb-4 border border-aqua/20">
+              <div className="h-10 w-10 rounded-lg bg-transparent text-primary flex items-center justify-center mb-4 border border-primary/20">
                 <l.icon className="h-5 w-5" strokeWidth={1.5} />
               </div>
               <div className="font-semibold mb-1 text-foreground">{l.title}</div>
@@ -355,7 +355,7 @@ const Index = () => {
             <img 
               src="/logos/multicloud.png" 
               alt="Multi-Cloud Architecture Diagram" 
-              className="max-w-md h-auto rounded-lg border border-aqua/20"
+              className="max-w-md h-auto rounded-lg border border-primary/20"
             />
           </div>
         </div>
