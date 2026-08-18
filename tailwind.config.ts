@@ -16,7 +16,7 @@ export default {
         display: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
-        // AlpheasAI Enterprise Color System
+        // AlphaesAI Enterprise Color System
         maroon: "#800020",
         orange: "#F05A28",
         gold: "#D4AF37",
@@ -27,38 +27,38 @@ export default {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
-        background: "#FFFFFF",
-        foreground: "#800020",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#F05A28",
-          foreground: "#FFFFFF",
-          glow: "rgba(240, 90, 40, 0.15)",
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+          glow: "hsl(var(--primary-glow) / 0.15)",
         },
         secondary: {
-          DEFAULT: "rgba(128, 0, 32, 0.1)",
-          foreground: "#800020",
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
         },
         destructive: {
-          DEFAULT: "#800020",
-          foreground: "#FFFFFF",
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "rgba(128, 0, 32, 0.05)",
-          foreground: "rgba(128, 0, 32, 0.7)",
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
         },
         accent: {
-          DEFAULT: "#D4AF37",
-          foreground: "#800020",
-          cyan: "#00FFFF",
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+          cyan: "hsl(var(--accent-cyan))",
         },
-        success: "#D4AF37",
+        success: "hsl(var(--success))",
         popover: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#800020",
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
         },
         card: {
-          DEFAULT: "#FFFFFF",
-          foreground: "#800020",
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
         },
         sidebar: {
           DEFAULT: "#FFFFFF",

@@ -26,7 +26,7 @@ export default function DrGodly() {
       <section className="relative overflow-hidden bg-background text-foreground">
         <div className="container relative py-20 md:py-32 text-center max-w-3xl mx-auto space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground">
-            <Stethoscope className="h-3 w-3" /> AlpheasAI Product
+            <Stethoscope className="h-3 w-3" /> AlphaesAI Product
           </div>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight text-foreground">
             <span className="text-primary">DrGodly</span> — AI-First Telemedicine Platform

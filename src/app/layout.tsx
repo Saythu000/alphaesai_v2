@@ -9,7 +9,7 @@ const geistSans = Geist({ subsets: ["latin"] });
 const geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "AlpheasAI - AI, Cloud & FinOps Engineering",
+  title: "AlphaesAI - AI, Cloud & FinOps Engineering",
   description:
     "Cut cloud costs by 50% while building AI platforms. AI-first systems combined with FinOps-driven cloud architecture.",
   keywords:

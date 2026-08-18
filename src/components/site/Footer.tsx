@@ -47,7 +47,7 @@ export const Footer = () => (
     </div>
     <div className="border-t border-border">
       <div className="container py-6 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
-        <p>© {new Date().getFullYear()} AlpheasAI. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} AlphaesAI. All rights reserved.</p>
         <p>HIPAA Ready · Multi-cloud</p>
       </div>
     </div>

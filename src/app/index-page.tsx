@@ -70,54 +70,51 @@ const Index = () => {
   return (
     <>
       {/* HERO */}
-      <section className="relative overflow-hidden bg-background text-foreground">
-        {/* Video Background */}
-        <div className="absolute inset-0 -z-10">
-          {/* Desktop video - hidden on mobile for performance */}
-          <div className="hidden md:block absolute inset-0">
-            <video
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="absolute inset-0 w-full h-full object-cover"
-              poster="/videos/hero-fallback.jpg"
-            >
-              <source src="/videos/hero-background.webm" type="video/webm" />
-              <source src="/videos/hero-background.mp4" type="video/mp4" />
-            </video>
-          </div>
-          
-          {/* Mobile fallback image - always visible on mobile */}
-          <img 
-            src="/videos/hero-fallback.jpg" 
-            alt="Abstract data visualization" 
-            className="absolute inset-0 w-full h-full object-cover md:hidden" 
+      <section className="relative overflow-hidden bg-background text-foreground min-h-screen">
+        {/* Clean Layered Hero Background */}
+        <div className="absolute inset-0 z-0 overflow-hidden">
+          {/* Base Background Image */}
+          <img
+            src="/images/multicloud.webp"
+            alt="Multi-cloud infrastructure architecture"
+            className="object-cover absolute inset-0 w-full h-full"
+            style={{
+              width: '100vw',
+              height: '100vh'
+            }}
           />
           
-          {/* Desktop fallback image - shows if video fails */}
-          <img 
-            src="/videos/hero-fallback.jpg" 
-            alt="Abstract data visualization" 
-            className="absolute inset-0 w-full h-full object-cover hidden md:block" 
-          />
+          {/* Desktop Video Overlay */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="absolute inset-0 hidden md:block w-full h-full object-cover opacity-50 mix-blend-screen"
+            poster="/images/multicloud.webp"
+          >
+            <source src="/videos/hero-background.webm" type="video/webm" />
+            <source src="/videos/hero-background.mp4" type="video/mp4" />
+          </video>
           
-          {/* Maroon overlay at 40% opacity with subtle animation */}
-          <div className="absolute inset-0 bg-maroon/60 animate-overlay-pulse" aria-hidden />
+          {/* Dark Gradient Overlay for Text Readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-[#1a0d0d]/70 to-black/50" />
         </div>
         
-        {/* Geometric grid pattern */}
-        <div className="absolute inset-0 opacity-[0.03]" aria-hidden>
-          <div className="absolute inset-0" style={{
-            backgroundImage: `
-              linear-gradient(to right, #800020 1px, transparent 1px),
-              linear-gradient(to bottom, #800020 1px, transparent 1px)
-            `,
-            backgroundSize: '40px 40px'
-          }} />
+        {/* Hero Background Grid Overlay */}
+        <div className="absolute inset-0 z-10 pointer-events-none opacity-[0.03]" aria-hidden>
+          <div 
+            className="absolute inset-0" 
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, #800020 1px, transparent 1px),
+                linear-gradient(to bottom, #800020 1px, transparent 1px)
+              `,
+              backgroundSize: '40px 40px'
+            }} 
+          />
+          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20" />
         </div>
-        {/* Minimal accent area */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20" aria-hidden />
 
         <div className="container relative pt-24 pb-28 md:pt-36 md:pb-40">
           <div className="max-w-5xl mx-auto text-center space-y-8">
@@ -255,7 +252,7 @@ const Index = () => {
                       <div className="h-3 w-3 rounded-full bg-yellow-500" />
                       <div className="h-3 w-3 rounded-full bg-green-500" />
                     </div>
-                    <div className="ml-4 text-xs text-white/80 font-mono">drgodly.alpheas.ai</div>
+                    <div className="ml-4 text-xs text-white/80 font-mono">drgodly.alphaesai.com</div>
                   </div>
                   <div className="text-xs text-white/60">DrGodly Platform</div>
                 </div>
@@ -345,12 +342,29 @@ const Index = () => {
             </div>
           ))}
         </div>
+        
+        {/* Multi-Cloud Visual */}
+        <div className="mt-8 rounded-2xl border border-border bg-card p-8">
+          <div className="text-center mb-4">
+            <h3 className="text-lg font-semibold text-maroon mb-2">Multi-Cloud Infrastructure</h3>
+            <p className="text-sm text-muted-foreground">
+              Seamless integration across all major cloud providers with unified management and monitoring.
+            </p>
+          </div>
+          <div className="flex justify-center">
+            <img 
+              src="/logos/multicloud.png" 
+              alt="Multi-Cloud Architecture Diagram" 
+              className="max-w-md h-auto rounded-lg border border-aqua/20"
+            />
+          </div>
+        </div>
       </Section>
 
       {/* COMPARISON */}
       <Section className="bg-secondary/30">
         <SectionHeading
-          eyebrow="FDE Model Advantage"
+          eyebrow="Why AlphaesAI"
           title={<>Forward Deployed vs. <span className="text-primary">Traditional Consulting</span></>}
         />
         {/* Desktop table view */}
@@ -358,7 +372,7 @@ const Index = () => {
           <div className="grid grid-cols-3 text-sm font-semibold bg-secondary px-6 py-4 text-foreground">
             <div>Capability</div>
             <div className="text-center">Traditional vendor</div>
-            <div className="text-center text-primary">AlpheasAI</div>
+            <div className="text-center text-primary">AlphaesAI</div>
           </div>
           {compare.map((row, i) => (
             <div key={row.feat} className={`grid grid-cols-3 items-center px-6 py-4 text-sm ${i % 2 ? "bg-secondary/30" : ""}`}>
@@ -383,7 +397,7 @@ const Index = () => {
                   {typeof row.them === "boolean" ? (row.them ? <Check className="h-4 w-4 text-primary" /> : <X className="h-4 w-4 text-muted-foreground/60" />) : <span className="text-muted-foreground">{row.them}</span>}
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-primary font-medium">AlpheasAI:</span>
+                  <span className="text-primary font-medium">AlphaesAI:</span>
                   {typeof row.us === "boolean" ? (row.us ? <Check className="h-5 w-5 text-primary" /> : <X className="h-5 w-5" />) : <span className="text-primary font-medium">{row.us}</span>}
                 </div>
               </div>

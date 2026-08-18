@@ -1,17 +1,8 @@
 import Link from "next/link";
-import Image from "next/image";
+import UiLogo from "@/components/ui/Logo";
 
 export const Logo = ({ className = "" }: { className?: string }) => (
-  <Link href="/" className={`flex items-center gap-2 group ${className}`}>
-    <Image 
-      src="/logo.png" 
-      alt="AlpheasAI Logo" 
-      width={36} 
-      height={36} 
-      className="h-9 w-9 object-contain"
-    />
-    <span className="font-bold text-lg tracking-tight text-foreground">
-      Alpheas<span className="text-primary">AI</span>
-    </span>
+  <Link href="/" className={`inline-block hover:opacity-90 transition-opacity ${className}`}>
+    <UiLogo size="md" />
   </Link>
 );

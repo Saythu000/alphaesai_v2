@@ -17,7 +17,7 @@ export default function About() {
     <>
       <section className="bg-background">
         <div className="container py-20 md:py-28 max-w-3xl mx-auto text-center space-y-6">
-          <Eyebrow>About AlpheasAI</Eyebrow>
+          <Eyebrow>About AlphaesAI</Eyebrow>
           <h1 className="text-4xl md:text-6xl font-bold tracking-tight leading-tight text-foreground">
             A product company that <span className="text-primary">consults</span> — not the other way around.
           </h1>
@@ -37,7 +37,7 @@ export default function About() {
               on infrastructure no one understands, and on cloud bills no one can explain.
             </p>
             <p className="text-muted-foreground text-lg">
-              AlpheasAI was founded by engineers who have shipped large-scale AI and cloud systems at
+              AlphaesAI was founded by engineers who have shipped large-scale AI and cloud systems at
               healthcare, fintech and SaaS companies. We bring that same rigor — and our own
               production playbooks — to every engagement.
             </p>
