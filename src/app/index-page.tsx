@@ -75,8 +75,8 @@ const Index = () => {
         <div className="absolute inset-0 z-0 overflow-hidden">
           {/* Base Background Image */}
           <img
-            src="/images/multicloud.webp"
-            alt="Multi-cloud infrastructure architecture"
+            src="/images/hero_embedded_ai_cloud.jpg"
+            alt="Embedded AI and multi-cloud infrastructure architecture"
             className="object-cover absolute inset-0 w-full h-full"
             style={{
               width: '100vw',
@@ -91,7 +91,7 @@ const Index = () => {
             loop
             playsInline
             className="absolute inset-0 hidden md:block w-full h-full object-cover opacity-50 mix-blend-screen"
-            poster="/images/multicloud.webp"
+            poster="/images/hero_embedded_ai_cloud.jpg"
           >
             <source src="/videos/hero-background.webm" type="video/webm" />
             <source src="/videos/hero-background.mp4" type="video/mp4" />
