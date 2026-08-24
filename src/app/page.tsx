@@ -1,6 +1,5 @@
 // AlphaesAI Homepage
 import { Metadata } from "next";
-import Layout from "@/components/site/Layout";
 import Index from "./index-page";
 
 export const metadata: Metadata = {
@@ -10,9 +9,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return (
-    <Layout>
-      <Index />
-    </Layout>
-  );
+  return <Index />;
 }

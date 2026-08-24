@@ -1,429 +1,387 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import {
-  ArrowRight, Sparkles, Cloud, LineChart, Database, Stethoscope,
-  ShieldCheck, Cpu, Zap, Check, X, AlertTriangle, BarChart3, Server, TrendingDown, Activity,
-} from "lucide-react";
-import { Section, SectionHeading, Eyebrow } from "@/components/site/Section";
-import { Counter } from "@/components/site/Counter";
-import { Button } from "@/components/ui/button";
+import { Globe, MapPin, Activity, Quote, Zap, ArrowRight } from "lucide-react";
+import { motion } from "framer-motion";
 
-const services = [
-  {
-    icon: Sparkles,
-    title: "Embedded AI Systems Engineering",
-    desc: "Production-grade GenAI applications, autonomous agents and ML systems deployed directly into client infrastructure. No prototypes, no handoffs.",
-    points: ["LLM applications & RAG systems", "Agentic workflows & autonomous agents", "MLOps infrastructure & evaluation frameworks"],
-  },
-  {
-    icon: LineChart,
-    title: "FinOps Architecture & Optimization",
-    desc: "Cloud cost reduction through embedded cost-optimization engineering. 30–50% savings via rightsizing, architectural redesign, and real-time visibility.",
-    points: ["Cost optimization architecture", "Real-time cost attribution", "K8s & workload optimization"],
-    highlight: true,
-  },
-  {
-    icon: Cloud,
-    title: "Multi-Cloud Infrastructure Engineering",
-    desc: "Cloud-agnostic architecture and migrations across AWS, Azure, GCP, and OCI. Fully Infrastructure-as-Code with zero vendor lock-in.",
-    points: ["Multi-cloud architecture design", "Infrastructure-as-Code (IaC)", "Zero vendor lock-in deployment"],
-  },
-  {
-    icon: Database,
-    title: "Data Platform & Lakehouse Engineering",
-    desc: "Lakehouse architecture, data pipeline engineering and ML platform optimization. Embedded execution from design through production.",
-    points: ["Delta Lake & data pipelines", "ML platform engineering", "Performance optimization & cost efficiency"],
-  },
-];
+import { SplineScene } from "@/components/ui/spline";
+import { Spotlight } from "@/components/ui/spotlight";
+import { Card } from "@/components/ui/card";
+import { useCMS } from "@/context/CMSContext";
 
-const heroTrust = [
-  { icon: Sparkles, label: "50+ AI Systems Deployed" },
-  { icon: TrendingDown, label: "30–50% Cloud Cost Savings" },
-  { icon: ShieldCheck, label: "HIPAA-ready Architecture" },
-];
-
-const leaks = [
-  { icon: Server, title: "Idle resources", desc: "Forgotten dev clusters, unused volumes and zombie load balancers." },
-  { icon: BarChart3, title: "Overprovisioned systems", desc: "Workloads sized for peak that runs 2 hours per week." },
-  { icon: Cpu, title: "Inefficient AI workloads", desc: "GPU instances running 24/7 for batch jobs that need 2 hours." },
-  { icon: AlertTriangle, title: "No cost visibility", desc: "No per-team, per-feature or per-customer attribution." },
-];
-
-const clouds = [
-  { name: "AWS", logo: "/logos/aws.svg" },
-  { name: "Azure", logo: "/logos/azure.svg" },
-  { name: "GCP", logo: "/logos/gcp.svg" },
-  { name: "Oracle Cloud Infrastructure (OCI)", logo: "/logos/oracle.svg" },
-];
-
-const compare: { feat: string; us: boolean | string; them: boolean | string }[] = [
-  { feat: "Embedded systems engineers on client teams", us: true, them: false },
-  { feat: "Cost optimization architected from day one", us: true, them: false },
-  { feat: "Production-grade AI systems (not POCs)", us: true, them: "Sometimes" },
-  { feat: "Cloud-agnostic, multi-cloud capable", us: true, them: false },
-  { feat: "Accountable for production outcomes", us: true, them: false },
-  { feat: "End-to-end delivery timelines", us: "2–6 weeks", them: "3–9 months" },
-];
+const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
 
 const Index = () => {
+  const { data } = useCMS();
+  const { hero, showcase3d, metrics, architecture, testimonial, ctaBanner } = data.homepage;
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
+  const handleCanvasMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    setMousePos({ x, y });
+  };
+
+  const handleCanvasMouseLeave = () => {
+    setMousePos({ x: 0, y: 0 });
+  };
+
   return (
-    <>
-      {/* HERO */}
-      <section className="relative overflow-hidden bg-background text-foreground min-h-screen">
-        {/* Clean Layered Hero Background */}
-        <div className="absolute inset-0 z-0 overflow-hidden">
-          {/* Base Background Image */}
-          <img
-            src="/images/hero_embedded_ai_cloud.jpg"
-            alt="Embedded AI and multi-cloud infrastructure architecture"
-            className="object-cover absolute inset-0 w-full h-full"
-            style={{
-              width: '100vw',
-              height: '100vh'
-            }}
-          />
-          
-          {/* Desktop Video Overlay */}
-          <video
-            autoPlay
-            muted
-            loop
-            playsInline
-            className="absolute inset-0 hidden md:block w-full h-full object-cover opacity-50 mix-blend-screen"
-            poster="/images/hero_embedded_ai_cloud.jpg"
+    <div className="w-full bg-[#fff8f5] text-[#241913]">
+      {/* ========================================================================= */}
+      {/* 1. HERO SECTION                                                           */}
+      {/* ========================================================================= */}
+      <section
+        className="pt-24 pb-16 px-4 md:pt-32 md:pb-24 relative overflow-hidden text-center border-b border-[#ddc1b0]"
+        style={{
+          backgroundImage:
+            "url('https://lh3.googleusercontent.com/aida/AEtjO1XhW_z72NRbeXELTVtHq3yyOo32IWDZQzNfMP9koiHVQT5vxqYUwelCn4ohe_pmt_CwsdqrKs7q4qMfYNsJb-CzspPL4miVTGp1F03Z_dQTAx0V1YhSeWWf-9sOUO7Tc2HaOnpxXRZlBC59traLmwS-gBpLQJtic3at6dydx_99IM83FUpQ2BM4ottrElRFiIe57nQzx8FWR1aaF2Jum88uQqqtCsAy1t64VdAsWgzf2SZd2oJ0smJd3Fc')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#fff8f5] opacity-90 pointer-events-none" />
+
+        <div className="max-w-[1280px] mx-auto relative z-10 flex flex-col items-center text-center">
+          {/* Announcement Chip */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: SMOOTH_EASE, delay: 0.1 }}
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#ddc1b0] bg-[#fff8f5]/60 backdrop-blur-md mb-8 shadow-sm"
           >
-            <source src="/videos/hero-background.webm" type="video/webm" />
-            <source src="/videos/hero-background.mp4" type="video/mp4" />
-          </video>
-          
-          {/* Dark Gradient Overlay for Text Readability */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-[#1a0d0d]/70 to-black/50" />
+            <span className="font-['JetBrains_Mono'] text-xs font-medium text-[#241913]">
+              {hero.announcementText}
+            </span>
+            <Link
+              href={hero.announcementLinkHref}
+              className="font-['JetBrains_Mono'] text-xs text-[#0051C3] underline font-bold ml-1"
+            >
+              {hero.announcementLinkText}
+            </Link>
+          </motion.div>
+
+          {/* Main Display Headline */}
+          <motion.h1
+            initial={{ opacity: 0, y: 35 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: SMOOTH_EASE, delay: 0.25 }}
+            className="font-['Hanken_Grotesk'] text-4xl sm:text-6xl lg:text-[64px] leading-[1.1] font-extrabold text-[#241913] mb-6 max-w-4xl tracking-tight"
+          >
+            {hero.headline}
+          </motion.h1>
+
+          {/* Body Subtitle */}
+          <motion.p
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: SMOOTH_EASE, delay: 0.4 }}
+            className="font-['Inter'] text-lg sm:text-xl text-[#564336] mb-10 max-w-2xl mx-auto leading-relaxed"
+          >
+            {hero.subtitle}
+          </motion.p>
+
+          {/* CTA Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: SMOOTH_EASE, delay: 0.55 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center"
+          >
+            <Link
+              href={hero.primaryCtaHref}
+              className="bg-[#964900] text-white font-[#JetBrains_Mono] font-bold py-4 px-8 rounded-full text-base shadow-lg hover:bg-[#723600] transition-all hover:scale-105"
+            >
+              {hero.primaryCtaText}
+            </Link>
+            <Link
+              href={hero.secondaryCtaHref}
+              className="bg-[#ffffff] border border-[#ddc1b0] text-[#241913] font-['JetBrains_Mono'] font-bold py-4 px-8 rounded-full text-base hover:bg-[#fff1ea] transition-colors shadow-sm"
+            >
+              {hero.secondaryCtaText}
+            </Link>
+          </motion.div>
         </div>
-        
-        {/* Hero Background Grid Overlay */}
-        <div className="absolute inset-0 z-10 pointer-events-none opacity-[0.03]" aria-hidden>
-          <div 
-            className="absolute inset-0" 
-            style={{
-              backgroundImage: `
-                linear-gradient(to right, #800020 1px, transparent 1px),
-                linear-gradient(to bottom, #800020 1px, transparent 1px)
-              `,
-              backgroundSize: '40px 40px'
-            }} 
-          />
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary/20 via-transparent to-primary/20" />
-        </div>
+      </section>
 
-        <div className="container relative pt-24 pb-28 md:pt-36 md:pb-40">
-          <div className="max-w-5xl mx-auto text-center space-y-8">
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3.5 py-1.5 text-xs font-medium text-white/90">
-              <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-              AI · Cloud · FinOps · Healthcare
-            </div>
-
-            <div className="relative">
-              <h1 className="text-5xl md:text-7xl lg:text-[5.25rem] font-bold tracking-tight leading-[1.02] text-white">
-                Embedded AI & Cloud Systems Engineering
-              </h1>
-            </div>
-
-            <p className="text-lg md:text-2xl text-white/80 max-w-3xl mx-auto leading-relaxed font-light">
-              Our engineers embed directly into your teams as operating members. We architect and ship production-grade AI systems, multi-cloud infrastructure, and FinOps optimization in{" "}
-              <span className="text-amber-400 font-medium">2–6 weeks, not quarters.</span>
+      {/* ========================================================================= */}
+      {/* 2. INTERACTIVE 3D ROBOT & AI INFRASTRUCTURE SHOWCASE                      */}
+      {/* ========================================================================= */}
+      <section className="py-20 px-4 border-b border-[#ddc1b0] bg-[#fff8f5]">
+        <div className="max-w-[1280px] mx-auto flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: SMOOTH_EASE }}
+            className="text-center mb-10"
+          >
+            <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#964900] uppercase tracking-widest bg-[#fff1ea] border border-[#ddc1b0] px-3.5 py-1.5 rounded-full inline-block mb-3">
+              {showcase3d.badgeText}
+            </span>
+            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#241913] mb-3">
+              {showcase3d.title}
+            </h2>
+            <p className="font-['Inter'] text-base sm:text-lg text-[#564336] max-w-2xl mx-auto">
+              {showcase3d.subtitle}
             </p>
+          </motion.div>
 
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-4">
-              <Button asChild size="lg" variant="hero" className="h-12 px-7 text-base">
-                <Link href="/contact">Start FDE Engagement <ArrowRight className="ml-1" /></Link>
-              </Button>
-              <Button asChild size="lg" variant="outline" className="h-12 px-7 text-base border-white/20 bg-white/5 text-white hover:bg-white/10 hover:text-white hover:border-white/30">
-                <Link href="/contact">Get Strategic Assessment</Link>
-              </Button>
-            </div>
+          {/* Interactive 3D Robot Card Container */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.97 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.8, ease: SMOOTH_EASE, delay: 0.15 }}
+            className="w-full max-w-[1100px] mb-12"
+          >
+            <Card className="w-full h-[550px] bg-[#1c130d] border-2 border-[#ddc1b0] relative overflow-hidden rounded-2xl shadow-2xl">
+              <Spotlight
+                className="-top-40 left-0 md:left-60 md:-top-20"
+                size={300}
+              />
 
-            <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 pt-8 text-sm text-white/70">
-              {heroTrust.map((t) => (
-                <div key={t.label} className="inline-flex items-center gap-2">
-                  <span className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-white/5 border border-white/10">
-                    <t.icon className="h-3.5 w-3.5 text-primary" />
-                  </span>
-                  <span className="font-medium text-white">{t.label}</span>
+              <div className="flex flex-col md:flex-row h-full relative z-10">
+                {/* Left content */}
+                <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center text-left">
+                  <h3 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-white leading-tight mb-4">
+                    {showcase3d.cardHeadline}
+                  </h3>
+
+                  <p className="font-['Inter'] text-sm sm:text-base text-white/80 leading-relaxed mb-6">
+                    {showcase3d.cardDescription}
+                  </p>
+
+                  <div className="flex flex-wrap gap-4 pt-2">
+                    <Link
+                      href={showcase3d.cardBtn1Href}
+                      className="bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-xs px-5 py-3 rounded-full hover:bg-[#b05600] transition-colors shadow-sm inline-flex items-center gap-2"
+                    >
+                      <span>{showcase3d.cardBtn1Text}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                    <Link
+                      href={showcase3d.cardBtn2Href}
+                      className="border border-white/20 bg-white/5 text-white font-['JetBrains_Mono'] font-bold text-xs px-5 py-3 rounded-full hover:bg-white/10 transition-colors"
+                    >
+                      {showcase3d.cardBtn2Text}
+                    </Link>
+                  </div>
                 </div>
-              ))}
-            </div>
+
+                {/* Right 3D Spline Canvas */}
+                <div
+                  onMouseMove={handleCanvasMouseMove}
+                  onMouseLeave={handleCanvasMouseLeave}
+                  className="w-full md:w-1/2 h-[300px] md:h-full relative overflow-hidden [perspective:1000px]"
+                >
+                  <SplineScene
+                    scene="https://prod.spline.design/kZDDjO5HuC9GJUM2/scene.splinecode"
+                    className="w-full h-full"
+                  />
+
+                  {/* Robot Chest Brand - Animated Parallax Typography */}
+                  <motion.div
+                    className="absolute top-[48%] left-[50%] pointer-events-none z-20"
+                    animate={{
+                      x: `calc(-50% + ${mousePos.x * 22}px)`,
+                      y: `calc(-50% + ${mousePos.y * 18}px)`,
+                      rotateY: mousePos.x * 12,
+                      rotateX: -mousePos.y * 12,
+                    }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 120,
+                      damping: 16,
+                      mass: 0.4,
+                    }}
+                  >
+                    <motion.div
+                      animate={{
+                        y: [-2.5, 2.5, -2.5],
+                        scale: [1, 1.02, 1],
+                      }}
+                      transition={{
+                        duration: 3.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="relative flex items-center justify-center"
+                    >
+                      <span className="font-['Hanken_Grotesk'] text-[13px] sm:text-[15px] font-black tracking-[0.38em] uppercase select-none text-white/95 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
+                        {showcase3d.chestBrandText}
+                      </span>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              </div>
+            </Card>
+          </motion.div>
+
+          {/* Performance Metrics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+            {metrics.map((metric, idx) => (
+              <motion.div
+                key={metric.id || idx}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{ duration: 0.6, ease: SMOOTH_EASE, delay: idx * 0.15 }}
+                className="flex flex-col gap-2 p-6 border border-[#ddc1b0] rounded-xl bg-[#F3F3F3] hover:border-[#964900] transition-colors"
+              >
+                <h4 className="font-['Hanken_Grotesk'] text-2xl font-bold text-[#964900]">
+                  {metric.value}
+                </h4>
+                <p className="font-['Inter'] text-sm text-[#564336]">
+                  {metric.description}
+                </p>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* STATS */}
-      <Section className="!py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-          {[
-            { v: 50, suf: "+", l: "AI Systems Deployed" },
-            { v: 100, suf: "+", l: "Cloud Workloads Optimized" },
-            { v: 50, suf: "%", l: "Max Cost Reduction" },
-            { v: 99.9, suf: "%", l: "Uptime", float: true },
-          ].map((s) => (
-            <div key={s.l} className="rounded-2xl border border-border bg-card p-6 md:p-8 hover-lift">
-              <div className="text-3xl md:text-5xl font-bold text-gold">
-                {s.float ? <Counter to={99.9} suffix="%" decimals={1} /> : <Counter to={s.v} suffix={s.suf} />}
-              </div>
-              <div className="mt-2 text-sm md:text-base text-muted-foreground">{s.l}</div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* SERVICES */}
-      <Section id="services" className="bg-[#F9FAFB]">
-        <SectionHeading
-          eyebrow="The FDE Paradigm"
-          title={<>Embedded Systems Engineering<span className="text-primary"> Vectors</span></>}
-          subtitle="Our engineers operate as embedded systems architects across AI, cloud infrastructure, data platforms, and FinOps optimization."
-        />
-        <div className="grid md:grid-cols-2 gap-6">
-          {services.map((s) => (
-            <div
-              key={s.title}
-              className={`group rounded-2xl border bg-card p-8 hover-lift relative overflow-hidden ${
-                s.highlight ? "border-primary/50 bg-primary/5" : "border-border"
-              }`}
-            >
-              {s.highlight && (
-                <div className="absolute top-4 right-4 text-[10px] font-semibold uppercase tracking-wider px-2 py-1 rounded-full bg-primary/15 text-primary">
-                  Most requested
-                </div>
-              )}
-              <div className="h-12 w-12 rounded-xl bg-transparent flex items-center justify-center mb-6 border border-primary/20">
-                <s.icon className="h-6 w-6 text-primary" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-foreground">{s.title}</h3>
-              <p className="text-muted-foreground mb-5">{s.desc}</p>
-              <ul className="space-y-2 mb-6">
-                {s.points.map((p) => (
-                  <li key={p} className="flex items-center gap-2 text-sm text-foreground">
-                    <Check className="h-4 w-4 text-primary" /> {p}
-                  </li>
-                ))}
-              </ul>
-              <Button asChild variant="ghost" className="px-0 hover:bg-transparent text-primary">
-                <Link href="/services">Learn more <ArrowRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" /></Link>
-              </Button>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* PRODUCT SPOTLIGHT — DRGODLY */}
-      <Section className="relative">
-        <div className="rounded-3xl bg-white border border-border p-8 md:p-16 overflow-hidden relative">
-          <div className="relative grid lg:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <div className="inline-flex items-center gap-2 rounded-full border border-border bg-secondary px-3 py-1 text-xs font-medium text-foreground">
-                <Stethoscope className="h-3 w-3" /> Our flagship product
-              </div>
-              <h2 className="text-3xl md:text-5xl font-bold leading-tight text-maroon">
-                Meet <span className="text-orange-700">DrGodly</span> — AI-Powered Telemedicine Platform
-              </h2>
-              <p className="text-muted-foreground text-lg">
-                AI doctor + real doctor in one seamless experience. Built on the same AI and cloud
-                infrastructure we deploy for our enterprise clients.
-              </p>
-              <ul className="grid sm:grid-cols-2 gap-3 text-sm">
-                {["AI symptom checker","Doctor consultations","EMR records","AI clinical summaries","Secure platform","HIPAA-ready"].map((f) => (
-                  <li key={f} className="flex items-center gap-2 text-foreground"><Check className="h-4 w-4 text-primary" />{f}</li>
-                ))}
-              </ul>
-              <div className="flex flex-col sm:flex-row gap-3 pt-2">
-                <Button asChild size="lg" variant="hero"><Link href="/drgodly">Explore DrGodly <ArrowRight className="ml-1" /></Link></Button>
-                <Button asChild size="lg" variant="outline" className="border-border bg-secondary text-foreground hover:bg-muted"><Link href="/contact">Request Demo</Link></Button>
-              </div>
-            </div>
-            <div className="relative">
-              {/* High-Fidelity UI Mockup with Browser Frame */}
-              <div className="relative rounded-2xl border-2 border-gold overflow-hidden shadow-lg" style={{ boxShadow: '0 20px 50px rgba(128, 0, 32, 0.15)' }}>
-                {/* Browser Title Bar */}
-                <div className="bg-maroon/90 px-4 py-2 flex items-center justify-between border-b border-gold/30">
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                      <div className="h-3 w-3 rounded-full bg-red-500" />
-                      <div className="h-3 w-3 rounded-full bg-yellow-500" />
-                      <div className="h-3 w-3 rounded-full bg-green-500" />
-                    </div>
-                    <div className="ml-4 text-xs text-white/80 font-mono">drgodly.alphaesai.com</div>
-                  </div>
-                  <div className="text-xs text-white/60">DrGodly Platform</div>
-                </div>
-                
-                {/* Mockup Content */}
-                <div className="relative bg-black">
-                  <div className="absolute inset-0 bg-gradient-to-br from-gold/20 to-primary/20 pointer-events-none" />
-                  <img 
-                    src="/mockups/drgodly-ui-dark.png" 
-                    alt="DrGodly AI Platform Interface - Dark theme with gold and orange accents showing active AI processing"
-                    className="w-full h-auto"
-                  />
-                  {/* Active processing indicator */}
-                  <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/90 text-white text-xs font-medium animate-pulse-subtle">
-                    <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    Active AI Processing
-                  </div>
-                </div>
-              </div>
-              
-              {/* Technical diagram with brand accents */}
-              <div className="mt-6 p-4 rounded-xl border border-primary/20 bg-secondary/30">
-                <div className="flex items-center justify-between text-xs text-muted-foreground mb-3">
-                  <span>System Architecture</span>
-                  <div className="flex items-center gap-1">
-                    <div className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                    <span>Live Data Flow</span>
-                  </div>
-                </div>
-                <div className="grid grid-cols-3 gap-2">
-                  {[1, 2, 3, 4, 5, 6].map((node) => (
-                    <div key={node} className="relative">
-                      <div className="h-8 rounded border border-primary/20 bg-secondary/50 flex items-center justify-center">
-                        <div className={`h-1.5 w-1.5 rounded-full ${node <= 3 ? 'bg-primary' : 'bg-muted-foreground/40'}`} style={node <= 3 ? { animation: 'pulse 4s ease-in-out infinite' } : {}} />
-                      </div>
-                      {node < 6 && (
-                        <div className="absolute top-1/2 -right-2 h-0.5 w-2 bg-primary/20" />
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </Section>
-
-      {/* CLOUD LEAK */}
-      <Section className="bg-secondary/30">
-        <SectionHeading
-          eyebrow="FinOps"
-          title={<>Where your cloud budget is <span className="text-primary">leaking</span></>}
-          subtitle="Most enterprises overspend by 30–45% on cloud. Here's where it happens — and what we fix."
-        />
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-          {leaks.map((l) => (
-            <div key={l.title} className="rounded-2xl border border-border bg-card p-6 shadow-card hover-lift">
-              <div className="h-10 w-10 rounded-lg bg-transparent text-primary flex items-center justify-center mb-4 border border-primary/20">
-                <l.icon className="h-5 w-5" strokeWidth={1.5} />
-              </div>
-              <div className="font-semibold mb-1 text-foreground">{l.title}</div>
-              <p className="text-sm text-muted-foreground">{l.desc}</p>
-            </div>
-          ))}
-        </div>
-        <div className="text-center mt-12">
-          <Button asChild size="lg" variant="hero"><Link href="/contact">Get Free Cost Audit <ArrowRight className="ml-1" /></Link></Button>
-        </div>
-      </Section>
-
-      {/* MULTI-CLOUD */}
-      <Section>
-        <SectionHeading
-          eyebrow="Multi-cloud"
-          title={<>Cloud-agnostic architecture, <span className="text-primary">no vendor lock-in</span></>}
-          subtitle="We design and deploy on every major hyperscaler — and across them when it matters."
-        />
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {clouds.map((c) => (
-            <div key={c.name} className="rounded-2xl border border-border bg-card p-8 text-center hover-lift flex flex-col items-center justify-center group">
-              <img 
-                src={c.logo} 
-                alt={c.name} 
-                className="h-10 w-auto mx-auto mb-3 filter grayscale opacity-60 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-500 ease-in-out" 
-              />
-              <div className="font-semibold text-foreground">{c.name}</div>
-            </div>
-          ))}
-        </div>
-        
-        {/* Multi-Cloud Visual */}
-        <div className="mt-8 rounded-2xl border border-border bg-card p-8">
-          <div className="text-center mb-4">
-            <h3 className="text-lg font-semibold text-maroon mb-2">Multi-Cloud Infrastructure</h3>
-            <p className="text-sm text-muted-foreground">
-              Seamless integration across all major cloud providers with unified management and monitoring.
-            </p>
-          </div>
-          <div className="flex justify-center">
-            <img 
-              src="/logos/multicloud.png" 
-              alt="Multi-Cloud Architecture Diagram" 
-              className="max-w-md h-auto rounded-lg border border-primary/20"
-            />
-          </div>
-        </div>
-      </Section>
-
-      {/* COMPARISON */}
-      <Section className="bg-secondary/30">
-        <SectionHeading
-          eyebrow="Why AlphaesAI"
-          title={<>Forward Deployed vs. <span className="text-primary">Traditional Consulting</span></>}
-        />
-        {/* Desktop table view */}
-        <div className="hidden md:block rounded-2xl border border-border bg-card overflow-hidden">
-          <div className="grid grid-cols-3 text-sm font-semibold bg-secondary px-6 py-4 text-foreground">
-            <div>Capability</div>
-            <div className="text-center">Traditional vendor</div>
-            <div className="text-center text-primary">AlphaesAI</div>
-          </div>
-          {compare.map((row, i) => (
-            <div key={row.feat} className={`grid grid-cols-3 items-center px-6 py-4 text-sm ${i % 2 ? "bg-secondary/30" : ""}`}>
-              <div className="font-medium text-foreground">{row.feat}</div>
-              <div className="text-center text-muted-foreground">
-                {typeof row.them === "boolean" ? (row.them ? <Check className="inline h-4 w-4 text-primary" /> : <X className="inline h-4 w-4 text-muted-foreground/60" />) : row.them}
-              </div>
-              <div className="text-center font-medium text-foreground">
-                {typeof row.us === "boolean" ? (row.us ? <Check className="inline h-5 w-5 text-primary" /> : <X className="inline h-5 w-5" />) : <span className="text-primary">{row.us}</span>}
-              </div>
-            </div>
-          ))}
-        </div>
-        {/* Mobile card view */}
-        <div className="md:hidden space-y-4">
-          {compare.map((row) => (
-            <div key={row.feat} className="rounded-2xl border border-border bg-card p-5">
-              <div className="font-medium text-foreground mb-3">{row.feat}</div>
-              <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="flex items-center gap-2">
-                  <span className="text-muted-foreground">Traditional:</span>
-                  {typeof row.them === "boolean" ? (row.them ? <Check className="h-4 w-4 text-primary" /> : <X className="h-4 w-4 text-muted-foreground/60" />) : <span className="text-muted-foreground">{row.them}</span>}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-primary font-medium">AlphaesAI:</span>
-                  {typeof row.us === "boolean" ? (row.us ? <Check className="h-5 w-5 text-primary" /> : <X className="h-5 w-5" />) : <span className="text-primary font-medium">{row.us}</span>}
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </Section>
-
-      {/* FINAL CTA */}
-      <Section>
-        <div className="rounded-3xl bg-primary text-primary-foreground p-10 md:p-16 text-center relative overflow-hidden">
-          <div className="relative space-y-6">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-tight">
-              Ready to build scalable AI platforms <br className="hidden md:block" />and reduce cloud costs?
+      {/* ========================================================================= */}
+      {/* 3. BENTO GRID FEATURES SECTION                                            */}
+      {/* ========================================================================= */}
+      <section className="py-20 px-4 bg-[#F3F3F3] border-b border-[#ddc1b0]">
+        <div className="max-w-[1280px] mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: SMOOTH_EASE }}
+            className="text-center mb-12"
+          >
+            <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#964900] uppercase tracking-widest">
+              {architecture.badgeText}
+            </span>
+            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mt-2">
+              {architecture.title}
             </h2>
-            <p className="text-primary-foreground/85 max-w-2xl mx-auto">
-              Talk to an engineer in 24 hours. Walk away with a roadmap — whether or not you work with us.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-3 justify-center pt-2">
-              <Button asChild size="lg" className="bg-white text-primary hover:bg-white/90"><Link href="/contact">Book Strategy Call</Link></Button>
-              <Button asChild size="lg" variant="outline" className="border-primary-foreground/40 bg-primary-foreground/10 text-primary-foreground hover:bg-primary-foreground/20"><Link href="/contact">Get Free Assessment</Link></Button>
-            </div>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {architecture.cards.map((item, idx) => {
+              const icons = [Globe, MapPin, Activity];
+              const Icon = icons[idx % icons.length];
+              return (
+                <motion.div
+                  key={item.id || idx}
+                  initial={{ opacity: 0, y: 35 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true, margin: "-60px" }}
+                  transition={{
+                    duration: 0.6,
+                    delay: idx * 0.15,
+                    ease: SMOOTH_EASE,
+                  }}
+                  className="p-8 border border-[#ddc1b0] rounded-xl bg-[#ffffff] flex flex-col gap-4 shadow-sm hover:shadow-md transition-shadow"
+                >
+                  <Icon className="w-8 h-8 text-[#964900]" />
+                  <h3 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#241913]">
+                    {item.title}
+                  </h3>
+                  <p className="font-['Inter'] text-sm text-[#564336] leading-relaxed">
+                    {item.desc}
+                  </p>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
-      </Section>
-    </>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 4. SOCIAL PROOF & TESTIMONIAL SECTION                                     */}
+      {/* ========================================================================= */}
+      <section className="py-24 px-4 text-center border-b border-[#ddc1b0]">
+        <div className="max-w-3xl mx-auto flex flex-col items-center">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            transition={{ duration: 0.7, ease: SMOOTH_EASE }}
+          >
+            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-5xl font-extrabold text-[#241913] mb-4">
+              {testimonial.heading}
+            </h2>
+            <p className="font-['Inter'] text-base text-[#564336] mb-12">
+              {testimonial.subhead}
+            </p>
+          </motion.div>
+
+          {/* Testimonial Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 40, scale: 0.98 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-80px" }}
+            transition={{ duration: 0.75, ease: SMOOTH_EASE, delay: 0.1 }}
+            className="bg-[#F3F3F3] p-8 rounded-2xl border border-[#ddc1b0] text-left relative mb-12 shadow-sm w-full"
+          >
+            <Quote className="w-10 h-10 text-[#ddc1b0] absolute top-6 left-6 opacity-40" />
+            <blockquote className="font-['Inter'] text-lg text-[#241913] mb-6 pl-10 relative z-10 leading-relaxed italic">
+              {testimonial.quote}
+            </blockquote>
+            <div className="flex items-center gap-4 pl-10">
+              <img
+                className="w-12 h-12 rounded-full border-2 border-[#ddc1b0] object-cover"
+                alt={`Headshot of ${testimonial.authorName}`}
+                src={testimonial.authorAvatar}
+              />
+              <div>
+                <div className="font-['Hanken_Grotesk'] text-sm font-bold text-[#241913]">
+                  {testimonial.authorName}
+                </div>
+                <div className="font-['Inter'] text-xs text-[#564336]">
+                  {testimonial.authorTitle}
+                </div>
+              </div>
+            </div>
+          </motion.div>
+
+          <p className="font-['JetBrains_Mono'] text-xs text-[#564336] uppercase tracking-wider font-semibold">
+            {testimonial.footerCaption}
+          </p>
+        </div>
+      </section>
+
+      {/* ========================================================================= */}
+      {/* 5. FINAL HIGH-IMPACT CTA BANNER                                           */}
+      {/* ========================================================================= */}
+      <motion.section
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-100px" }}
+        transition={{ duration: 0.8, ease: SMOOTH_EASE }}
+        className="py-24 px-4 bg-[#964900] text-white text-center"
+      >
+        <div className="max-w-2xl mx-auto flex flex-col items-center">
+          <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-5xl font-extrabold text-white mb-6">
+            {ctaBanner.title}
+          </h2>
+          <p className="font-['Inter'] text-base sm:text-lg text-[#ffdcc6] mb-10 leading-relaxed font-light">
+            {ctaBanner.description}
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link
+              href={ctaBanner.primaryCtaHref}
+              className="bg-[#ffffff] text-[#964900] font-['JetBrains_Mono'] font-bold py-3.5 px-8 rounded-full text-sm hover:bg-[#fff8f5] transition-colors shadow-lg hover:scale-105 transition-transform"
+            >
+              {ctaBanner.primaryCtaText}
+            </Link>
+            <Link
+              href={ctaBanner.secondaryCtaHref}
+              className="bg-transparent border-2 border-white text-white font-['JetBrains_Mono'] font-bold py-3.5 px-8 rounded-full text-sm hover:bg-white/10 transition-colors"
+            >
+              {ctaBanner.secondaryCtaText}
+            </Link>
+          </div>
+        </div>
+      </motion.section>
+    </div>
   );
 };
 

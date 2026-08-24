@@ -16,12 +16,22 @@ export default {
         display: ["var(--font-sans)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
+        // Databricks Exact Color System
+        "db-navy": "#1B3139",
+        "db-dark": "#0B171C",
+        "db-orange": "#FF3621",
+        "db-coral": "#FF5F46",
+        "db-cyan": "#00A3E0",
+        "db-cream": "#F9F7F4",
+        "db-gray": "#DCE0E2",
+        "db-crimson": "#BD2B26",
+
         // AlphaesAI Enterprise Color System
         maroon: "#800020",
-        orange: "#F05A28",
+        orange: "#FF3621",
         gold: "#D4AF37",
         white: "#FFFFFF",
-        aqua: "#00FFFF",
+        aqua: "#00A3E0",
         
         // Existing semantic colors mapped to new system
         border: "hsl(var(--border))",

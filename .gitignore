@@ -44,3 +44,7 @@ dist
 dist-ssr
 *.rdb
 .vercel
+*.mp4
+*.png
+*.tsbuildinfo
+stitch_alphaesai_data_platform_homepage/

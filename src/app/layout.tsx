@@ -1,19 +1,35 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Hanken_Grotesk, Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
 import { Navbar } from "@/components/site/Navbar";
 import { Footer } from "@/components/site/Footer";
+import { SiteFrame } from "@/components/site/SiteFrame";
 
-const geistSans = Geist({ subsets: ["latin"] });
-const geistMono = Geist_Mono({ subsets: ["latin"] });
+const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["600", "700", "800"],
+  variable: "--font-hanken-grotesk",
+});
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--font-jetbrains-mono",
+});
 
 export const metadata: Metadata = {
-  title: "AlphaesAI - AI, Cloud & FinOps Engineering",
+  title: "AlphaesAI - Enterprise Data & AI Engineering",
   description:
-    "Cut cloud costs by 50% while building AI platforms. AI-first systems combined with FinOps-driven cloud architecture.",
+    "AlphaesAI helps organizations move from AI pilots to production systems with precision engineering and scalable architectures.",
   keywords:
-    "AI, Cloud, FinOps, Cloud Architecture, Cost Optimization, DrGodly",
+    "AI, Cloud, FinOps, Databricks, Snowflake, Forward Deployed Engineering, OneAI Assist, DrGodly",
 };
 
 export const viewport: Viewport = {
@@ -21,8 +37,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
-  themeColor: "#FF5A3C",
+  themeColor: "#FF3621",
 };
+
+import { CMSProvider } from "@/context/CMSContext";
 
 export default function RootLayout({
   children,
@@ -30,16 +48,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="bg-background scroll-smooth">
+    <html lang="en" className="bg-[#fff8f5] scroll-smooth">
       <body
-        className={`${geistSans.className} ${geistMono.className} text-foreground`}
+        className={`${hankenGrotesk.variable} ${inter.variable} ${jetbrainsMono.variable} font-sans text-[#241913] bg-[#fff8f5] antialiased min-h-screen flex flex-col`}
       >
-        <div className="min-h-screen flex flex-col">
+        <CMSProvider>
+          <SiteFrame />
           <Navbar />
-          <main className="flex-1 pt-16">{children}</main>
+          <main className="flex-1">{children}</main>
           <Footer />
-        </div>
-        <Toaster />
+          <Toaster />
+        </CMSProvider>
       </body>
     </html>
   );
