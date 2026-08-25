@@ -7,6 +7,7 @@ import {
   loadCMSData,
   saveCMSData,
   resetCMSData,
+  sanitizeCMSData,
 } from "@/lib/cms-store";
 
 interface CMSContextType {
@@ -37,8 +38,9 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       .then((res) => res.json())
       .then((resData) => {
         if (resData.success && resData.data) {
-          setData(resData.data);
-          saveCMSData(resData.data);
+          const sanitized = sanitizeCMSData(resData.data);
+          setData(sanitized);
+          saveCMSData(sanitized);
         }
       })
       .catch((err) => {

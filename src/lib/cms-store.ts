@@ -477,69 +477,102 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
 
 const STORAGE_KEY = "alphaesai_cms_data_v2";
 
+export function sanitizeCMSData(raw: unknown): FullCMSData {
+  if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const parsed = raw as any;
+  try {
+    return {
+      header: { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) },
+      footer: {
+        ...DEFAULT_CMS_DATA.footer,
+        ...(parsed.footer || {}),
+        columns: Array.isArray(parsed.footer?.columns)
+          ? parsed.footer.columns
+          : DEFAULT_CMS_DATA.footer.columns,
+      },
+      homepage: {
+        ...DEFAULT_CMS_DATA.homepage,
+        ...(parsed.homepage || {}),
+        hero: { ...DEFAULT_CMS_DATA.homepage.hero, ...(parsed.homepage?.hero || {}) },
+        showcase3d: { ...DEFAULT_CMS_DATA.homepage.showcase3d, ...(parsed.homepage?.showcase3d || {}) },
+        metrics: Array.isArray(parsed.homepage?.metrics)
+          ? parsed.homepage.metrics
+          : DEFAULT_CMS_DATA.homepage.metrics,
+        architecture: {
+          ...DEFAULT_CMS_DATA.homepage.architecture,
+          ...(parsed.homepage?.architecture || {}),
+          cards: Array.isArray(parsed.homepage?.architecture?.cards)
+            ? parsed.homepage.architecture.cards
+            : DEFAULT_CMS_DATA.homepage.architecture.cards,
+        },
+        testimonial: { ...DEFAULT_CMS_DATA.homepage.testimonial, ...(parsed.homepage?.testimonial || {}) },
+        ctaBanner: { ...DEFAULT_CMS_DATA.homepage.ctaBanner, ...(parsed.homepage?.ctaBanner || {}) },
+      },
+      pages: {
+        services: {
+          ...DEFAULT_CMS_DATA.pages.services,
+          ...(parsed.pages?.services || {}),
+          cards: Array.isArray(parsed.pages?.services?.cards)
+            ? parsed.pages.services.cards
+            : DEFAULT_CMS_DATA.pages.services.cards,
+        },
+        drgodly: {
+          ...DEFAULT_CMS_DATA.pages.drgodly,
+          ...(parsed.pages?.drgodly || {}),
+          features: Array.isArray(parsed.pages?.drgodly?.features)
+            ? parsed.pages.drgodly.features
+            : DEFAULT_CMS_DATA.pages.drgodly.features,
+          metrics: Array.isArray(parsed.pages?.drgodly?.metrics)
+            ? parsed.pages.drgodly.metrics
+            : DEFAULT_CMS_DATA.pages.drgodly.metrics,
+        },
+        oneaiAssist: {
+          ...DEFAULT_CMS_DATA.pages.oneaiAssist,
+          ...(parsed.pages?.oneaiAssist || {}),
+          features: Array.isArray(parsed.pages?.oneaiAssist?.features)
+            ? parsed.pages.oneaiAssist.features
+            : DEFAULT_CMS_DATA.pages.oneaiAssist.features,
+        },
+        about: {
+          ...DEFAULT_CMS_DATA.pages.about,
+          ...(parsed.pages?.about || {}),
+          stats: Array.isArray(parsed.pages?.about?.stats)
+            ? parsed.pages.about.stats
+            : DEFAULT_CMS_DATA.pages.about.stats,
+          values: Array.isArray(parsed.pages?.about?.values)
+            ? parsed.pages.about.values
+            : DEFAULT_CMS_DATA.pages.about.values,
+        },
+        partners: {
+          ...DEFAULT_CMS_DATA.pages.partners,
+          ...(parsed.pages?.partners || {}),
+          partners: Array.isArray(parsed.pages?.partners?.partners)
+            ? parsed.pages.partners.partners
+            : DEFAULT_CMS_DATA.pages.partners.partners,
+        },
+        contact: {
+          ...DEFAULT_CMS_DATA.pages.contact,
+          ...(parsed.pages?.contact || {}),
+          faqs: Array.isArray(parsed.pages?.contact?.faqs)
+            ? parsed.pages.contact.faqs
+            : DEFAULT_CMS_DATA.pages.contact.faqs,
+        },
+      },
+    };
+  } catch (err) {
+    console.error("Failed to sanitize CMS data:", err);
+    return DEFAULT_CMS_DATA;
+  }
+}
+
 export function loadCMSData(): FullCMSData {
   if (typeof window === "undefined") return DEFAULT_CMS_DATA;
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       const parsed = JSON.parse(saved);
-      // Safe deep merge to prevent any missing nested object errors
-      return {
-        header: { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) },
-        footer: {
-          ...DEFAULT_CMS_DATA.footer,
-          ...(parsed.footer || {}),
-          columns: parsed.footer?.columns || DEFAULT_CMS_DATA.footer.columns,
-        },
-        homepage: {
-          ...DEFAULT_CMS_DATA.homepage,
-          ...(parsed.homepage || {}),
-          hero: { ...DEFAULT_CMS_DATA.homepage.hero, ...(parsed.homepage?.hero || {}) },
-          showcase3d: { ...DEFAULT_CMS_DATA.homepage.showcase3d, ...(parsed.homepage?.showcase3d || {}) },
-          metrics: parsed.homepage?.metrics || DEFAULT_CMS_DATA.homepage.metrics,
-          architecture: {
-            ...DEFAULT_CMS_DATA.homepage.architecture,
-            ...(parsed.homepage?.architecture || {}),
-            cards: parsed.homepage?.architecture?.cards || DEFAULT_CMS_DATA.homepage.architecture.cards,
-          },
-          testimonial: { ...DEFAULT_CMS_DATA.homepage.testimonial, ...(parsed.homepage?.testimonial || {}) },
-          ctaBanner: { ...DEFAULT_CMS_DATA.homepage.ctaBanner, ...(parsed.homepage?.ctaBanner || {}) },
-        },
-        pages: {
-          services: {
-            ...DEFAULT_CMS_DATA.pages.services,
-            ...(parsed.pages?.services || {}),
-            cards: parsed.pages?.services?.cards || DEFAULT_CMS_DATA.pages.services.cards,
-          },
-          drgodly: {
-            ...DEFAULT_CMS_DATA.pages.drgodly,
-            ...(parsed.pages?.drgodly || {}),
-            features: parsed.pages?.drgodly?.features || DEFAULT_CMS_DATA.pages.drgodly.features,
-            metrics: parsed.pages?.drgodly?.metrics || DEFAULT_CMS_DATA.pages.drgodly.metrics,
-          },
-          oneaiAssist: {
-            ...DEFAULT_CMS_DATA.pages.oneaiAssist,
-            ...(parsed.pages?.oneaiAssist || {}),
-            features: parsed.pages?.oneaiAssist?.features || DEFAULT_CMS_DATA.pages.oneaiAssist.features,
-          },
-          about: {
-            ...DEFAULT_CMS_DATA.pages.about,
-            ...(parsed.pages?.about || {}),
-            stats: parsed.pages?.about?.stats || DEFAULT_CMS_DATA.pages.about.stats,
-            values: parsed.pages?.about?.values || DEFAULT_CMS_DATA.pages.about.values,
-          },
-          partners: {
-            ...DEFAULT_CMS_DATA.pages.partners,
-            ...(parsed.pages?.partners || {}),
-            partners: parsed.pages?.partners?.partners || DEFAULT_CMS_DATA.pages.partners.partners,
-          },
-          contact: {
-            ...DEFAULT_CMS_DATA.pages.contact,
-            ...(parsed.pages?.contact || {}),
-            faqs: parsed.pages?.contact?.faqs || DEFAULT_CMS_DATA.pages.contact.faqs,
-          },
-        },
-      };
+      return sanitizeCMSData(parsed);
     }
   } catch (err) {
     console.error("Failed to load CMS data from localStorage:", err);

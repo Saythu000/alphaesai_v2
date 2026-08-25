@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { getCMSDataFromDB, saveCMSDataToDB } from "@/lib/db";
-import { DEFAULT_CMS_DATA } from "@/lib/cms-store";
+import { DEFAULT_CMS_DATA, sanitizeCMSData } from "@/lib/cms-store";
 
 export async function GET() {
   try {
     const dbData = await getCMSDataFromDB();
     if (dbData) {
-      return NextResponse.json({ success: true, data: dbData });
+      const sanitized = sanitizeCMSData(dbData);
+      return NextResponse.json({ success: true, data: sanitized });
     }
     return NextResponse.json({ success: true, data: DEFAULT_CMS_DATA });
   } catch (error) {
