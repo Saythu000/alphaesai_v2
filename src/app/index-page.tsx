@@ -36,11 +36,13 @@ const Index = () => {
       <section
         className="pt-24 pb-16 px-4 md:pt-32 md:pb-24 relative overflow-hidden text-center border-b border-[#ddc1b0]"
         style={{
-          background:
-            "radial-gradient(circle at 50% 30%, rgba(255, 120, 40, 0.5), transparent 75%), linear-gradient(180deg, #ff6b1a 0%, #f88530 40%, #ffa566 75%, #fff8f5 100%)",
+          backgroundImage:
+            "url('https://lh3.googleusercontent.com/aida/AEtjO1XhW_z72NRbeXELTVtHq3yyOo32IWDZQzNfMP9koiHVQT5vxqYUwelCn4ohe_pmt_CwsdqrKs7q4qMfYNsJb-CzspPL4miVTGp1F03Z_dQTAx0V1YhSeWWf-9sOUO7Tc2HaOnpxXRZlBC59traLmwS-gBpLQJtic3at6dydx_99IM83FUpQ2BM4ottrElRFiIe57nQzx8FWR1aaF2Jum88uQqqtCsAy1t64VdAsWgzf2SZd2oJ0smJd3Fc')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(#8c3a00_1.5px,transparent_1.5px)] [background-size:24px_24px] opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#fff8f5] opacity-90 pointer-events-none" />
 
         <div className="max-w-[1280px] mx-auto relative z-10 flex flex-col items-center text-center">
           {/* Announcement Chip */}
