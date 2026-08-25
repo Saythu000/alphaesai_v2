@@ -265,11 +265,11 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
   },
   homepage: {
     hero: {
-      announcementText: "Connect 2026 · The Agentic Conference of the Year · Oct 19-21",
-      announcementLinkText: "Register",
-      announcementLinkHref: "/contact",
-      headline: "Everything we learned from powering 20% of the Internet—yours by default",
-      subtitle: "One platform for your apps, agents, and workforce. Build, secure, and scale without managing infrastructure.",
+      announcementText: "AI Transformation, Engineered for Production",
+      announcementLinkText: "Learn More →",
+      announcementLinkHref: "/services/forward-deployed-ai-engineering",
+      headline: "Build AI Capabilities That Create Measurable Business Value",
+      subtitle: "AlphaesAI helps organizations move from AI pilots to production systems — combining AI engineering, cloud infrastructure, and automation into technology that actually runs your business.",
       primaryCtaText: "Start building for free",
       primaryCtaHref: "/contact",
       secondaryCtaText: "Explore Services & Products",
