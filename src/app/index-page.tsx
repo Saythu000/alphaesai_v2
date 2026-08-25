@@ -33,15 +33,35 @@ const Index = () => {
       {/* ========================================================================= */}
       {/* 1. HERO SECTION                                                           */}
       {/* ========================================================================= */}
-      <section
-        className="pt-24 pb-16 px-4 md:pt-32 md:pb-24 relative overflow-hidden text-center border-b border-[#ddc1b0]"
-        style={{
-          backgroundImage: "url('/hero-bg.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[#fff8f5] opacity-90 pointer-events-none" />
+      <section className="pt-24 pb-16 px-4 md:pt-32 md:pb-24 relative overflow-hidden text-center border-b border-[#ddc1b0] bg-[#fff8f5]">
+        {/* Pure CSS Radial Glow Highlights */}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: `
+              radial-gradient(circle at 50% 20%, rgba(255, 126, 73, 0.16) 0%, rgba(255, 248, 245, 0) 65%),
+              radial-gradient(circle at 85% 35%, rgba(240, 90, 40, 0.12) 0%, rgba(255, 248, 245, 0) 55%),
+              radial-gradient(circle at 15% 45%, rgba(255, 160, 110, 0.14) 0%, rgba(255, 248, 245, 0) 55%)
+            `,
+          }}
+        />
+
+        {/* Pure Inline SVG Geometric Grid & Mesh Texture */}
+        <div className="absolute inset-0 pointer-events-none opacity-45">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="hero-grid-pattern" width="48" height="48" patternUnits="userSpaceOnUse">
+                <path d="M 48 0 L 0 0 0 48" fill="none" stroke="#e0c2b0" strokeWidth="0.8" />
+                <path d="M 0 0 L 48 48" fill="none" stroke="#e0c2b0" strokeWidth="0.4" strokeDasharray="2 4" />
+                <circle cx="48" cy="0" r="1.5" fill="#d9b6a1" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#hero-grid-pattern)" />
+          </svg>
+        </div>
+
+        {/* Soft Bottom Transition Gradient */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#fff8f5] opacity-90 pointer-events-none" />
 
         <div className="max-w-[1280px] mx-auto relative z-10 flex flex-col items-center text-center">
           {/* Announcement Chip */}
