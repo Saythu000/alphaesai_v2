@@ -47,5 +47,6 @@ dist-ssr
 *.mp4
 *.png
 !public/*.png
+!src/app/*.png
 *.tsbuildinfo
 stitch_alphaesai_data_platform_homepage/
