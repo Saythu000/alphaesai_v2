@@ -36,8 +36,7 @@ const Index = () => {
       <section
         className="pt-24 pb-16 px-4 md:pt-32 md:pb-24 relative overflow-hidden text-center border-b border-[#ddc1b0]"
         style={{
-          backgroundImage:
-            "url('https://lh3.googleusercontent.com/aida/AEtjO1XhW_z72NRbeXELTVtHq3yyOo32IWDZQzNfMP9koiHVQT5vxqYUwelCn4ohe_pmt_CwsdqrKs7q4qMfYNsJb-CzspPL4miVTGp1F03Z_dQTAx0V1YhSeWWf-9sOUO7Tc2HaOnpxXRZlBC59traLmwS-gBpLQJtic3at6dydx_99IM83FUpQ2BM4ottrElRFiIe57nQzx8FWR1aaF2Jum88uQqqtCsAy1t64VdAsWgzf2SZd2oJ0smJd3Fc')",
+          backgroundImage: "url('/hero-bg.png')",
           backgroundSize: "cover",
           backgroundPosition: "center",
         }}
