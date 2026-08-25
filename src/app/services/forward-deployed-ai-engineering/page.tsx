@@ -282,7 +282,7 @@ export default function ForwardDeployedEngineeringPage() {
         {/* INTERACTIVE ENGINE SHOWCASE (HUB & SPOKE DIAGRAM) */}
         <section id="interactive-engine" className="py-12 px-6 sm:px-12 max-w-6xl mx-auto">
           <FdeInteractiveHub
-            badgeText="CapeStart / AlphaesAI FDE Engine"
+            badgeText="AlphaesAI FDE Engine"
             title="Working alongside you, every step"
           />
         </section>

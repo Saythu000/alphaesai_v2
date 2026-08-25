@@ -25,11 +25,44 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://alphaesai-v2.vercel.app"),
   title: "AlphaesAI - Enterprise Data & AI Engineering",
   description:
     "AlphaesAI helps organizations move from AI pilots to production systems with precision engineering and scalable architectures.",
   keywords:
     "AI, Cloud, FinOps, Databricks, Snowflake, Forward Deployed Engineering, OneAI Assist, DrGodly",
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/icon.png", type: "image/png", sizes: "32x32" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
+  openGraph: {
+    title: "AlphaesAI - Enterprise Data & AI Engineering",
+    description:
+      "AlphaesAI helps organizations move from AI pilots to production systems with precision engineering and scalable architectures.",
+    url: "https://alphaesai-v2.vercel.app",
+    siteName: "AlphaesAI",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "AlphaesAI Enterprise Data & AI Engineering",
+      },
+    ],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "AlphaesAI - Enterprise Data & AI Engineering",
+    description:
+      "AlphaesAI helps organizations move from AI pilots to production systems with precision engineering and scalable architectures.",
+    images: ["/og-image.png"],
+  },
 };
 
 export const viewport: Viewport = {

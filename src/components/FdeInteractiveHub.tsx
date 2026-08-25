@@ -119,7 +119,7 @@ interface Props {
 
 export const FdeInteractiveHub: React.FC<Props> = ({
   title = "Working alongside you, every step",
-  badgeText = "CapeStart / AlphaesAI FDE Engine",
+  badgeText = "AlphaesAI FDE Engine",
   steps = DEFAULT_STEPS,
   nodes = DEFAULT_NODES,
 }) => {
