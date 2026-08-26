@@ -466,21 +466,28 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v2";
+const STORAGE_KEY = "alphaesai_cms_data_v3";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const parsed = raw as any;
   try {
+    const rawCols = Array.isArray(parsed.footer?.columns)
+      ? parsed.footer.columns
+      : DEFAULT_CMS_DATA.footer.columns;
+
+    const filteredCols = rawCols.filter(
+      (col: { id?: string; title?: string }) =>
+        col?.id !== "col-legal" && col?.title?.toLowerCase() !== "legal"
+    );
+
     return {
       header: { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) },
       footer: {
         ...DEFAULT_CMS_DATA.footer,
         ...(parsed.footer || {}),
-        columns: Array.isArray(parsed.footer?.columns)
-          ? parsed.footer.columns
-          : DEFAULT_CMS_DATA.footer.columns,
+        columns: filteredCols.length > 0 ? filteredCols : DEFAULT_CMS_DATA.footer.columns,
       },
       homepage: {
         ...DEFAULT_CMS_DATA.homepage,
