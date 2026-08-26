@@ -37,6 +37,7 @@ import {
   User,
   Key,
   Loader2,
+  LogOut,
 } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
 import { FullCMSData, DEFAULT_CMS_DATA, FAQItemCMS } from "@/lib/cms-store";
@@ -183,6 +184,13 @@ export default function AdminPage() {
     } finally {
       setIsUpdatingCreds(false);
     }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setAdminUser(null);
+    setPasswordInput("");
+    toast.info("Logged out of Admin Control Panel.");
   };
 
   const handleSave = () => {
@@ -375,6 +383,15 @@ export default function AdminPage() {
               <Save className="w-4 h-4" />
               <span>Save Live Changes</span>
             </button>
+
+            <button
+              onClick={handleLogout}
+              className="border border-red-500/40 bg-red-950/40 text-red-300 font-['JetBrains_Mono'] text-xs font-bold px-4 py-2 rounded-full hover:bg-red-900/60 transition-colors shadow-md flex items-center gap-1.5"
+              title="Log out of Admin session"
+            >
+              <LogOut className="w-3.5 h-3.5 text-red-400" />
+              <span>Log Out ({adminUser?.username || "admin"})</span>
+            </button>
           </div>
         </div>
       </header>
@@ -516,6 +533,13 @@ export default function AdminPage() {
               >
                 <Download className="w-3.5 h-3.5 text-[#964900]" />
                 <span>Export JSON Backup</span>
+              </button>
+              <button
+                onClick={handleLogout}
+                className="w-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold py-2 rounded-xl hover:bg-red-100 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
+              >
+                <LogOut className="w-3.5 h-3.5 text-red-600" />
+                <span>Log Out Session</span>
               </button>
             </div>
           </div>
