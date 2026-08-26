@@ -96,7 +96,7 @@ export default function AdminPage() {
   const { data, updateData, resetData } = useCMS();
   const [formData, setFormData] = useState<FullCMSData>(data);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [usernameInput, setUsernameInput] = useState("admin");
+  const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
@@ -280,7 +280,7 @@ export default function AdminPage() {
                 type="text"
                 value={usernameInput}
                 onChange={(e) => setUsernameInput(e.target.value)}
-                placeholder="Admin Username (default: admin)"
+                placeholder="Enter your username or email"
                 className="w-full bg-[#1c130d] border border-[#ddc1b0]/30 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#964900] font-['JetBrains_Mono']"
                 required
               />
@@ -296,7 +296,7 @@ export default function AdminPage() {
                   type={showPassword ? "text" : "password"}
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="Enter password (default: alphaes2026)"
+                  placeholder="Enter your password"
                   className="w-full bg-[#1c130d] border border-[#ddc1b0]/30 rounded-lg pl-4 pr-11 py-3 text-sm text-white focus:outline-none focus:border-[#964900] font-['JetBrains_Mono']"
                   required
                 />
@@ -330,14 +330,6 @@ export default function AdminPage() {
               </button>
             </div>
           </form>
-
-          <div className="p-3 rounded-xl bg-[#1c130d]/80 border border-[#ddc1b0]/20 text-[11px] text-[#f3ded3]/70 space-y-1 font-mono">
-            <p className="font-bold text-[#ffb786] flex items-center gap-1">
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Initial Login Credentials:
-            </p>
-            <p className="text-white/80">Username: <span className="text-[#ffb786]">admin</span></p>
-            <p className="text-white/80">Password: <span className="text-[#ffb786]">alphaes2026</span></p>
-          </div>
         </div>
       </div>
     );
