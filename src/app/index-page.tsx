@@ -141,11 +141,6 @@ const Index = () => {
             transition={{ duration: 0.7, ease: SMOOTH_EASE }}
             className="text-center mb-10"
           >
-            {showcase3d?.badgeText ? (
-              <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#964900] uppercase tracking-widest bg-[#fff1ea] border border-[#ddc1b0] px-3.5 py-1.5 rounded-full inline-block mb-3">
-                {showcase3d.badgeText}
-              </span>
-            ) : null}
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#241913] mb-3">
               {showcase3d.title}
             </h2>
