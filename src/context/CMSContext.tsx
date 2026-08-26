@@ -41,6 +41,12 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const sanitized = sanitizeCMSData(resData.data);
           setData(sanitized);
           saveCMSData(sanitized);
+          // Sync sanitized data back to Neon DB if DB had stale content
+          fetch("/api/cms", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(sanitized),
+          }).catch(() => {});
         }
       })
       .catch((err) => {

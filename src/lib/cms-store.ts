@@ -470,7 +470,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v4";
+const STORAGE_KEY = "alphaesai_cms_data_v5";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
@@ -486,12 +486,30 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
         col?.id !== "col-legal" && col?.title?.toLowerCase() !== "legal"
     );
 
+    const defaultContactCol = DEFAULT_CMS_DATA.footer.columns.find(
+      (c) => c.id === "col-contact"
+    )!;
+
+    const sanitizedCols = filteredCols.map((col: { id?: string; title?: string }) => {
+      if (col?.id === "col-contact" || col?.title?.toLowerCase().includes("contact")) {
+        return defaultContactCol;
+      }
+      return col;
+    });
+
+    const hasContact = sanitizedCols.some(
+      (col: { id?: string; title?: string }) => col?.id === "col-contact" || col?.title?.toLowerCase().includes("contact")
+    );
+    if (!hasContact) {
+      sanitizedCols.push(defaultContactCol);
+    }
+
     return {
       header: { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) },
       footer: {
         ...DEFAULT_CMS_DATA.footer,
         ...(parsed.footer || {}),
-        columns: filteredCols.length > 0 ? filteredCols : DEFAULT_CMS_DATA.footer.columns,
+        columns: sanitizedCols.length > 0 ? sanitizedCols : DEFAULT_CMS_DATA.footer.columns,
       },
       homepage: {
         ...DEFAULT_CMS_DATA.homepage,
