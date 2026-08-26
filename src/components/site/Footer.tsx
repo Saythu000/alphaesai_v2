@@ -40,11 +40,12 @@ export const Footer = () => {
                 const isPhone = link.label.includes("+91") || link.href.startsWith("tel:");
                 const isMail = link.href.startsWith("mailto:");
                 const isBriefing = link.href === "/contact" && !isAddress;
+                const isCareers = link.href === "/careers" || link.label.toLowerCase() === "careers";
 
                 return (
                   <Link
                     key={link.id}
-                    className="text-[#f3ded3]/80 hover:text-[#ffb786] transition-colors flex items-start gap-2 group leading-relaxed"
+                    className="text-[#f3ded3]/80 hover:text-[#ffb786] transition-colors flex items-center gap-2 group leading-relaxed"
                     href={link.href}
                   >
                     {isAddress && <MapPin className="w-4 h-4 text-[#ffb786] shrink-0 mt-0.5" />}
@@ -52,6 +53,11 @@ export const Footer = () => {
                     {isMail && <Mail className="w-4 h-4 text-[#ffb786] shrink-0 mt-0.5" />}
                     {isBriefing && <Calendar className="w-4 h-4 text-[#ffb786] shrink-0 mt-0.5" />}
                     <span className="group-hover:text-[#ffb786] transition-colors">{link.label}</span>
+                    {isCareers && (
+                      <span className="px-1.5 py-0.5 text-[9px] font-['JetBrains_Mono'] font-bold rounded bg-[#964900] text-[#ffb786] border border-[#ffb786]/30 uppercase tracking-wider">
+                        Hiring
+                      </span>
+                    )}
                   </Link>
                 );
               })}

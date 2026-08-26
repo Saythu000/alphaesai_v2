@@ -244,6 +244,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
           { id: "l-4", label: "Partners", href: "/partners" },
           { id: "l-5", label: "DrGodly Health", href: "/drgodly" },
           { id: "l-6", label: "Company", href: "/about" },
+          { id: "l-7", label: "Careers", href: "/careers" },
         ],
       },
       {
