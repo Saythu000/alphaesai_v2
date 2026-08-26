@@ -271,7 +271,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       secondaryCtaHref: "/services",
     },
     showcase3d: {
-      badgeText: "Interactive 3D Engine",
+      badgeText: "",
       title: "AI-Native Autonomous Infrastructure",
       subtitle: "Intelligent agents, high-throughput model pipelines, and self-healing cloud workloads operating in real time.",
       cardHeadline: "Experience Autonomous Intelligence",
