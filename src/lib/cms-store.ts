@@ -245,14 +245,6 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
         ],
       },
       {
-        id: "col-legal",
-        title: "Legal",
-        links: [
-          { id: "l-7", label: "Privacy Policy", href: "/privacy" },
-          { id: "l-8", label: "Terms of Service", href: "/terms" },
-        ],
-      },
-      {
         id: "col-contact",
         title: "Contact",
         links: [
