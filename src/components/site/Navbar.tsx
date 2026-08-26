@@ -152,7 +152,7 @@ export const Navbar = () => {
         duration: 0.7,
         ease: [0.16, 1, 0.3, 1],
       }}
-      className="fixed top-2.5 max-[850px]:top-0 left-1/2 w-full max-w-4xl max-[1200px]:max-w-2xl max-[850px]:max-w-none z-50 bg-[#fff8f5] shadow-xl/10 border-b border-[#ddc1b0]/40 rounded-b-3xl sm:rounded-b-[24px] max-[850px]:rounded-none max-[850px]:rounded-b-2xl transition-shadow duration-300"
+      className="fixed top-2.5 max-[850px]:top-0 left-1/2 w-full max-w-[1240px] max-[1300px]:max-w-[95%] max-[850px]:max-w-none z-50 bg-[#fff8f5] shadow-xl/10 border-b border-[#ddc1b0]/40 rounded-b-3xl sm:rounded-b-[24px] max-[850px]:rounded-none max-[850px]:rounded-b-2xl transition-shadow duration-300"
     >
       {/* Top Left Concave Inverted Corner SVG Cutout */}
       <svg
@@ -179,14 +179,14 @@ export const Navbar = () => {
       </svg>
 
       {/* Main Header Inner Row */}
-      <div className="h-14 sm:h-16 flex items-center justify-between px-5 sm:px-6">
+      <div className="h-14 sm:h-16 flex items-center justify-between px-5 sm:px-8">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2 group">
           <Logo size="sm" showSubtitle={true} />
         </Link>
 
         {/* Center Desktop Navigation Links & Dropdowns */}
-        <nav className="hidden md:flex items-center gap-1">
+        <nav className="hidden md:flex items-center gap-2 lg:gap-3">
           {/* CapeStart-Style Categorized Mega Dropdown for Services */}
           <div
             className="relative"
