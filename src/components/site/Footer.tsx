@@ -53,11 +53,6 @@ export const Footer = () => {
                     {isMail && <Mail className="w-4 h-4 text-[#ffb786] shrink-0 mt-0.5" />}
                     {isBriefing && <Calendar className="w-4 h-4 text-[#ffb786] shrink-0 mt-0.5" />}
                     <span className="group-hover:text-[#ffb786] transition-colors">{link.label}</span>
-                    {isCareers && (
-                      <span className="px-1.5 py-0.5 text-[9px] font-['JetBrains_Mono'] font-bold rounded bg-[#964900] text-[#ffb786] border border-[#ffb786]/30 uppercase tracking-wider">
-                        Hiring
-                      </span>
-                    )}
                   </Link>
                 );
               })}

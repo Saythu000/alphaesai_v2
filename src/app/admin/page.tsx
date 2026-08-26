@@ -33,7 +33,7 @@ import {
   Navigation,
 } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
-import { FullCMSData, DEFAULT_CMS_DATA } from "@/lib/cms-store";
+import { FullCMSData, DEFAULT_CMS_DATA, FAQItemCMS } from "@/lib/cms-store";
 import { toast } from "sonner";
 
 type TabType =
@@ -48,6 +48,7 @@ type TabType =
   | "about"
   | "partners"
   | "contact"
+  | "careers"
   | "navigation"
   | "footer"
   | "settings";
@@ -75,6 +76,7 @@ const TABS: TabItem[] = [
   { id: "about", label: "About Firm", category: "subpages", icon: Info, previewHref: "/about" },
   { id: "partners", label: "Partner Network", category: "subpages", icon: Handshake, previewHref: "/partners" },
   { id: "contact", label: "Contact & FAQs", category: "subpages", icon: PhoneCall, previewHref: "/contact" },
+  { id: "careers", label: "Careers & Open Roles", category: "subpages", icon: Briefcase, previewHref: "/careers" },
 
   // Global
   { id: "navigation", label: "Header & Announcement", category: "global", icon: Navigation, previewHref: "/" },
@@ -2113,7 +2115,7 @@ export default function AdminPage() {
                 </div>
 
                 <div className="space-y-3">
-                  {formData.pages.contact.faqs.map((faq, idx) => (
+                  {formData.pages.contact.faqs.map((faq: FAQItemCMS, idx: number) => (
                     <div key={faq.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
                       <div className="flex items-center justify-between">
                         <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
@@ -2121,7 +2123,7 @@ export default function AdminPage() {
                         </span>
                         <button
                           onClick={() => {
-                            const updated = formData.pages.contact.faqs.filter((_, i) => i !== idx);
+                            const updated = formData.pages.contact.faqs.filter((_: FAQItemCMS, i: number) => i !== idx);
                             setFormData({
                               ...formData,
                               pages: {
@@ -2171,6 +2173,393 @@ export default function AdminPage() {
                       />
                     </div>
                   ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB: CAREERS */}
+          {activeTab === "careers" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Briefcase className="w-5 h-5" />
+                    Careers & Job Postings Controls (/careers)
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Post, edit, and manage open job positions displayed live on the Careers page.
+                  </p>
+                </div>
+                <Link
+                  href="/careers"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /careers</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+
+              {/* Hero Banner Controls */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Hero Badge Text
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.pages.careers?.heroBadge || ""}
+                    placeholder="Optional badge text e.g. Join Core Engineering Team"
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pages: {
+                          ...formData.pages,
+                          careers: { ...formData.pages.careers, heroBadge: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Hero Page Title
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.pages.careers?.title || "Build the Operating System for Industrial-Scale Agentic AI"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        pages: {
+                          ...formData.pages,
+                          careers: { ...formData.pages.careers, title: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                  Hero Subtitle
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.pages.careers?.subtitle || ""}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      pages: {
+                        ...formData.pages,
+                        careers: { ...formData.pages.careers, subtitle: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                />
+              </div>
+
+              {/* JOB POSTINGS LIST */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-sm font-bold text-[#964900] uppercase">
+                      Open Job Positions ({formData.pages.careers?.jobs?.length || 0})
+                    </h3>
+                    <p className="text-xs text-[#564336]">
+                      Add, modify, or remove job openings. Changes sync live instantly to the Careers page.
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      const newJob = {
+                        id: `job-${Date.now()}`,
+                        title: "New Engineering Position",
+                        department: "Agentic AI",
+                        location: "Bengaluru, IN / Remote",
+                        type: "Full-Time",
+                        experience: "3+ Years",
+                        featured: false,
+                        summary: "Description of the open role...",
+                        responsibilities: [
+                          "Lead technical design and development.",
+                          "Collaborate with client engineering teams."
+                        ],
+                        techStack: ["TypeScript", "Python", "Docker"]
+                      };
+                      const currentJobs = formData.pages.careers?.jobs || [];
+                      setFormData({
+                        ...formData,
+                        pages: {
+                          ...formData.pages,
+                          careers: {
+                            ...formData.pages.careers,
+                            jobs: [newJob, ...currentJobs]
+                          }
+                        }
+                      });
+                      toast.success("Added new job opening draft!");
+                    }}
+                    className="bg-[#964900] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Post New Job Opening</span>
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {(formData.pages.careers?.jobs || []).length === 0 ? (
+                    <div className="p-8 border border-dashed border-[#ddc1b0] bg-[#fff8f5] rounded-2xl text-center space-y-2">
+                      <p className="text-xs text-[#564336] font-medium">No job postings currently listed.</p>
+                      <p className="text-[11px] text-[#564336]/70">Click "Post New Job Opening" above to create an active opening.</p>
+                    </div>
+                  ) : (
+                    (formData.pages.careers?.jobs || []).map((job, idx) => (
+                      <div key={job.id} className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-2xl space-y-3 shadow-sm">
+                        <div className="flex items-center justify-between border-b border-[#ddc1b0]/60 pb-2">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-mono font-bold bg-[#964900] text-white px-2 py-0.5 rounded">
+                              Job #{idx + 1}
+                            </span>
+                            <span className="text-xs font-bold text-[#964900]">{job.title || "Untitled Role"}</span>
+                          </div>
+                          <button
+                            onClick={() => {
+                              const updatedJobs = (formData.pages.careers?.jobs || []).filter((_, i) => i !== idx);
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                }
+                              });
+                              toast.info("Deleted job posting.");
+                            }}
+                            className="text-red-500 hover:text-red-700 p-1 flex items-center gap-1 text-xs font-semibold"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                            <span>Remove</span>
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Job Title *
+                            </label>
+                            <input
+                              type="text"
+                              value={job.title}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].title = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs font-bold bg-white"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Department *
+                            </label>
+                            <select
+                              value={job.department}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].department = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                            >
+                              <option value="Agentic AI">Agentic AI</option>
+                              <option value="Data Platforms">Data Platforms</option>
+                              <option value="Cloud Infrastructure">Cloud Infrastructure</option>
+                            </select>
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Location *
+                            </label>
+                            <input
+                              type="text"
+                              value={job.location}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].location = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                            />
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Employment Type
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Full-Time / Contract"
+                              value={job.type}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].type = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Experience Required
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="4+ Years"
+                              value={job.experience}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].experience = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                            />
+                          </div>
+
+                          <div className="flex items-center gap-2 pt-5">
+                            <label className="flex items-center gap-2 text-xs font-bold text-[#964900] cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={job.featured || false}
+                                onChange={(e) => {
+                                  const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                  updatedJobs[idx].featured = e.target.checked;
+                                  setFormData({
+                                    ...formData,
+                                    pages: {
+                                      ...formData.pages,
+                                      careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                    }
+                                  });
+                                }}
+                                className="w-4 h-4 rounded border-[#ddc1b0] text-[#964900] accent-[#964900]"
+                              />
+                              <span>High Priority / Featured Badge</span>
+                            </label>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                            Role Summary
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={job.summary}
+                            onChange={(e) => {
+                              const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                              updatedJobs[idx].summary = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                }
+                              });
+                            }}
+                            className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                          />
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Responsibilities (1 per line)
+                            </label>
+                            <textarea
+                              rows={3}
+                              value={(job.responsibilities || []).join("\n")}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].responsibilities = e.target.value.split("\n").filter(Boolean);
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-mono"
+                            />
+                          </div>
+
+                          <div>
+                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                              Tech Stack Tags (Comma-separated)
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="Next.js 15, TypeScript, Python, Docker"
+                              value={(job.techStack || []).join(", ")}
+                              onChange={(e) => {
+                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                updatedJobs[idx].techStack = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-mono"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             </div>

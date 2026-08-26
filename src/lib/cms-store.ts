@@ -177,6 +177,19 @@ export interface PartnersCMSData {
   ctaBtnHref: string;
 }
 
+export interface JobPostingCMS {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  experience: string;
+  summary: string;
+  responsibilities: string[];
+  techStack: string[];
+  featured?: boolean;
+}
+
 export interface ContactCMSData {
   title: string;
   subtitle: string;
@@ -188,6 +201,13 @@ export interface ContactCMSData {
   faqs: FAQItemCMS[];
 }
 
+export interface CareersCMSData {
+  heroBadge: string;
+  title: string;
+  subtitle: string;
+  jobs: JobPostingCMS[];
+}
+
 export interface PagesCMSData {
   services: ServicesCMSData;
   drgodly: DrGodlyCMSData;
@@ -195,6 +215,7 @@ export interface PagesCMSData {
   about: AboutCMSData;
   partners: PartnersCMSData;
   contact: ContactCMSData;
+  careers: CareersCMSData;
 }
 
 export interface FullCMSData {
@@ -468,10 +489,16 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
         },
       ],
     },
+    careers: {
+      heroBadge: "",
+      title: "Build the Operating System for Industrial-Scale Agentic AI",
+      subtitle: "We are looking for forward-deployed engineers, Databricks optimization architects, and cloud security pioneers to build systems that run real enterprise operations.",
+      jobs: []
+    }
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v6";
+const STORAGE_KEY = "alphaesai_cms_data_v8";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
@@ -591,6 +618,13 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
           faqs: Array.isArray(parsed.pages?.contact?.faqs)
             ? parsed.pages.contact.faqs
             : DEFAULT_CMS_DATA.pages.contact.faqs,
+        },
+        careers: {
+          ...DEFAULT_CMS_DATA.pages.careers,
+          ...(parsed.pages?.careers || {}),
+          jobs: Array.isArray(parsed.pages?.careers?.jobs)
+            ? parsed.pages.careers.jobs
+            : DEFAULT_CMS_DATA.pages.careers.jobs,
         },
       },
     };

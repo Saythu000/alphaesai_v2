@@ -1,118 +1,36 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
+import React, { useState } from "react";
 import {
   Briefcase,
+  ArrowRight,
   Sparkles,
+  Code2,
+  Zap,
+  ShieldCheck,
+  Award,
+  Send,
   MapPin,
   Clock,
-  ArrowRight,
-  CheckCircle2,
-  X,
-  Send,
-  Building2,
-  Code2,
-  Database,
-  ShieldCheck,
-  Zap,
   Globe2,
+  Laptop,
   BookOpen,
   HeartPulse,
-  Laptop,
+  Building2,
+  X,
+  CheckCircle2,
   Flame,
-  Award
 } from "lucide-react";
-
-interface Role {
-  id: string;
-  title: string;
-  department: "Agentic AI" | "Data Platforms" | "Cloud Infrastructure";
-  location: string;
-  type: string;
-  experience: string;
-  summary: string;
-  responsibilities: string[];
-  techStack: string[];
-  featured?: boolean;
-}
-
-const OPEN_ROLES: Role[] = [
-  {
-    id: "fde-ai-lead",
-    title: "Senior Forward-Deployed AI Engineer",
-    department: "Agentic AI",
-    location: "Bengaluru, IN / Remote",
-    type: "Full-Time",
-    experience: "4+ Years",
-    featured: true,
-    summary:
-      "Architect and deploy production-grade multi-agent swarms, tool-use protocols, and low-latency RAG pipelines embedded directly inside client enterprise codebases.",
-    responsibilities: [
-      "Embed within client engineering teams to build custom AI agents & autonomous workflows.",
-      "Design multi-agent orchestration graphs using LangGraph, AutoGen, and custom Antigravity SDKs.",
-      "Build high-throughput vector retrieval pipelines with Milvus, Qdrant, and Pinecone.",
-      "Implement enterprise guardrails for PII scrubbing, prompt injection defense, and output verification."
-    ],
-    techStack: ["Next.js 15", "TypeScript", "Python", "LangChain/LangGraph", "Vector DBs", "Docker"]
-  },
-  {
-    id: "databricks-architect",
-    title: "Databricks & Lakehouse Optimization Architect",
-    department: "Data Platforms",
-    location: "Bengaluru, IN / Hybrid",
-    type: "Full-Time",
-    experience: "5+ Years",
-    featured: true,
-    summary:
-      "Lead cost-optimization and performance-tuning audits for enterprise Databricks & Snowflake environments, targeting 40%+ compute savings.",
-    responsibilities: [
-      "Analyze PySpark execution graphs, liquid clustering keys, and Delta Lake Z-Ordering for Fortune 500 pipelines.",
-      "Eliminate expensive spill-to-disk operations and optimize photon engine memory allocation.",
-      "Design zero-trust lakehouse governance using Unity Catalog and row/column-level access policies.",
-      "Automate cluster auto-scaling strategies and serverless SQL warehouse parameters."
-    ],
-    techStack: ["Databricks", "PySpark", "Delta Lake", "Unity Catalog", "Snowflake", "SQL Optimization"]
-  },
-  {
-    id: "fullstack-ai-dev",
-    title: "Fullstack AI Systems Engineer",
-    department: "Agentic AI",
-    location: "Remote / Bengaluru",
-    type: "Full-Time",
-    experience: "3+ Years",
-    summary:
-      "Craft high-performance, visually stunning web interfaces, real-time streaming agent dashboards, and developer platforms for AlphaesAI applications.",
-    responsibilities: [
-      "Build dynamic React/Next.js 15 web applications with glassmorphism aesthetics and micro-animations.",
-      "Implement WebSocket and Server-Sent Events (SSE) for real-time agent token streaming.",
-      "Integrate complex backend APIs, Tailwind CSS design systems, and responsive layouts.",
-      "Maintain 100% Core Web Vitals performance and strict accessibility standards."
-    ],
-    techStack: ["React 19", "Next.js 15", "TypeScript", "Tailwind CSS", "WebSockets", "Node.js"]
-  },
-  {
-    id: "zero-trust-sec-lead",
-    title: "Zero-Trust Cloud & Security Specialist",
-    department: "Cloud Infrastructure",
-    location: "Bengaluru, IN / Hybrid",
-    type: "Full-Time",
-    experience: "4+ Years",
-    summary:
-      "Engineer zero-trust multi-cloud infrastructure, eBPF runtime monitoring, and automated security posture management across AWS and GCP.",
-    responsibilities: [
-      "Deploy eBPF kernel-level monitoring using Cilium Tetragon and Falco for runtime threat detection.",
-      "Design IAM permission boundaries, workload identities, and KMS envelope encryption pipelines.",
-      "Execute automated vulnerability scanning in CI/CD using Trivy, Grype, and Gitleaks.",
-      "Architect HIPAA and SOC-2 Type II compliant cloud boundaries for healthcare AI workloads."
-    ],
-    techStack: ["AWS", "GCP", "Kubernetes", "eBPF / Tetragon", "Terraform", "Zero-Trust"]
-  }
-];
+import { useCMS } from "@/context/CMSContext";
+import { JobPostingCMS } from "@/lib/cms-store";
 
 export default function CareersPage() {
+  const { data } = useCMS();
+  const careersData = data.pages.careers;
+  const roles = careersData?.jobs || [];
+
   const [selectedDept, setSelectedDept] = useState<string>("All");
-  const [activeRole, setActiveRole] = useState<Role | null>(null);
+  const [activeRole, setActiveRole] = useState<JobPostingCMS | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -128,10 +46,10 @@ export default function CareersPage() {
 
   const filteredRoles =
     selectedDept === "All"
-      ? OPEN_ROLES
-      : OPEN_ROLES.filter((r) => r.department === selectedDept);
+      ? roles
+      : roles.filter((r) => r.department === selectedDept);
 
-  const handleApplyClick = (role: Role) => {
+  const handleApplyClick = (role: JobPostingCMS) => {
     setActiveRole(role);
     setIsSubmitted(false);
   };
@@ -155,10 +73,6 @@ export default function CareersPage() {
       <div className="relative z-10 max-w-[1280px] mx-auto px-6 space-y-20">
         {/* HERO SECTION */}
         <div className="text-center max-w-4xl mx-auto space-y-6 pt-6">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#392218] border border-[#ffb786]/30 text-[#ffb786] font-['JetBrains_Mono'] text-xs font-bold uppercase tracking-wider shadow-lg">
-            <Flame className="w-3.5 h-3.5 text-[#ff7700] animate-pulse" />
-            Join AlphaesAI Core Team • We're Hiring
-          </div>
           <h1 className="font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-6xl font-black text-[#fff8f5] tracking-tight leading-[1.1]">
             Build the Operating System for <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffb786] via-[#ff8833] to-[#e65c00]">
@@ -281,65 +195,84 @@ export default function CareersPage() {
 
           {/* Roles List */}
           <div className="space-y-4">
-            {filteredRoles.map((role) => (
-              <div
-                key={role.id}
-                className="p-6 rounded-2xl bg-[#241913]/90 border border-[#ddc1b0]/20 hover:border-[#ffb786]/50 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6 group shadow-md"
-              >
-                <div className="space-y-3 max-w-3xl">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-md bg-[#964900]/40 border border-[#ffb786]/30 text-[#ffb786] text-[11px] font-['JetBrains_Mono'] font-bold uppercase tracking-wider">
-                      {role.department}
-                    </span>
-                    {role.featured && (
-                      <span className="px-2.5 py-0.5 rounded-md bg-[#ff7700]/20 border border-[#ff7700]/40 text-[#ff8833] text-[11px] font-['JetBrains_Mono'] font-bold uppercase tracking-wider flex items-center gap-1">
-                        <Flame className="w-3 h-3 text-[#ff7700]" /> High Priority
-                      </span>
-                    )}
-                  </div>
-                  <h3 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#fff8f5] group-hover:text-[#ffb786] transition-colors">
-                    {role.title}
-                  </h3>
-                  <p className="text-xs text-[#f3ded3]/75 leading-relaxed font-light">
-                    {role.summary}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-4 text-xs text-[#f3ded3]/60">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-[#ffb786]" />
-                      {role.location}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#ffb786]" />
-                      {role.type}
-                    </span>
-                    <span className="flex items-center gap-1.5">
-                      <Briefcase className="w-3.5 h-3.5 text-[#ffb786]" />
-                      {role.experience}
-                    </span>
-                  </div>
-                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
-                    {role.techStack.map((tech) => (
-                      <span
-                        key={tech}
-                        className="px-2 py-0.5 rounded bg-[#392218]/60 text-[#f3ded3]/70 text-[10px] font-['JetBrains_Mono'] border border-[#ddc1b0]/10"
-                      >
-                        {tech}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="shrink-0 pt-2 lg:pt-0">
-                  <button
-                    onClick={() => handleApplyClick(role)}
-                    className="w-full lg:w-auto px-5 py-2.5 rounded-xl bg-[#964900] hover:bg-[#a85200] text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-[#964900]/30"
-                  >
-                    Apply for Position
-                    <ArrowRight className="w-3.5 h-3.5 text-[#ffb786]" />
-                  </button>
-                </div>
+            {filteredRoles.length === 0 ? (
+              <div className="p-12 text-center rounded-2xl bg-[#241913]/90 border border-[#ddc1b0]/20 space-y-4 shadow-md">
+                <Briefcase className="w-12 h-12 text-[#ffb786]/50 mx-auto" />
+                <h3 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#fff8f5]">
+                  No Open Positions Currently Posted
+                </h3>
+                <p className="text-xs text-[#f3ded3]/70 max-w-md mx-auto leading-relaxed font-light">
+                  There are currently no active openings in {selectedDept === "All" ? "any department" : selectedDept}. New roles are posted directly from our engineering leadership team in the Admin Panel.
+                </p>
+                <a
+                  href="mailto:careers@alphaesai.com"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#964900] hover:bg-[#a85200] text-white font-bold text-xs transition-colors shadow-md mt-2"
+                >
+                  <Send className="w-3.5 h-3.5 text-[#ffb786]" />
+                  Submit Spontaneous Application
+                </a>
               </div>
-            ))}
+            ) : (
+              filteredRoles.map((role) => (
+                <div
+                  key={role.id}
+                  className="p-6 rounded-2xl bg-[#241913]/90 border border-[#ddc1b0]/20 hover:border-[#ffb786]/50 transition-all flex flex-col lg:flex-row lg:items-center justify-between gap-6 group shadow-md"
+                >
+                  <div className="space-y-3 max-w-3xl">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="px-2.5 py-0.5 rounded-md bg-[#964900]/40 border border-[#ffb786]/30 text-[#ffb786] text-[11px] font-['JetBrains_Mono'] font-bold uppercase tracking-wider">
+                        {role.department}
+                      </span>
+                      {role.featured && (
+                        <span className="px-2.5 py-0.5 rounded-md bg-[#ff7700]/20 border border-[#ff7700]/40 text-[#ff8833] text-[11px] font-['JetBrains_Mono'] font-bold uppercase tracking-wider flex items-center gap-1">
+                          <Flame className="w-3 h-3 text-[#ff7700]" /> High Priority
+                        </span>
+                      )}
+                    </div>
+                    <h3 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#fff8f5] group-hover:text-[#ffb786] transition-colors">
+                      {role.title}
+                    </h3>
+                    <p className="text-xs text-[#f3ded3]/75 leading-relaxed font-light">
+                      {role.summary}
+                    </p>
+                    <div className="flex flex-wrap items-center gap-4 text-xs text-[#f3ded3]/60">
+                      <span className="flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#ffb786]" />
+                        {role.location}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-[#ffb786]" />
+                        {role.type}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Briefcase className="w-3.5 h-3.5 text-[#ffb786]" />
+                        {role.experience}
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                      {role.techStack.map((tech) => (
+                        <span
+                          key={tech}
+                          className="px-2 py-0.5 rounded bg-[#392218]/60 text-[#f3ded3]/70 text-[10px] font-['JetBrains_Mono'] border border-[#ddc1b0]/10"
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="shrink-0 pt-2 lg:pt-0">
+                    <button
+                      onClick={() => handleApplyClick(role)}
+                      className="w-full lg:w-auto px-5 py-2.5 rounded-xl bg-[#964900] hover:bg-[#a85200] text-white font-semibold text-xs transition-colors flex items-center justify-center gap-2 shadow-md hover:shadow-[#964900]/30"
+                    >
+                      Apply for Position
+                      <ArrowRight className="w-3.5 h-3.5 text-[#ffb786]" />
+                    </button>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
 
