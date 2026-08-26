@@ -26,39 +26,33 @@ const servicesMegaMenu = [
     items: [
       {
         href: "/services/forward-deployed-ai-engineering",
-        label: "Forward Deployed AI Eng (FDE)",
-        desc: "Embedded senior engineers building production RAG & agents.",
+        label: "Forward Deployed AI (FDE)",
       },
       {
         href: "/services/forward-deployed-ai-engineering#agentic-workflows",
-        label: "Autonomous Agent Workflows",
-        desc: "Multi-agent orchestration & custom tool integration.",
+        label: "Autonomous AI Agents",
       },
       {
         href: "/services/forward-deployed-ai-engineering#fine-tuning",
         label: "Custom Model Fine-Tuning",
-        desc: "Domain-specific model optimization & safety alignment.",
       },
     ],
   },
   {
-    category: "Data & Database Optimization",
+    category: "Data & Cloud Optimization",
     icon: Database,
     items: [
       {
         href: "/services/database-performance-and-cloud-optimization",
-        label: "Database & Cloud Optimization",
-        desc: "30–50% infrastructure cost cuts & P99 latency tuning.",
+        label: "Database & Cloud Tuning",
       },
       {
         href: "/services/database-performance-and-cloud-optimization#lakehouse",
         label: "Databricks & Snowflake Lakehouse",
-        desc: "Governed Delta Lake & scalable feature engineering.",
       },
       {
         href: "/services/database-performance-and-cloud-optimization#etl",
-        label: "Streaming & Real-Time ETL",
-        desc: "Kafka, Spark Streaming & telemetry ingestion pipelines.",
+        label: "Streaming Real-Time ETL",
       },
     ],
   },
@@ -69,17 +63,14 @@ const servicesMegaMenu = [
       {
         href: "/services/data-annotation-and-rlhf",
         label: "High-Fidelity Data Annotation",
-        desc: "Text, Audio, Video & Vision expert labeling.",
       },
       {
         href: "/services/data-annotation-and-rlhf#rlhf",
         label: "RLHF & Model Safety Alignment",
-        desc: "Preference feedback loops & reward model design.",
       },
       {
         href: "/services/data-annotation-and-rlhf#benchmarking",
-        label: "Dataset Audit & Evaluation",
-        desc: "Rigorously audit datasets to eliminate bias & hallucinations.",
+        label: "Dataset Evaluation & Audits",
       },
     ],
   },
@@ -90,17 +81,14 @@ const servicesMegaMenu = [
       {
         href: "/services/cloud-migration-cyber-security-databricks-snowflake",
         label: "Zero-Downtime Cloud Migration",
-        desc: "Seamlessly move workloads across AWS, Azure & GCP.",
       },
       {
         href: "/services/cloud-migration-cyber-security-databricks-snowflake#security",
-        label: "Cybersecurity & AI Guardrails",
-        desc: "PII sanitization, RBAC & agent execution boundaries.",
+        label: "AI Guardrails & Cybersecurity",
       },
       {
         href: "/services/cloud-migration-cyber-security-databricks-snowflake#k8s",
-        label: "DevOps & MLOps Infrastructure",
-        desc: "Infrastructure as Code, CI/CD pipelines & monitoring.",
+        label: "DevOps & MLOps Pipelines",
       },
     ],
   },
@@ -112,9 +100,9 @@ const productsDropdown = [
 ];
 
 const academyDropdown = [
-  { href: "/academy/agentic-ai", label: "Agentic AI", desc: "Autonomous multi-agent orchestration & tool calling" },
-  { href: "/academy/fullstack-developer-with-ai", label: "Fullstack Developer with AI", desc: "AI-native web apps with Next.js, Vector DBs & RAG" },
-  { href: "/academy/databricks", label: "Databricks", desc: "Lakehouse architecture, Delta Lake & PySpark tuning" },
+  { href: "/academy/agentic-ai", label: "Agentic AI Architecture" },
+  { href: "/academy/fullstack-developer-with-ai", label: "Fullstack Engineering with AI" },
+  { href: "/academy/databricks", label: "Databricks & Lakehouse Masterclass" },
 ];
 
 const directLinks = [
@@ -195,44 +183,47 @@ export const Navbar = () => {
           >
             <button
               onClick={() => setServicesOpen(!servicesOpen)}
-              className="flex items-center gap-1 px-4 py-2 text-xs font-['JetBrains_Mono'] font-medium text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-['Inter'] font-semibold text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
             >
               Services
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  servicesOpen ? "rotate-180" : ""
+                  servicesOpen ? "rotate-180 text-[#964900]" : ""
                 }`}
               />
             </button>
 
             {servicesOpen && (
-              <div className="absolute top-full -left-[140px] lg:-left-[180px] mt-1 w-[820px] lg:w-[860px] bg-[#fff8f5] border border-[#ddc1b0] rounded-3xl shadow-2xl p-6 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
-                
-                {/* 4-Column Mega Dropdown Grid */}
-                <div className="grid grid-cols-4 gap-5">
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute top-full -left-[140px] lg:-left-[180px] mt-2 w-[820px] lg:w-[860px] bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-3xl shadow-2xl p-6 z-50"
+              >
+                {/* 4-Column Clean Mega Dropdown Grid */}
+                <div className="grid grid-cols-4 gap-6">
                   {servicesMegaMenu.map((cat) => {
                     const IconComponent = cat.icon;
                     return (
                       <div key={cat.category} className="flex flex-col gap-3">
-                        <div className="flex items-center gap-1.5 border-b border-[#ddc1b0]/60 pb-2">
-                          <IconComponent className="w-4 h-4 text-[#964900] shrink-0" />
-                          <span className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] uppercase tracking-wider">
+                        <div className="flex items-center gap-2 border-b border-[#ddc1b0]/50 pb-2.5">
+                          <div className="w-6 h-6 rounded-lg bg-[#964900]/10 text-[#964900] flex items-center justify-center shrink-0">
+                            <IconComponent className="w-3.5 h-3.5" />
+                          </div>
+                          <span className="text-[11px] font-['Hanken_Grotesk'] font-extrabold text-[#241913] uppercase tracking-wider">
                             {cat.category}
                           </span>
                         </div>
-                        <div className="flex flex-col gap-1.5">
+                        <div className="flex flex-col gap-1">
                           {cat.items.map((item) => (
                             <Link
                               key={item.label}
                               href={item.href}
-                              className="p-2 rounded-xl hover:bg-[#ffeade] transition-colors group"
+                              className="px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 transition-all flex items-center justify-between group"
                             >
-                              <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] group-hover:text-[#964900] leading-snug">
-                                {item.label}
-                              </div>
-                              <div className="text-[11px] font-['Inter'] text-[#564336] mt-0.5 leading-tight line-clamp-2">
-                                {item.desc}
-                              </div>
+                              <span>{item.label}</span>
+                              <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                             </Link>
                           ))}
                         </div>
@@ -242,19 +233,19 @@ export const Navbar = () => {
                 </div>
 
                 {/* Bottom Full-Width Banner Link */}
-                <div className="mt-5 pt-4 border-t border-[#ddc1b0]/60 flex items-center justify-between bg-[#fff1ea] -mx-6 -mb-6 px-6 py-3.5 rounded-b-3xl">
-                  <div className="text-xs font-['Inter'] text-[#564336]">
+                <div className="mt-5 pt-3.5 border-t border-[#ddc1b0]/60 flex items-center justify-between bg-[#fff1ea]/80 -mx-6 -mb-6 px-6 py-3.5 rounded-b-3xl">
+                  <div className="text-xs font-['Inter'] font-medium text-[#564336]">
                     Looking for custom enterprise architecture or a tailored scoping session?
                   </div>
                   <Link
                     href="/services"
-                    className="inline-flex items-center gap-1.5 text-xs font-['JetBrains_Mono'] font-bold text-[#964900] hover:text-[#723600] transition-colors"
+                    className="inline-flex items-center gap-1.5 text-xs font-['Inter'] font-bold text-[#964900] hover:text-[#723600] transition-colors"
                   >
-                    <span>View All Services & Pillars</span>
+                    <span>View All Services</span>
                     <ArrowRight className="w-3.5 h-3.5" />
                   </Link>
                 </div>
-              </div>
+              </motion.div>
             )}
           </div>
 
@@ -266,28 +257,35 @@ export const Navbar = () => {
           >
             <button
               onClick={() => setProductsOpen(!productsOpen)}
-              className="flex items-center gap-1 px-4 py-2 text-xs font-['JetBrains_Mono'] font-medium text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-['Inter'] font-semibold text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
             >
               Products
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  productsOpen ? "rotate-180" : ""
+                  productsOpen ? "rotate-180 text-[#964900]" : ""
                 }`}
               />
             </button>
 
             {productsOpen && (
-              <div className="absolute top-full left-0 mt-1 w-64 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl shadow-xl p-2 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute top-full left-0 mt-2 w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50"
+              >
                 {productsDropdown.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="block px-3 py-2 text-xs font-['JetBrains_Mono'] text-[#241913] hover:bg-[#ffeade] hover:text-[#964900] rounded-xl transition-colors"
+                    className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
                   >
-                    {item.label}
+                    <span>{item.label}</span>
+                    <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 ))}
-              </div>
+              </motion.div>
             )}
           </div>
 
@@ -299,33 +297,35 @@ export const Navbar = () => {
           >
             <button
               onClick={() => setAcademyOpen(!academyOpen)}
-              className="flex items-center gap-1 px-4 py-2 text-xs font-['JetBrains_Mono'] font-medium text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
+              className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-['Inter'] font-semibold text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
             >
               Academy
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                  academyOpen ? "rotate-180" : ""
+                  academyOpen ? "rotate-180 text-[#964900]" : ""
                 }`}
               />
             </button>
 
             {academyOpen && (
-              <div className="absolute top-full left-0 mt-1 w-72 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl shadow-xl p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+              <motion.div
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                className="absolute top-full left-0 mt-2 w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50"
+              >
                 {academyDropdown.map((item) => (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="block px-3 py-2.5 rounded-xl hover:bg-[#ffeade] transition-colors group"
+                    className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
                   >
-                    <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] group-hover:text-[#964900]">
-                      {item.label}
-                    </div>
-                    <div className="text-[11px] font-['Inter'] text-[#564336] mt-0.5 leading-tight">
-                      {item.desc}
-                    </div>
+                    <span>{item.label}</span>
+                    <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                   </Link>
                 ))}
-              </div>
+              </motion.div>
             )}
           </div>
 
@@ -334,7 +334,7 @@ export const Navbar = () => {
             <Link
               key={link.href}
               href={link.href}
-              className={`px-4 py-2 text-xs font-['JetBrains_Mono'] font-medium rounded-full transition-colors ${
+              className={`px-3.5 py-2 text-xs font-['Inter'] font-semibold rounded-full transition-colors ${
                 isActive(link.href)
                   ? "bg-[#241913]/10 text-[#964900] font-bold"
                   : "text-[#564336] hover:text-[#241913] hover:bg-[#241913]/5"
