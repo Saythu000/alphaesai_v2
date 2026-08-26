@@ -471,7 +471,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v5";
+const STORAGE_KEY = "alphaesai_cms_data_v6";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
@@ -490,10 +490,16 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     const defaultContactCol = DEFAULT_CMS_DATA.footer.columns.find(
       (c) => c.id === "col-contact"
     )!;
+    const defaultEcosystemCol = DEFAULT_CMS_DATA.footer.columns.find(
+      (c) => c.id === "col-ecosystem"
+    )!;
 
     const sanitizedCols = filteredCols.map((col: { id?: string; title?: string }) => {
       if (col?.id === "col-contact" || col?.title?.toLowerCase().includes("contact")) {
         return defaultContactCol;
+      }
+      if (col?.id === "col-ecosystem" || col?.title?.toLowerCase().includes("ecosystem")) {
+        return defaultEcosystemCol;
       }
       return col;
     });
@@ -503,6 +509,13 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     );
     if (!hasContact) {
       sanitizedCols.push(defaultContactCol);
+    }
+
+    const hasEcosystem = sanitizedCols.some(
+      (col: { id?: string; title?: string }) => col?.id === "col-ecosystem" || col?.title?.toLowerCase().includes("ecosystem")
+    );
+    if (!hasEcosystem) {
+      sanitizedCols.push(defaultEcosystemCol);
     }
 
     return {
