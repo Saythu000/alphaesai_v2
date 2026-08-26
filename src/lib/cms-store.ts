@@ -250,7 +250,6 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
         links: [
           { id: "l-7", label: "Privacy Policy", href: "/privacy" },
           { id: "l-8", label: "Terms of Service", href: "/terms" },
-          { id: "l-9", label: "Trust Center", href: "/trust" },
         ],
       },
       {
