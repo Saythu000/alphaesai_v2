@@ -154,7 +154,7 @@ export default function ServicesPage() {
             href="#dbops"
             className="px-4 py-1.5 bg-[#ffffff] border border-[#ddc1b0] hover:border-[#964900] rounded-full text-xs font-['JetBrains_Mono'] font-semibold text-[#241913] transition-colors shadow-sm"
           >
-            🚀 Database Operations (DBOps)
+            🚀 Database & Cloud Optimization
           </a>
           <a
             href="#cloud-migration-security"
@@ -238,7 +238,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* 2. DATABASE OPERATIONS (DBOps) */}
+      {/* 2. DATABASE OPTIMIZATION */}
       <section id="dbops" className="py-20 border-b border-[#ddc1b0] bg-[#fff8f5]">
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
@@ -246,7 +246,7 @@ export default function ServicesPage() {
               Performance Tuning & FinOps
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Database Operations (DBOps)
+              Database & Cloud Optimization
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
               Your database is likely costing you more than it should. We identify bottlenecks, optimize query execution, and manage resource allocation to cut your infrastructure costs by 30-50% while improving latency.

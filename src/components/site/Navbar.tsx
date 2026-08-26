@@ -41,12 +41,12 @@ const servicesMegaMenu = [
     ],
   },
   {
-    category: "Data & Database Operations",
+    category: "Data & Database Optimization",
     icon: Database,
     items: [
       {
         href: "/services/database-performance-and-cloud-optimization",
-        label: "Database Operations (DBOps)",
+        label: "Database & Cloud Optimization",
         desc: "30–50% infrastructure cost cuts & P99 latency tuning.",
       },
       {
