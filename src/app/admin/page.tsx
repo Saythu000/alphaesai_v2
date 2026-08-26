@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
+import Logo from "@/components/ui/Logo";
 import {
   ShieldCheck,
   Save,
@@ -348,20 +349,12 @@ export default function AdminPage() {
       <header className="bg-[#1c130d] text-white border-b border-[#964900] sticky top-0 z-50 shadow-lg">
         <div className="max-w-[1440px] mx-auto px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-[#964900] flex items-center justify-center text-white shadow-md">
-              <ShieldCheck className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="font-['Hanken_Grotesk'] text-lg font-extrabold text-[#ffb786] flex items-center gap-2">
-                <span>AlphaesAI Central CMS</span>
-                <span className="bg-[#964900]/40 text-[#ffb786] border border-[#964900] text-[10px] font-['JetBrains_Mono'] px-2 py-0.5 rounded-full uppercase">
-                  Live Mode
-                </span>
-              </h1>
-              <p className="font-['JetBrains_Mono'] text-[11px] text-white/60">
-                Full-Site Content Manager for All Pages & Navigation
-              </p>
-            </div>
+            <Link href="/" className="hover:opacity-90 transition-opacity">
+              <Logo variant="dark" size="sm" showSubtitle={true} />
+            </Link>
+            <span className="bg-[#964900]/40 text-[#ffb786] border border-[#964900] text-[10px] font-['JetBrains_Mono'] px-2.5 py-0.5 rounded-full uppercase font-bold tracking-wider">
+              Central CMS
+            </span>
           </div>
 
           <div className="flex items-center gap-3">

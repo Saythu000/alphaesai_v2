@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Network, MapPin, Phone, Mail, Calendar } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
+import Logo from "@/components/ui/Logo";
 
 export const Footer = () => {
   const { data } = useCMS();
@@ -12,14 +13,9 @@ export const Footer = () => {
     <footer className="bg-[#241913] text-[#fff8f5] w-full py-16 border-t border-[#ddc1b0]/20">
       <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
         <div className="md:col-span-1 lg:col-span-2 space-y-4">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded bg-[#964900] flex items-center justify-center text-white">
-              <Network className="w-4 h-4" />
-            </div>
-            <span className="font-['Hanken_Grotesk'] text-2xl font-extrabold text-[#ffb786]">
-              {footer.brandName}
-            </span>
-          </div>
+          <Link href="/" className="inline-block">
+            <Logo variant="dark" size="md" />
+          </Link>
           <p className="font-['Inter'] text-sm text-[#f3ded3]/70">
             {footer.tagline}
           </p>

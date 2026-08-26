@@ -17,6 +17,7 @@ import {
 import { motion } from "framer-motion";
 
 import { useCMS } from "@/context/CMSContext";
+import Logo from "@/components/ui/Logo";
 
 const servicesMegaMenu = [
   {
@@ -180,11 +181,8 @@ export const Navbar = () => {
       {/* Main Header Inner Row */}
       <div className="h-14 sm:h-16 flex items-center justify-between px-5 sm:px-6">
         {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group">
-          <div className="w-5 h-5 rounded-full bg-[#964900] group-hover:scale-110 transition-transform shadow-sm" />
-          <span className="font-['JetBrains_Mono'] text-lg font-bold text-[#964900] tracking-tight">
-            {data.footer?.brandName || "AlphaesAI"}
-          </span>
+        <Link href="/" className="flex items-center gap-2 group">
+          <Logo size="sm" showSubtitle={true} />
         </Link>
 
         {/* Center Desktop Navigation Links & Dropdowns */}
