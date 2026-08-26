@@ -225,6 +225,8 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
     tagline: "© 2026 AlphaesAI, Inc. All rights reserved.",
     description: "Industrial-Scale Intelligence for apps, agents, and enterprise data.",
     contactEmail: "contact@alphaesai.com",
+    contactPhone: "+91 70106 42399",
+    contactAddress: "No. 472/7 Balaji Arcade, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095, India",
     columns: [
       {
         id: "col-platform",
@@ -246,10 +248,12 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       },
       {
         id: "col-contact",
-        title: "Contact",
+        title: "Contact & Location",
         links: [
           { id: "l-10", label: "Schedule Briefing", href: "/contact" },
           { id: "l-11", label: "contact@alphaesai.com", href: "mailto:contact@alphaesai.com" },
+          { id: "l-12", label: "+91 70106 42399", href: "tel:+917010642399" },
+          { id: "l-13", label: "No. 472/7 Balaji Arcade, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095, India", href: "/contact" },
         ],
       },
     ],
@@ -466,7 +470,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v3";
+const STORAGE_KEY = "alphaesai_cms_data_v4";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
