@@ -2,13 +2,18 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Globe, MapPin, Activity, Quote, Zap, ArrowRight } from "lucide-react";
+import { Globe, MapPin, Activity, Zap, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
 import { SplineScene } from "@/components/ui/spline";
 import { Spotlight } from "@/components/ui/spotlight";
 import { Card } from "@/components/ui/card";
 import { useCMS } from "@/context/CMSContext";
+
+import { SupportedTechStackBar } from "@/components/ui/SupportedTechStackBar";
+import { HubSpokeArchitecture } from "@/components/ui/HubSpokeArchitecture";
+import { RoiMetricsGrid } from "@/components/ui/RoiMetricsGrid";
+import { EnhancedTestimonial } from "@/components/ui/EnhancedTestimonial";
 
 const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -34,7 +39,7 @@ const Index = () => {
       {/* 1. HERO SECTION                                                           */}
       {/* ========================================================================= */}
       <section className="pt-24 pb-16 px-4 md:pt-32 md:pb-24 relative overflow-hidden text-center border-b border-[#ddc1b0]">
-        {/* Pure CSS Vibrant Orange Multi-stop Gradient matching Screenshot 1 */}
+        {/* Pure CSS Vibrant Orange Multi-stop Gradient */}
         <div
           className="absolute inset-0 pointer-events-none"
           style={{
@@ -45,7 +50,7 @@ const Index = () => {
           }}
         />
 
-        {/* Pure Code Halftone Micro-Dot Pattern Texture matching Screenshot 1 */}
+        {/* Pure Code Halftone Micro-Dot Pattern Texture */}
         <div
           className="absolute inset-0 pointer-events-none opacity-25"
           style={{
@@ -120,6 +125,11 @@ const Index = () => {
       </section>
 
       {/* ========================================================================= */}
+      {/* 1B. SUPPORTED DATA ANALYTICS & AI STACK + COMPLIANCE SHIELDS              */}
+      {/* ========================================================================= */}
+      <SupportedTechStackBar />
+
+      {/* ========================================================================= */}
       {/* 2. INTERACTIVE 3D ROBOT & AI INFRASTRUCTURE SHOWCASE                      */}
       {/* ========================================================================= */}
       <section className="py-20 px-4 border-b border-[#ddc1b0] bg-[#fff8f5]">
@@ -142,7 +152,7 @@ const Index = () => {
             </p>
           </motion.div>
 
-          {/* Interactive 3D Robot Card Container */}
+          {/* Interactive 3D Robot Card Container - 100% PRESERVED */}
           <motion.div
             initial={{ opacity: 0, y: 40, scale: 0.97 }}
             whileInView={{ opacity: 1, y: 0, scale: 1 }}
@@ -184,7 +194,7 @@ const Index = () => {
                   </div>
                 </div>
 
-                {/* Right 3D Spline Canvas */}
+                {/* Right 3D Spline Canvas - 100% PRESERVED */}
                 <div
                   onMouseMove={handleCanvasMouseMove}
                   onMouseLeave={handleCanvasMouseLeave}
@@ -253,8 +263,16 @@ const Index = () => {
               </motion.div>
             ))}
           </div>
+
+          {/* Quantifiable ROI Metrics Grid */}
+          <RoiMetricsGrid />
         </div>
       </section>
+
+      {/* ========================================================================= */}
+      {/* 2B. INTERACTIVE HUB-AND-SPOKE SYSTEM ARCHITECTURE DIAGRAM                 */}
+      {/* ========================================================================= */}
+      <HubSpokeArchitecture />
 
       {/* ========================================================================= */}
       {/* 3. BENTO GRID FEATURES SECTION                                            */}
@@ -308,58 +326,9 @@ const Index = () => {
       </section>
 
       {/* ========================================================================= */}
-      {/* 4. SOCIAL PROOF & TESTIMONIAL SECTION                                     */}
+      {/* 4. ENHANCED SOCIAL PROOF & VERIFIED TESTIMONIAL SECTION                   */}
       {/* ========================================================================= */}
-      <section className="py-24 px-4 text-center border-b border-[#ddc1b0]">
-        <div className="max-w-3xl mx-auto flex flex-col items-center">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ duration: 0.7, ease: SMOOTH_EASE }}
-          >
-            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-5xl font-extrabold text-[#241913] mb-4">
-              {testimonial.heading}
-            </h2>
-            <p className="font-['Inter'] text-base text-[#564336] mb-12">
-              {testimonial.subhead}
-            </p>
-          </motion.div>
-
-          {/* Testimonial Card */}
-          <motion.div
-            initial={{ opacity: 0, y: 40, scale: 0.98 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true, margin: "-80px" }}
-            transition={{ duration: 0.75, ease: SMOOTH_EASE, delay: 0.1 }}
-            className="bg-[#F3F3F3] p-8 rounded-2xl border border-[#ddc1b0] text-left relative mb-12 shadow-sm w-full"
-          >
-            <Quote className="w-10 h-10 text-[#ddc1b0] absolute top-6 left-6 opacity-40" />
-            <blockquote className="font-['Inter'] text-lg text-[#241913] mb-6 pl-10 relative z-10 leading-relaxed italic">
-              {testimonial.quote}
-            </blockquote>
-            <div className="flex items-center gap-4 pl-10">
-              <img
-                className="w-12 h-12 rounded-full border-2 border-[#ddc1b0] object-cover"
-                alt={`Headshot of ${testimonial.authorName}`}
-                src={testimonial.authorAvatar}
-              />
-              <div>
-                <div className="font-['Hanken_Grotesk'] text-sm font-bold text-[#241913]">
-                  {testimonial.authorName}
-                </div>
-                <div className="font-['Inter'] text-xs text-[#564336]">
-                  {testimonial.authorTitle}
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
-          <p className="font-['JetBrains_Mono'] text-xs text-[#564336] uppercase tracking-wider font-semibold">
-            {testimonial.footerCaption}
-          </p>
-        </div>
-      </section>
+      <EnhancedTestimonial />
 
       {/* ========================================================================= */}
       {/* 5. FINAL HIGH-IMPACT CTA BANNER                                           */}
