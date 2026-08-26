@@ -31,6 +31,12 @@ import {
   CheckCircle2,
   FileText,
   Navigation,
+  Eye,
+  EyeOff,
+  Database,
+  User,
+  Key,
+  Loader2,
 } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
 import { FullCMSData, DEFAULT_CMS_DATA, FAQItemCMS } from "@/lib/cms-store";
@@ -88,21 +94,94 @@ export default function AdminPage() {
   const { data, updateData, resetData } = useCMS();
   const [formData, setFormData] = useState<FullCMSData>(data);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [passcode, setPasscode] = useState("");
+  const [usernameInput, setUsernameInput] = useState("admin");
+  const [passwordInput, setPasswordInput] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [adminUser, setAdminUser] = useState<{ username: string; email?: string } | null>(null);
   const [activeTab, setActiveTab] = useState<TabType>("hero");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Settings tab credential update state
+  const [credUsername, setCredUsername] = useState("admin");
+  const [credPassword, setCredPassword] = useState("");
+  const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
 
   React.useEffect(() => {
     setFormData(data);
   }, [data]);
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === "alphaes2026" || passcode === "admin") {
-      setIsAuthenticated(true);
-      toast.success("Authenticated as Administrator");
-    } else {
-      toast.error("Invalid passcode. Try 'alphaes2026'");
+    if (!usernameInput.trim() || !passwordInput.trim()) {
+      toast.error("Please enter both username/email and password.");
+      return;
+    }
+
+    setIsAuthenticating(true);
+    try {
+      const res = await fetch("/api/admin/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: usernameInput.trim(),
+          password: passwordInput,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        setIsAuthenticated(true);
+        setAdminUser(result.user);
+        toast.success(`Welcome ${result.user.username}! Authenticated via Neon DB.`);
+      } else {
+        toast.error(result.error || "Authentication failed. Invalid credentials.");
+      }
+    } catch (err) {
+      console.error("Neon DB authentication error:", err);
+      toast.error("Failed to connect to Neon database authentication server.");
+    } finally {
+      setIsAuthenticating(false);
+    }
+  };
+
+  const handleUpdateCredentials = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!credUsername.trim() || !credPassword.trim()) {
+      toast.error("Username and new password are required.");
+      return;
+    }
+
+    if (credPassword.length < 6) {
+      toast.error("Password must be at least 6 characters.");
+      return;
+    }
+
+    setIsUpdatingCreds(true);
+    try {
+      const res = await fetch("/api/admin/credentials", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          username: credUsername.trim(),
+          password: credPassword,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (res.ok && result.success) {
+        toast.success("Admin credentials successfully updated in Neon DB!");
+        setCredPassword("");
+      } else {
+        toast.error(result.error || "Failed to update admin credentials.");
+      }
+    } catch (err) {
+      console.error("Error updating credentials:", err);
+      toast.error("Error connecting to database to update credentials.");
+    } finally {
+      setIsUpdatingCreds(false);
     }
   };
 
@@ -164,39 +243,92 @@ export default function AdminPage() {
       <div className="min-h-screen bg-[#1c130d] text-[#fff8f5] flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-[#241913] border-2 border-[#964900] p-8 rounded-2xl shadow-2xl space-y-6">
           <div className="flex flex-col items-center text-center space-y-2">
-            <div className="w-12 h-12 rounded-full bg-[#964900] flex items-center justify-center text-white mb-2 shadow-lg">
+            <div className="w-12 h-12 rounded-full bg-[#964900] flex items-center justify-center text-white mb-2 shadow-lg relative">
               <Lock className="w-6 h-6" />
+              <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1 border-2 border-[#241913]" title="Neon DB Connected">
+                <Database className="w-3 h-3 text-white" />
+              </div>
             </div>
             <h1 className="font-['Hanken_Grotesk'] text-2xl font-black text-[#ffb786]">
-              AlphaesAI CMS Control Panel
+              AlphaesAI Control Panel
             </h1>
-            <p className="font-['Inter'] text-xs text-[#f3ded3]/70">
-              Enter admin passcode to manage website content, headlines, subpages, footer links, and contact info.
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#392218] border border-[#ffb786]/30 text-[#ffb786] font-mono text-[10px] uppercase font-bold tracking-wider">
+              <Database className="w-3 h-3 text-emerald-400" />
+              Neon DB Authentication
+            </div>
+            <p className="font-['Inter'] text-xs text-[#f3ded3]/70 pt-1">
+              Enter your admin credentials to access live CMS controls, page headers, open roles, and website settings.
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] uppercase mb-2">
-                Admin Passcode
+              <label className="block font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] uppercase mb-1.5 flex items-center gap-1.5">
+                <User className="w-3.5 h-3.5 text-[#ff7700]" />
+                Username / Email
               </label>
               <input
-                type="password"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter passcode (alphaes2026)"
+                type="text"
+                value={usernameInput}
+                onChange={(e) => setUsernameInput(e.target.value)}
+                placeholder="Admin Username (default: admin)"
                 className="w-full bg-[#1c130d] border border-[#ddc1b0]/30 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#964900] font-['JetBrains_Mono']"
+                required
               />
             </div>
 
-            <button
-              type="submit"
-              className="w-full bg-[#964900] text-white font-['JetBrains_Mono'] font-bold py-3 rounded-lg hover:bg-[#b05600] transition-colors shadow-md flex items-center justify-center gap-2"
-            >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Unlock Admin Panel</span>
-            </button>
+            <div>
+              <label className="block font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] uppercase mb-1.5 flex items-center gap-1.5">
+                <Key className="w-3.5 h-3.5 text-[#ff7700]" />
+                Password
+              </label>
+              <div className="relative">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  value={passwordInput}
+                  onChange={(e) => setPasswordInput(e.target.value)}
+                  placeholder="Enter password (default: alphaes2026)"
+                  className="w-full bg-[#1c130d] border border-[#ddc1b0]/30 rounded-lg pl-4 pr-11 py-3 text-sm text-white focus:outline-none focus:border-[#964900] font-['JetBrains_Mono']"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f3ded3]/60 hover:text-white"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <button
+                type="submit"
+                disabled={isAuthenticating}
+                className="w-full bg-[#964900] text-white font-['JetBrains_Mono'] font-bold py-3 rounded-lg hover:bg-[#b05600] transition-colors shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isAuthenticating ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <span>Verifying Neon DB...</span>
+                  </>
+                ) : (
+                  <>
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Login to Admin Panel</span>
+                  </>
+                )}
+              </button>
+            </div>
           </form>
+
+          <div className="p-3 rounded-xl bg-[#1c130d]/80 border border-[#ddc1b0]/20 text-[11px] text-[#f3ded3]/70 space-y-1 font-mono">
+            <p className="font-bold text-[#ffb786] flex items-center gap-1">
+              <ShieldCheck className="w-3.5 h-3.5 text-emerald-400" /> Initial Login Credentials:
+            </p>
+            <p className="text-white/80">Username: <span className="text-[#ffb786]">admin</span></p>
+            <p className="text-white/80">Password: <span className="text-[#ffb786]">alphaes2026</span></p>
+          </div>
         </div>
       </div>
     );
@@ -2851,6 +2983,70 @@ export default function AdminPage() {
                 <Settings className="w-5 h-5" />
                 CMS Backups, JSON Import/Export & Reset
               </h2>
+
+              {/* NEON DB ADMIN CREDENTIAL MANAGEMENT */}
+              <div className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2 text-[#964900] font-bold text-sm">
+                    <Database className="w-4 h-4 text-emerald-600" />
+                    <span>Neon Database Admin Credentials</span>
+                  </div>
+                  <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                    Active Session: {adminUser?.username || "admin"}
+                  </span>
+                </div>
+                <p className="text-xs text-[#564336]">
+                  Update your admin username and password saved in your Neon PostgreSQL database. Future logins will authenticate against these updated credentials.
+                </p>
+
+                <form onSubmit={handleUpdateCredentials} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      New Username / Email
+                    </label>
+                    <input
+                      type="text"
+                      value={credUsername}
+                      onChange={(e) => setCredUsername(e.target.value)}
+                      placeholder="e.g. admin"
+                      className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm bg-white"
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      New Password
+                    </label>
+                    <input
+                      type="password"
+                      value={credPassword}
+                      onChange={(e) => setCredPassword(e.target.value)}
+                      placeholder="Enter new strong password"
+                      className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm bg-white"
+                      required
+                    />
+                  </div>
+                  <div className="md:col-span-2 pt-1 flex justify-end">
+                    <button
+                      type="submit"
+                      disabled={isUpdatingCreds}
+                      className="bg-[#964900] text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-[#b05600] transition-colors flex items-center gap-2 disabled:opacity-50"
+                    >
+                      {isUpdatingCreds ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                          <span>Updating Neon DB...</span>
+                        </>
+                      ) : (
+                        <>
+                          <ShieldCheck className="w-3.5 h-3.5" />
+                          <span>Update Neon DB Credentials</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+                </form>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-3">
