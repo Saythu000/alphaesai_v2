@@ -110,7 +110,14 @@ const productsDropdown = [
   { href: "/drgodly", label: "DrGodly — AI Telemedicine Suite" },
 ];
 
+const academyDropdown = [
+  { href: "/academy/agentic-ai", label: "Agentic AI", desc: "Autonomous multi-agent orchestration & tool calling" },
+  { href: "/academy/fullstack-developer-with-ai", label: "Fullstack Developer with AI", desc: "AI-native web apps with Next.js, Vector DBs & RAG" },
+  { href: "/academy/databricks", label: "Databricks", desc: "Lakehouse architecture, Delta Lake & PySpark tuning" },
+];
+
 const directLinks = [
+  { href: "/blog", label: "Blog" },
   { href: "/partners", label: "Partners" },
   { href: "/about", label: "About" },
 ];
@@ -120,12 +127,14 @@ export const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [productsOpen, setProductsOpen] = useState(false);
+  const [academyOpen, setAcademyOpen] = useState(false);
   const pathname = usePathname();
 
   useEffect(() => {
     setOpen(false);
     setServicesOpen(false);
     setProductsOpen(false);
+    setAcademyOpen(false);
   }, [pathname]);
 
   const isActive = (href: string) => {
@@ -284,6 +293,44 @@ export const Navbar = () => {
             )}
           </div>
 
+          {/* Academy Dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setAcademyOpen(true)}
+            onMouseLeave={() => setAcademyOpen(false)}
+          >
+            <button
+              onClick={() => setAcademyOpen(!academyOpen)}
+              className="flex items-center gap-1 px-4 py-2 text-xs font-['JetBrains_Mono'] font-medium text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
+            >
+              Academy
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  academyOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {academyOpen && (
+              <div className="absolute top-full left-0 mt-1 w-72 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl shadow-xl p-2.5 z-50 animate-in fade-in slide-in-from-top-2 duration-150">
+                {academyDropdown.map((item) => (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="block px-3 py-2.5 rounded-xl hover:bg-[#ffeade] transition-colors group"
+                  >
+                    <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] group-hover:text-[#964900]">
+                      {item.label}
+                    </div>
+                    <div className="text-[11px] font-['Inter'] text-[#564336] mt-0.5 leading-tight">
+                      {item.desc}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
           {/* Direct Links */}
           {directLinks.map((link) => (
             <Link
@@ -302,13 +349,6 @@ export const Navbar = () => {
 
         {/* Right CTA Section */}
         <div className="hidden md:flex items-center gap-4">
-          <Link
-            href="/contact"
-            className="text-xs font-['JetBrains_Mono'] font-medium text-[#564336] hover:text-[#241913] transition-colors"
-          >
-            Log In
-          </Link>
-
           {/* Split-Badge React Bits CTA Button */}
           <Link href={data.header?.primaryCtaHref || "/contact"} className="group relative inline-flex items-center shadow-md hover:shadow-lg transition-shadow">
             <span className="absolute right-0 inset-y-0 w-[calc(100%-1.25rem)] rounded-xl bg-[#964900]" />
@@ -360,6 +400,19 @@ export const Navbar = () => {
               Products
             </div>
             {productsDropdown.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="px-3 py-1.5 rounded-xl text-xs font-['JetBrains_Mono'] text-[#241913] hover:bg-[#ffeade]"
+              >
+                {item.label}
+              </Link>
+            ))}
+
+            <div className="text-[10px] font-['JetBrains_Mono'] uppercase tracking-wider text-[#964900] font-bold px-1 pt-2">
+              Academy Programs
+            </div>
+            {academyDropdown.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
