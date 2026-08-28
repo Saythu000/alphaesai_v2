@@ -2,42 +2,57 @@
 
 import { motion } from "framer-motion";
 import { TrendingDown, Zap, ShieldCheck, Clock } from "lucide-react";
+import { useCMS } from "@/context/CMSContext";
 
 const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
 
-const ROI_METRICS = [
-  {
-    value: "85%+",
-    label: "Cloud Compute & FinOps Savings",
-    description: "Achieved via Databricks/Snowflake query tuning, GPU cluster auto-scaling, and dynamic model quantization.",
-    icon: TrendingDown,
-  },
-  {
-    value: "10x",
-    label: "Faster Deployment Cycles",
-    description: "Forward Deployed AI Engineers embed directly into your workflows to launch production pipelines in days.",
-    icon: Zap,
-  },
-  {
-    value: "99.99%",
-    label: "Enterprise SLA Availability",
-    description: "High-availability multi-cloud data architecture with zero single-point-of-failure guarantees.",
-    icon: ShieldCheck,
-  },
-  {
-    value: "70%",
-    label: "Query Latency Reduction",
-    description: "Optimized indexing, hybrid vector retrieval, and distributed Spark processing on massive datasets.",
-    icon: Clock,
-  },
-];
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  TrendingDown,
+  Zap,
+  ShieldCheck,
+  Clock,
+};
 
 export function RoiMetricsGrid() {
+  const { data } = useCMS();
+  const roiMetrics = data?.homepage?.roiMetricsGrid || [
+    {
+      id: "m1",
+      value: "85%+",
+      label: "Cloud Compute & FinOps Savings",
+      description: "Achieved via Databricks/Snowflake query tuning, GPU cluster auto-scaling, and dynamic model quantization.",
+      iconName: "TrendingDown",
+    },
+    {
+      id: "m2",
+      value: "10x",
+      label: "Faster Deployment Cycles",
+      description: "Forward Deployed AI Engineers embed directly into your workflows to launch production pipelines in days.",
+      iconName: "Zap",
+    },
+    {
+      id: "m3",
+      value: "99.99%",
+      label: "Enterprise SLA Availability",
+      description: "High-availability multi-cloud data architecture with zero single-point-of-failure guarantees.",
+      iconName: "ShieldCheck",
+    },
+    {
+      id: "m4",
+      value: "70%",
+      label: "Query Latency Reduction",
+      description: "Optimized indexing, hybrid vector retrieval, and distributed Spark processing on massive datasets.",
+      iconName: "Clock",
+    },
+  ];
+
   return (
     <div className="w-full max-w-[1100px] mx-auto mt-12">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {ROI_METRICS.map((metric, idx) => {
-          const Icon = metric.icon;
+        {roiMetrics.map((metric, idx: number) => {
+          const Icon = ICON_MAP[metric.iconName] || TrendingDown;
+
+
           return (
             <motion.div
               key={metric.label}
@@ -71,3 +86,4 @@ export function RoiMetricsGrid() {
     </div>
   );
 }
+

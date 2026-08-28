@@ -67,6 +67,139 @@ export interface TestimonialCMSData {
   footerCaption: string;
 }
 
+// -----------------------------------------------------------------------------
+// NEW EXPANDED COMPONENT INTERFACES
+// -----------------------------------------------------------------------------
+
+export interface MegamenuCategoryItem {
+  id: string;
+  name: string;
+  desc: string;
+  badge: string;
+  href: string;
+  iconName: string;
+}
+
+export interface MegamenuCategory {
+  id: string;
+  title: string;
+  items: MegamenuCategoryItem[];
+  featuredTitle: string;
+  featuredDesc: string;
+  featuredHref: string;
+  featuredBadge: string;
+}
+
+export interface MegamenuDropdownItem {
+  id: string;
+  title: string;
+  desc: string;
+  href: string;
+  badge?: string;
+}
+
+export interface HeaderMegamenuCMSData {
+  servicesCategories: MegamenuCategory[];
+  productsDropdown: MegamenuDropdownItem[];
+  academyDropdown: MegamenuDropdownItem[];
+}
+
+export interface TechStackItem {
+  id: string;
+  name: string;
+  category: string;
+  iconName: string;
+}
+
+export interface ComplianceShieldItem {
+  id: string;
+  title: string;
+  badge: string;
+  description: string;
+}
+
+export interface TechStackBarCMSData {
+  badge: string;
+  title: string;
+  subtitle: string;
+  techStack: TechStackItem[];
+  complianceShields: ComplianceShieldItem[];
+}
+
+export interface ArchNodeMetric {
+  label: string;
+  value: string;
+}
+
+export interface ArchNodeCMS {
+  id: string;
+  title: string;
+  subtitle: string;
+  badge: string;
+  iconName: string;
+  stack: string[];
+  metrics: ArchNodeMetric[];
+  description: string;
+  security: string;
+}
+
+export interface HubSpokeArchCMSData {
+  badgeText: string;
+  title: string;
+  subtitle: string;
+  nodes: ArchNodeCMS[];
+}
+
+export interface TestimonialItemCMS {
+  id: string;
+  quote: string;
+  authorName: string;
+  authorTitle: string;
+  authorAvatar: string;
+  domain: string;
+  roiChips: string[];
+  videoThumbnail: string;
+  videoTitle: string;
+}
+
+export interface EnhancedTestimonialCMSData {
+  badgeText: string;
+  title: string;
+  subtitle: string;
+  items: TestimonialItemCMS[];
+}
+
+export interface RoiMetricCMS {
+  id: string;
+  value: string;
+  label: string;
+  description: string;
+  iconName: string;
+}
+
+export interface FdeRadialNodeCMS {
+  id: string;
+  name: string;
+  iconName: string;
+  angle: number;
+}
+
+export interface FdeStepCMS {
+  id: string;
+  number: string;
+  title: string;
+  description: string;
+  targetNodeIds: string[];
+}
+
+export interface FdeInteractiveHubCMSData {
+  badgeText?: string;
+  title?: string;
+  nodes: FdeRadialNodeCMS[];
+  steps: FdeStepCMS[];
+}
+
+
 export interface HomepageCMSData {
   hero: HomepageHeroCMSData;
   showcase3d: Homepage3DCMSData;
@@ -85,6 +218,11 @@ export interface HomepageCMSData {
     secondaryCtaText: string;
     secondaryCtaHref: string;
   };
+  techStackBar: TechStackBarCMSData;
+  hubSpokeArch: HubSpokeArchCMSData;
+  enhancedTestimonials: EnhancedTestimonialCMSData;
+  roiMetricsGrid: RoiMetricCMS[];
+  fdeInteractiveHub: FdeInteractiveHubCMSData;
 }
 
 export interface HeaderCMSData {
@@ -94,6 +232,7 @@ export interface HeaderCMSData {
   navLinks: FooterLink[];
   primaryCtaText: string;
   primaryCtaHref: string;
+  megamenu: HeaderMegamenuCMSData;
 }
 
 export interface ServiceCardCMS {
@@ -126,6 +265,85 @@ export interface ServicesCMSData {
   fdeDescription: string;
   fdeCtaText: string;
   fdeCtaHref: string;
+}
+
+export interface ServiceFrictionPointCMS {
+  title: string;
+  tag: string;
+  desc: string;
+  iconName: string;
+}
+
+export interface ServiceCapabilityCMS {
+  id: string;
+  badge: string;
+  title: string;
+  desc: string;
+  highlights: string[];
+  iconName: string;
+}
+
+export interface ServiceEngagementTierCMS {
+  title: string;
+  subtitle: string;
+  desc: string;
+  cta: string;
+  href: string;
+  featured: boolean;
+  deliverables: string[];
+}
+
+export interface ServiceSubpageDetailCMS {
+  heroBadge: string;
+  title: string;
+  subtitle: string;
+  description: string;
+  capabilitiesBadges: string[];
+  primaryCtaText: string;
+  primaryCtaHref: string;
+  secondaryCtaText: string;
+  secondaryCtaHref: string;
+  frictionPoints: ServiceFrictionPointCMS[];
+  capabilities: ServiceCapabilityCMS[];
+  aiDifferencePoints: { title: string; desc: string; iconName: string }[];
+  engagementTiers: ServiceEngagementTierCMS[];
+  faqs: { q: string; a: string }[];
+}
+
+export interface ServiceSubpagesCMSData {
+  cloudMigration: ServiceSubpageDetailCMS;
+  fde: ServiceSubpageDetailCMS;
+  dataAnnotation: ServiceSubpageDetailCMS;
+  databaseTuning: ServiceSubpageDetailCMS;
+}
+
+export interface AcademyModuleCMS {
+  step: string;
+  title: string;
+  desc: string;
+  skills: string[];
+}
+
+export interface AcademyTrackDetailCMS {
+  heroBadge: string;
+  title: string;
+  subtitle: string;
+  primaryCtaText: string;
+  primaryCtaHref: string;
+  secondaryCtaText: string;
+  secondaryCtaHref: string;
+  highlights: { title: string; desc: string; iconName: string }[];
+  modules: AcademyModuleCMS[];
+  ctaTitle: string;
+  ctaDesc: string;
+  ctaBtnText: string;
+  ctaBtnHref: string;
+}
+
+export interface AcademySubpagesCMSData {
+  agenticAi: AcademyTrackDetailCMS;
+  databricks: AcademyTrackDetailCMS;
+  fullstackAi: AcademyTrackDetailCMS;
 }
 
 export interface DrGodlyCMSData {
@@ -208,6 +426,41 @@ export interface CareersCMSData {
   jobs: JobPostingCMS[];
 }
 
+// -----------------------------------------------------------------------------
+// BLOG CMS INTERFACES
+// -----------------------------------------------------------------------------
+export interface BlogPostSectionCMS {
+  heading: string;
+  body: string;
+  codeSnippet?: string;
+}
+
+export interface BlogPostCMSData {
+  id: string;
+  title: string;
+  category: string;
+  readTime: string;
+  date: string;
+  author: string;
+  authorRole: string;
+  snippet: string;
+  featured?: boolean;
+  content: {
+    introduction: string;
+    keyTakeaways: string[];
+    sections: BlogPostSectionCMS[];
+    conclusion: string;
+  };
+}
+
+export interface BlogCMSData {
+  heroBadge: string;
+  title: string;
+  subtitle: string;
+  categories: string[];
+  articles: BlogPostCMSData[];
+}
+
 export interface PagesCMSData {
   services: ServicesCMSData;
   drgodly: DrGodlyCMSData;
@@ -216,6 +469,8 @@ export interface PagesCMSData {
   partners: PartnersCMSData;
   contact: ContactCMSData;
   careers: CareersCMSData;
+  serviceSubpages: ServiceSubpagesCMSData;
+  academySubpages: AcademySubpagesCMSData;
 }
 
 export interface FullCMSData {
@@ -223,6 +478,7 @@ export interface FullCMSData {
   footer: FooterCMSData;
   homepage: HomepageCMSData;
   pages: PagesCMSData;
+  blog: BlogCMSData;
 }
 
 export const DEFAULT_CMS_DATA: FullCMSData = {
@@ -236,10 +492,190 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       { id: "nav-3", label: "Dr. Godly Health", href: "/drgodly" },
       { id: "nav-4", label: "Partners", href: "/partners" },
       { id: "nav-5", label: "About", href: "/about" },
-      { id: "nav-6", label: "Contact", href: "/contact" },
+      { id: "nav-6", label: "Blog", href: "/blog" },
+      { id: "nav-7", label: "Contact", href: "/contact" },
     ],
     primaryCtaText: "Contact Us",
     primaryCtaHref: "/contact",
+    megamenu: {
+      servicesCategories: [
+        {
+          id: "cat-ai",
+          title: "AI & Engineering",
+          items: [
+            {
+              id: "item-fde",
+              name: "Forward Deployed AI (FDE)",
+              desc: "Embedded senior AI engineers to ship production code.",
+              badge: "Popular",
+              href: "/services/forward-deployed-ai-engineering",
+              iconName: "Cpu",
+            },
+            {
+              id: "item-agents",
+              name: "Autonomous AI Agents",
+              desc: "Tool-calling swarms and self-healing agentic workflows.",
+              badge: "SOTA",
+              href: "/services/forward-deployed-ai-engineering",
+              iconName: "Bot",
+            },
+            {
+              id: "item-rag",
+              name: "RAG & Vector DB Systems",
+              desc: "Hybrid vector search, reranking, and knowledge graph DBs.",
+              badge: "Enterprise",
+              href: "/services/forward-deployed-ai-engineering",
+              iconName: "Layers",
+            },
+          ],
+          featuredTitle: "Forward Deployed AI Model",
+          featuredDesc: "Our senior AI engineers operate within your codebase and cloud boundary to deliver custom models.",
+          featuredHref: "/services/forward-deployed-ai-engineering",
+          featuredBadge: "FDE Execution",
+        },
+        {
+          id: "cat-data",
+          title: "Data & Cloud Optimization",
+          items: [
+            {
+              id: "item-dbx",
+              name: "Databricks Lakehouse Mastery",
+              desc: "Delta Lake tuning, Liquid Clustering, and DBU cost cuts.",
+              badge: "FinOps",
+              href: "/services/database-performance-and-cloud-optimization",
+              iconName: "Database",
+            },
+            {
+              id: "item-sf",
+              name: "Snowflake Warehouse Tuning",
+              desc: "Query optimization, auto-scaling, and Snowpark AI pipelines.",
+              badge: "5x Speed",
+              href: "/services/database-performance-and-cloud-optimization",
+              iconName: "Zap",
+            },
+            {
+              id: "item-cloud",
+              name: "Cloud Architecture & Migration",
+              desc: "Multi-cloud IaC across AWS, Azure, GCP, and OCI.",
+              badge: "Zero-Lockin",
+              href: "/services/cloud-migration-cyber-security-databricks-snowflake",
+              iconName: "Cloud",
+            },
+          ],
+          featuredTitle: "Database & Cloud Tuning",
+          featuredDesc: "Cut Snowflake & Databricks compute spend by up to 60% with zero downtime.",
+          featuredHref: "/services/database-performance-and-cloud-optimization",
+          featuredBadge: "60% Cost Cut",
+        },
+        {
+          id: "cat-rlhf",
+          title: "Data Annotation & RLHF",
+          items: [
+            {
+              id: "item-rlhf-align",
+              name: "RLHF & Data Curation",
+              desc: "Domain-expert fine-tuning datasets and preference ranking.",
+              badge: "High Precision",
+              href: "/services/data-annotation-and-rlhf",
+              iconName: "CheckCircle2",
+            },
+            {
+              id: "item-cv",
+              name: "Computer Vision & Multimodal",
+              desc: "Bounding box, segmentation, and video telemetry labeling.",
+              badge: "Multi-Modal",
+              href: "/services/data-annotation-and-rlhf",
+              iconName: "Sparkles",
+            },
+            {
+              id: "item-label",
+              name: "Enterprise Data Labeling",
+              desc: "Human-in-the-loop validation for medical, legal, and financial AI.",
+              badge: "HIPAA Ready",
+              href: "/services/data-annotation-and-rlhf",
+              iconName: "ShieldCheck",
+            },
+          ],
+          featuredTitle: "Data Curation & Alignment",
+          featuredDesc: "High-precision datasets curated by domain experts for enterprise model accuracy.",
+          featuredHref: "/services/data-annotation-and-rlhf",
+          featuredBadge: "Domain Experts",
+        },
+        {
+          id: "cat-sec",
+          title: "Cloud & Cybersecurity",
+          items: [
+            {
+              id: "item-sec-zt",
+              name: "Zero-Trust AI Security",
+              desc: "Policy-as-code, prompt injection guardrails, and IAM scoping.",
+              badge: "SOC-2 Ready",
+              href: "/services/cloud-migration-cyber-security-databricks-snowflake",
+              iconName: "ShieldCheck",
+            },
+            {
+              id: "item-devsecops",
+              name: "DevSecOps & Policy-as-Code",
+              desc: "Automated OPA, Gatekeeper, and secrets scanning pipelines.",
+              badge: "Automated",
+              href: "/services/cloud-migration-cyber-security-databricks-snowflake",
+              iconName: "Lock",
+            },
+            {
+              id: "item-k8s",
+              name: "Production Kubernetes",
+              desc: "EKS, AKS, GKE clusters with GPU scheduling and RBAC isolation.",
+              badge: "Kubernetes",
+              href: "/services/cloud-migration-cyber-security-databricks-snowflake",
+              iconName: "Server",
+            },
+          ],
+          featuredTitle: "Zero-Trust Cloud Defense",
+          featuredDesc: "Protect your AI data pipelines with policy-as-code and automated compliance guardrails.",
+          featuredHref: "/services/cloud-migration-cyber-security-databricks-snowflake",
+          featuredBadge: "Cyber Security",
+        },
+      ],
+      productsDropdown: [
+        {
+          id: "prod-oneai",
+          title: "OneAI Assist — Enterprise Agent Platform",
+          desc: "Multi-vector knowledge retrieval, autonomous workflow execution, and enterprise RBAC.",
+          href: "/oneai-assist",
+          badge: "SaaS Platform",
+        },
+        {
+          id: "prod-drgodly",
+          title: "DrGodly — AI Telemedicine Suite",
+          desc: "HIPAA-compliant clinical decision support, EHR integration, and multi-modal diagnostics.",
+          href: "/drgodly",
+          badge: "Healthcare AI",
+        },
+      ],
+      academyDropdown: [
+        {
+          id: "acad-agentic",
+          title: "Agentic AI Architecture",
+          desc: "Master tool-calling swarms, Antigravity SDK, and sub-100ms agent execution.",
+          href: "/academy/agentic-ai",
+          badge: "Deep Tech",
+        },
+        {
+          id: "acad-fullstack",
+          title: "Fullstack Developer with AI",
+          desc: "Build Next.js 15 streaming copilots, vector DB search, and server-sent events.",
+          href: "/academy/fullstack-developer-with-ai",
+          badge: "Hands-on",
+        },
+        {
+          id: "acad-databricks",
+          title: "Databricks Lakehouse Mastery",
+          desc: "Liquid Clustering, PySpark shuffle elimination, and FinOps DBU optimization.",
+          href: "/academy/databricks",
+          badge: "FinOps & Data",
+        },
+      ],
+    },
   },
   footer: {
     brandName: "AlphaesAI",
@@ -354,6 +790,197 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       secondaryCtaText: "View docs",
       secondaryCtaHref: "/services",
     },
+    techStackBar: {
+      badge: "Enterprise Stack & Security Standards",
+      title: "Data Analytics & Enterprise AI Infrastructure Stack",
+      subtitle: "Built directly on industry-standard Data Warehouses, Distributed Analytics Engines, and SOTA AI Frameworks.",
+      techStack: [
+        { id: "ts-1", name: "Databricks", category: "Lakehouse & Compute", iconName: "Database" },
+        { id: "ts-2", name: "Snowflake", category: "Data Warehouse", iconName: "Zap" },
+        { id: "ts-3", name: "Apache Spark", category: "Distributed Processing", iconName: "Cpu" },
+        { id: "ts-4", name: "Google BigQuery", category: "Cloud Analytics", iconName: "Globe" },
+        { id: "ts-5", name: "PyTorch", category: "Deep Learning", iconName: "Layers" },
+        { id: "ts-6", name: "Hugging Face", category: "Model Zoo & Hub", iconName: "Sparkles" },
+        { id: "ts-7", name: "OpenAI API", category: "Foundation Models", iconName: "Bot" },
+        { id: "ts-8", name: "LangChain", category: "Agent Framework", iconName: "Workflow" },
+        { id: "ts-9", name: "Pinecone", category: "Vector Database", iconName: "Server" },
+        { id: "ts-10", name: "dbt Cloud", category: "Data Transformation", iconName: "Terminal" },
+        { id: "ts-11", name: "Neon DB", category: "Serverless Postgres", iconName: "Database" },
+        { id: "ts-12", name: "Antigravity SDK", category: "Agentic Loop SDK", iconName: "ShieldCheck" },
+      ],
+      complianceShields: [
+        { id: "cs-1", title: "SOC-2 Type II", badge: "SOC-2 Certified", description: "Audited security, availability, and confidential data processing controls." },
+        { id: "cs-2", title: "HIPAA Ready", badge: "HIPAA Compliant", description: "BAA execution, encrypted medical data pipelines & PHI sanitization." },
+        { id: "cs-3", title: "ISO 27001", badge: "ISO Certified", description: "Global information security management system & risk governance." },
+        { id: "cs-4", title: "GDPR Privacy", badge: "EU Privacy Shield", description: "Strict data sovereignty, right-to-forget & zero data retention guarantees." },
+      ],
+    },
+    hubSpokeArch: {
+      badgeText: "System Architecture",
+      title: "Interactive Enterprise AI & Data Analytics Pipeline",
+      subtitle: "Click any architectural node to inspect live data throughput, security guardrails, and supported tech stacks.",
+      nodes: [
+        {
+          id: "ingestion",
+          title: "Data Ingestion & Analytics",
+          subtitle: "Batch & Real-time Streaming",
+          badge: "STAGE 01",
+          iconName: "Database",
+          stack: ["Apache Spark", "Databricks Delta", "Snowflake", "dbt", "Kafka"],
+          metrics: [
+            { label: "Throughput", value: "2.4 GB/sec" },
+            { label: "Pipeline Latency", value: "< 45ms" },
+          ],
+          description: "Massive scale ingestion from transactional DBs, IoT logs, and warehouse streams into Delta Lakehouses with zero data loss.",
+          security: "End-to-End TLS 1.3 Encryption • Automated Schema Drift Validation",
+        },
+        {
+          id: "finetuning",
+          title: "AI Model Fine-Tuning & GPU",
+          subtitle: "Domain Adaptation & Quantization",
+          badge: "STAGE 02",
+          iconName: "Cpu",
+          stack: ["PyTorch", "Hugging Face", "vLLM", "Ray Train", "NVIDIA H100"],
+          metrics: [
+            { label: "GPU Utilization", value: "94.2%" },
+            { label: "Inference Speed", value: "140 tok/sec" },
+          ],
+          description: "Parameter-Efficient Fine-Tuning (LoRA/QLoRA) of open-weights LLMs tailored for high-accuracy enterprise domain tasks.",
+          security: "Isolated GPU Enclaves • Encrypted Model Checkpoints in Cloud Buckets",
+        },
+        {
+          id: "rlhf",
+          title: "RLHF & Data Curation",
+          subtitle: "Human Alignment & Preference Scoring",
+          badge: "STAGE 03",
+          iconName: "CheckCircle2",
+          stack: ["DPO/PPO", "Argilla", "Custom Annotation Hub", "CleanLab"],
+          metrics: [
+            { label: "Alignment Score", value: "99.1%" },
+            { label: "Hallucination Rate", value: "< 0.05%" },
+          ],
+          description: "Domain-expert reinforcement learning and preference scoring to eliminate hallucinations and enforce safety guidelines.",
+          security: "Human-in-the-Loop Approval • PII Anonymization Filters",
+        },
+        {
+          id: "vector",
+          title: "Vector Search & Knowledge DB",
+          subtitle: "Hybrid Dense/Sparse Retrieval",
+          badge: "STAGE 04",
+          iconName: "Layers",
+          stack: ["Pinecone", "Qdrant", "pgvector", "Databricks Vector Search"],
+          metrics: [
+            { label: "Recall Rate", value: "98.7%" },
+            { label: "Query Latency", value: "12ms" },
+          ],
+          description: "Sub-15ms semantic retrieval across tens of millions of enterprise documents using hybrid vector search and neural reranking.",
+          security: "Tenant Document Isolation • Row-Level Access Control (RLS)",
+        },
+        {
+          id: "gateway",
+          title: "Secure API & Analytics Gateway",
+          subtitle: "Zero-Trust Agent Runtime",
+          badge: "STAGE 05",
+          iconName: "ShieldCheck",
+          stack: ["Antigravity SDK", "FastAPI", "Kong Gateway", "Open Policy Agent"],
+          metrics: [
+            { label: "Uptime SLA", value: "99.999%" },
+            { label: "Security Interceptions", value: "100%" },
+          ],
+          description: "Rate-limited, zero-trust API gateway enforcing prompt injection defense, RBAC tool allowlisting, and audit logging.",
+          security: "LlamaGuard Input/Output Scanners • OAuth2 / SAML SSO Binding",
+        },
+      ],
+    },
+    enhancedTestimonials: {
+      badgeText: "Client Success & Proven ROI",
+      title: "Trusted by Engineering & Data Leaders",
+      subtitle: "Real results delivered by our Forward-Deployed AI Engineers and cloud data optimization stack.",
+      items: [
+        {
+          id: "fintech",
+          quote: "AlphaesAI's Forward-Deployed Engineers transformed our Databricks analytics pipeline, cutting query latency by 72% and saving over $18,000 per month in GPU compute costs within 3 weeks.",
+          authorName: "Sarah Jenkins",
+          authorTitle: "VP of Enterprise Data Engineering, Flowstate Fintech",
+          authorAvatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+          domain: "Fintech & Data Warehousing",
+          roiChips: ["72% Latency Reduction", "$18.5k/mo Savings", "3-Week Rollout"],
+          videoThumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&auto=format&fit=crop&q=80",
+          videoTitle: "Case Study: Scaling High-Throughput Analytics at Flowstate",
+        },
+        {
+          id: "healthcare",
+          quote: "With DrGodly AI and AlphaesAI's HIPAA-ready data pipeline, our clinical research teams process complex patient records 5x faster while maintaining 100% data privacy compliance.",
+          authorName: "Dr. Marcus Vance, Ph.D.",
+          authorTitle: "Director of Clinical Informatics, BioGenesis Health",
+          authorAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+          domain: "Healthcare & Life Sciences",
+          roiChips: ["5x Faster Intake", "100% HIPAA BAA", "Zero Data Leakage"],
+          videoThumbnail: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop&q=80",
+          videoTitle: "Case Study: Secure Medical NLP at BioGenesis",
+        },
+        {
+          id: "logistics",
+          quote: "Deploying OneAI Assist automated 85% of our tier-1 support tickets instantly. Their custom fine-tuned model outperformed off-the-shelf APIs with 99.4% resolution accuracy.",
+          authorName: "David Sterling",
+          authorTitle: "Head of Operations & AI Systems, Global LogiTech",
+          authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+          domain: "Global Supply Chain & SaaS",
+          roiChips: ["85% Automated Tickets", "99.4% Accuracy", "< 500ms Response"],
+          videoThumbnail: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop&q=80",
+          videoTitle: "Case Study: Customer Automation at Global LogiTech",
+        },
+      ],
+    },
+    roiMetricsGrid: [
+      {
+        id: "roi-1",
+        value: "85%+",
+        label: "Cloud Compute & FinOps Savings",
+        description: "Achieved via Databricks/Snowflake query tuning, GPU cluster auto-scaling, and dynamic model quantization.",
+        iconName: "TrendingDown",
+      },
+      {
+        id: "roi-2",
+        value: "10x",
+        label: "Faster Deployment Cycles",
+        description: "Forward Deployed AI Engineers embed directly into your workflows to launch production pipelines in days.",
+        iconName: "Zap",
+      },
+      {
+        id: "roi-3",
+        value: "99.99%",
+        label: "Enterprise SLA Availability",
+        description: "High-availability multi-cloud data architecture with zero single-point-of-failure guarantees.",
+        iconName: "ShieldCheck",
+      },
+      {
+        id: "roi-4",
+        value: "70%",
+        label: "Query Latency Reduction",
+        description: "Optimized indexing, hybrid vector retrieval, and distributed Spark processing on massive datasets.",
+        iconName: "Clock",
+      },
+    ],
+    fdeInteractiveHub: {
+      nodes: [
+        { id: "ai-agents", name: "AI Agents", iconName: "Bot", angle: 0 },
+        { id: "rag-systems", name: "RAG Systems", iconName: "Layers", angle: 45 },
+        { id: "sec-gov", name: "Security & Governance", iconName: "ShieldCheck", angle: 90 },
+        { id: "cloud-platform", name: "Cloud Platform", iconName: "Cloud", angle: 135 },
+        { id: "platform-eng", name: "Platform Engineering", iconName: "Cpu", angle: 180 },
+        { id: "integrations", name: "Enterprise Integrations", iconName: "Workflow", angle: 225 },
+        { id: "automation", name: "Automation & Orchestration", iconName: "Zap", angle: 270 },
+        { id: "data-eng", name: "Data Engineering", iconName: "Database", angle: 315 },
+      ],
+      steps: [
+        { id: "step-1", number: "01", title: "DISCOVER", description: "Audit legacy architecture, security boundaries, and data bottlenecks.", targetNodeIds: ["data-eng", "sec-gov"] },
+        { id: "step-2", number: "02", title: "DESIGN", description: "Architect multi-cloud topology, vector indexes, and agent state graphs.", targetNodeIds: ["rag-systems", "cloud-platform"] },
+        { id: "step-3", number: "03", title: "BUILD", description: "Embed FDE engineers to write production code directly inside client repos.", targetNodeIds: ["ai-agents", "integrations"] },
+        { id: "step-4", number: "04", title: "DEPLOY", description: "Launch zero-downtime blue/green pipelines with automated CI/CD guardrails.", targetNodeIds: ["automation", "platform-eng"] },
+        { id: "step-5", number: "05", title: "OPTIMIZE", description: "Continuous FinOps cost rightsizing, SLO tracking, and model quantization.", targetNodeIds: ["cloud-platform", "data-eng"] },
+      ],
+    },
   },
   pages: {
     services: {
@@ -395,6 +1022,271 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       fdeDescription: "Our senior AI engineers operate within your codebase, infrastructure, and security boundary to deliver fully custom AI agents, automated pipelines, and cloud optimizations.",
       fdeCtaText: "Request FDE Deployment",
       fdeCtaHref: "/contact",
+    },
+    serviceSubpages: {
+      cloudMigration: {
+        heroBadge: "CLOUD MIGRATION · CYBER SECURITY · DATABRICKS & SNOWFLAKE",
+        title: "Cloud Infrastructure Built for the AI Era.",
+        subtitle: "Scalable. Secure. Optimized.",
+        description: "Traditional cloud infrastructure was never designed for the demands of modern AI. From volatile GPU requirements and complex data pipelines to the security implications of large-scale LLMs, the old playbooks no longer apply. AlphaesAI engineers high-performance cloud environments—across AWS, Azure, GCP, and OCI—that integrate security, cost-optimization, and data architecture from Day 1. We don’t just move workloads; we build foundations that make your AI systems viable, scalable, and secure.",
+        capabilitiesBadges: ["AWS", "Azure", "GCP", "OCI", "Databricks", "Snowflake", "Production Kubernetes", "Policy-as-Code"],
+        primaryCtaText: "Schedule an Executive Briefing",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "Explore Capabilities",
+        secondaryCtaHref: "#capabilities",
+        frictionPoints: [
+          { title: "Escalating Cloud Spend", tag: "FINOPS FRICTION", desc: "GPU and compute costs spiraling without clear attribution to ROI, leading to runaway monthly cloud invoices.", iconName: "DollarSign" },
+          { title: "Security Gaps", tag: "SECOPS RISKS", desc: "Traditional network perimeters fail to account for the specific data access, PII sanitization, and LLM security needs of AI.", iconName: "Lock" },
+          { title: "Data Bottlenecks", tag: "PIPELINE STALLS", desc: "Disconnected data silos in Databricks or Snowflake that slow down model training, batch processing, and real-time inference.", iconName: "Database" },
+          { title: "Operational Debt", tag: "DEVOPS BOTTLENECK", desc: "Manual, undocumented infrastructure that prevents your engineering team from shipping models and features to production.", iconName: "Server" },
+        ],
+        capabilities: [
+          {
+            id: "migration",
+            badge: "Multi-Cloud Migration",
+            title: "Cloud Architecture & Migration",
+            desc: "We design, modernize, and migrate environments across AWS, Azure, GCP, and OCI. Our focus is zero-downtime, infrastructure-as-code (IaC) execution with Terraform and OpenTofu that eliminates vendor lock-in.",
+            highlights: [
+              "Zero-downtime blue/green workloads migration",
+              "Infrastructure-as-Code (Terraform, OpenTofu, Pulumi)",
+              "Multi-cloud architectures across AWS, Azure, GCP & OCI",
+            ],
+            iconName: "Cloud",
+          },
+          {
+            id: "security",
+            badge: "Cyber Security & Guardrails",
+            title: "Secure Infrastructure (Cyber Security)",
+            desc: "Security isn't an afterthought. We implement policy-as-code, identity and access management (IAM), and automated compliance guardrails that prevent non-compliant infrastructure before it deploys.",
+            highlights: [
+              "Automated policy-as-code (OPA & Gatekeeper)",
+              "Zero-trust IAM least-privilege scoping & RBAC",
+              "PII sanitization & AI agent execution boundaries",
+            ],
+            iconName: "ShieldCheck",
+          },
+          {
+            id: "lakehouse",
+            badge: "Data Lakehouse & Warehouse",
+            title: "AI-Ready Data Foundations (Databricks & Snowflake)",
+            desc: "We bridge the gap between your cloud and your data. From architecting high-performance Delta lakehouses in Databricks to optimizing Snowflake data warehousing, we ensure your data stack is clean, secure, and ready for model training.",
+            highlights: [
+              "Databricks Unity Catalog & Delta Lake orchestration",
+              "Snowflake warehouse optimization & cost controls",
+              "Feature store setup & real-time streaming ingestion",
+            ],
+            iconName: "Database",
+          },
+          {
+            id: "k8s",
+            badge: "Container & GPU Compute",
+            title: "Production Kubernetes & GPU Orchestration",
+            desc: "Enterprise-grade EKS, AKS, GKE, and self-managed clusters with GPU-aware scheduling, robust RBAC, and namespace isolation strategies designed specifically for high-throughput AI compute.",
+            highlights: [
+              "GPU-aware pod scheduling & node auto-scaling",
+              "Hardened EKS, AKS, GKE & hybrid clusters",
+              "Namespace isolation & workload cost attribution",
+            ],
+            iconName: "Cpu",
+          },
+          {
+            id: "observability",
+            badge: "Telemetry & SRE",
+            title: "Observability & High Availability",
+            desc: "Actionable telemetry, standardized structured logging, and strict Service Level Objectives (SLOs). We build resilient self-healing systems that tell you what’s wrong before your users notice.",
+            highlights: [
+              "Full-stack Datadog, Prometheus & Grafana telemetry",
+              "Automated alerting & incident playbook generation",
+              "Strict SLO/SLA monitoring for model inference APIs",
+            ],
+            iconName: "Activity",
+          },
+        ],
+        aiDifferencePoints: [
+          { title: "Cost-Aware Design", desc: "We bake cost attribution and GPU scheduling into your infrastructure architecture from Day 1—not as an unexpected line item on the invoice.", iconName: "DollarSign" },
+          { title: "Unified Expertise", desc: "The same senior engineers who architect your cloud infrastructure also understand the data pipelines, vector DBs, and LLM models running on top of it.", iconName: "Layers" },
+          { title: "No Vendor Lock-in", desc: "We build for multi-cloud flexibility, choosing the platform and tools that fit your specific performance and budget needs without proprietary hooks.", iconName: "Globe" },
+        ],
+        engagementTiers: [
+          {
+            title: "Cloud & Security Audit",
+            subtitle: "DIAGNOSTIC & READINESS",
+            desc: "A diagnostic deep-dive to identify vulnerabilities, cost inefficiencies, and performance bottlenecks in your current setup.",
+            cta: "Get the Audit",
+            href: "/contact?service=cloud-audit",
+            featured: false,
+            deliverables: [
+              "Infrastructure & security architecture review",
+              "FinOps cloud spend diagnostic",
+              "AI data readiness assessment",
+              "Prioritized remediation roadmap",
+            ],
+          },
+          {
+            title: "Infrastructure Modernization & Migration",
+            subtitle: "FULL-STACK EXECUTION",
+            desc: "Full-stack migration or refactoring projects designed to get your environments cloud-native, secure, and AI-ready.",
+            cta: "Discuss Your Roadmap",
+            href: "/contact?service=cloud-migration",
+            featured: true,
+            deliverables: [
+              "Zero-downtime cloud & data migration",
+              "IaC codebase buildout (Terraform/OpenTofu)",
+              "Databricks & Snowflake lakehouse setup",
+              "EKS/GKE production Kubernetes setup",
+            ],
+          },
+          {
+            title: "Continuous Optimization (FinOps & SecOps)",
+            subtitle: "MANAGED GOVERNANCE",
+            desc: "Ongoing oversight to keep your cloud spend, security posture, and data architecture performant as your AI usage grows.",
+            cta: "Talk to an Expert",
+            href: "/contact?service=continuous-optimization",
+            featured: false,
+            deliverables: [
+              "Monthly FinOps cost rightsizing",
+              "Continuous SecOps compliance scanning",
+              "Databricks/Snowflake performance tuning",
+              "Dedicated senior cloud engineer access",
+            ],
+          },
+        ],
+        faqs: [
+          { q: "How do you handle Databricks/Snowflake integration?", a: "We don't just manage the data tools; we optimize the entire pipeline—from how data flows into your lakehouse to how your cloud infrastructure supports high-concurrency model inference and feature retrieval." },
+          { q: "Do you focus on one cloud provider?", a: "We work seamlessly across AWS, Azure, GCP, and OCI. We advocate for the architecture that serves your business needs and workload requirements, not the platform that’s easiest to sell." },
+          { q: "Is my infrastructure 'AI-ready'?", a: "If your infrastructure lacks GPU scheduling, granular cost-attribution, or secure integration with your data warehouses (Snowflake/Databricks), it is likely creating friction. We can perform a rapid audit of your setup and tell you exactly where the gaps are." },
+          { q: "How long does a typical cloud migration or refactoring take?", a: "Diagnostic audits take 1–2 weeks. Full modernization or zero-downtime migration projects typically range from 4 to 12 weeks depending on workload complexity, with zero interruption to your live production users." },
+        ],
+      },
+      fde: {
+        heroBadge: "FORWARD-DEPLOYED AI ENGINEERING (FDE)",
+        title: "Senior AI Engineers Embedded Directly Into Your Team.",
+        subtitle: "Zero Handoff Friction. Production Velocity.",
+        description: "Traditional tech consultancies leave behind slides and static reports. AlphaesAI deploys Forward-Deployed AI Engineers directly into your codebase, Git repositories, and cloud accounts. We work alongside your internal engineers to build production RAG systems, tool-calling agent swarms, and high-throughput model endpoints in weeks.",
+        capabilitiesBadges: ["Embedded Engineers", "Antigravity SDK", "Agentic Swarms", "Zero Handoff", "Sub-100ms Latency"],
+        primaryCtaText: "Request FDE Deployment",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "View FDE Process",
+        secondaryCtaHref: "#process",
+        frictionPoints: [
+          { title: "Consulting Handoff Friction", tag: "DELIVERY GAP", desc: "External advice that never gets translated into actual shipping production code.", iconName: "AlertTriangle" },
+          { title: "Runaway AI Pilots", tag: "PILOT PURGATORY", desc: "Prototypes that work in Jupyter notebooks but stall when scaled to real enterprise concurrency.", iconName: "Cpu" },
+        ],
+        capabilities: [
+          {
+            id: "agents",
+            badge: "Autonomous Agents",
+            title: "Multi-Agent Swarm Orchestration",
+            desc: "Building deterministic state graphs and subagent swarms that execute complex workflows safely.",
+            highlights: ["Antigravity SDK loop integration", "Tool schema allowlisting", "Human-in-the-loop approval gateways"],
+            iconName: "Bot",
+          },
+        ],
+        aiDifferencePoints: [
+          { title: "Direct Git Access", desc: "Our engineers submit pull requests and build CI/CD pipelines directly inside your repos.", iconName: "Terminal" },
+        ],
+        engagementTiers: [],
+        faqs: [
+          { q: "How does the FDE model work?", a: "Senior AlphaesAI engineers embed into your team's Slack, Jira, and Git repository, writing production code alongside your staff." },
+        ],
+      },
+      dataAnnotation: {
+        heroBadge: "DATA ANNOTATION · RLHF · MULTI-MODAL ALIGNMENT",
+        title: "High-Precision Datasets Curated by Domain Experts.",
+        subtitle: "Human Alignment for Enterprise SOTA Models.",
+        description: "AI accuracy depends entirely on data quality. AlphaesAI provides high-precision data annotation, RLHF preference ranking, and multi-modal alignment executed by domain-expert annotators and verified by automated quality heuristics.",
+        capabilitiesBadges: ["RLHF", "DPO/PPO", "Computer Vision", "HIPAA Labeling", "Domain Experts"],
+        primaryCtaText: "Schedule Data Consultation",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "Explore Annotations",
+        secondaryCtaHref: "#capabilities",
+        frictionPoints: [],
+        capabilities: [],
+        aiDifferencePoints: [],
+        engagementTiers: [],
+        faqs: [],
+      },
+      databaseTuning: {
+        heroBadge: "DATABASE & CLOUD PERFORMANCE OPTIMIZATION",
+        title: "Slashing Lakehouse Costs & Accelerating Query Latency.",
+        subtitle: "Databricks Delta & Snowflake FinOps Mastery.",
+        description: "We optimize complex Databricks Delta Lake and Snowflake data warehouses to cut DBU compute spend by up to 60% while accelerating pipeline latency by 5x.",
+        capabilitiesBadges: ["Databricks", "Snowflake", "Delta Lake", "Liquid Clustering", "FinOps Savings"],
+        primaryCtaText: "Get Performance Audit",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "View Case Studies",
+        secondaryCtaHref: "#case-studies",
+        frictionPoints: [],
+        capabilities: [],
+        aiDifferencePoints: [],
+        engagementTiers: [],
+        faqs: [],
+      },
+    },
+    academySubpages: {
+      agenticAi: {
+        heroBadge: "AlphaesAI Academy — Deep Tech Track",
+        title: "Agentic AI & Multi-Agent Engineering",
+        subtitle: "Master the art of building production-grade autonomous AI agents, tool-calling swarms, and self-healing agentic workflows using industrial-scale design patterns.",
+        primaryCtaText: "Enroll in Agentic AI Track",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "Explore FDE Agent Capabilities",
+        secondaryCtaHref: "/services/forward-deployed-ai-engineering",
+        highlights: [
+          { title: "Sub-100ms Execution", desc: "Optimize prompt chaining and tool routing to achieve microsecond agent reactivity for high-throughput enterprise workloads.", iconName: "Cpu" },
+          { title: "Hierarchical Swarms", desc: "Deconstruct complex goals into parallel task streams delegated across specialized subagents with shared state synchronization.", iconName: "Workflow" },
+          { title: "Zero-Trust Guardrails", desc: "Protect agents against indirect prompt injection, data exfiltration, and unauthorized action execution with runtime interceptors.", iconName: "ShieldCheck" },
+        ],
+        modules: [
+          { step: "MODULE 01", title: "Autonomous Agent Architecture & Antigravity SDK", desc: "Master the foundations of agentic loop design, stateful memory management, and deterministic planning with the Antigravity SDK.", skills: ["State Graph Design", "Context Window Optimization", "Short & Long-term Memory Stores"] },
+          { step: "MODULE 02", title: "Tool Calling, Function Execution & Dynamic Schema Binding", desc: "Learn to equip agents with structured JSON schemas, safe API execution sandboxes, and automatic retries for complex enterprise tools.", skills: ["OpenAPI Tool Binding", "Sandboxed Python Execution", "Self-Healing Tool Retries"] },
+          { step: "MODULE 03", title: "Multi-Agent Systems & Hierarchical Swarm Routing", desc: "Architect multi-agent swarms where specialized subagents handle discrete tasks (Research, Refactoring, QA) with master controller orchestration.", skills: ["Subagent Lifecycle", "Inter-Agent Messaging", "Task Delegation Protocols"] },
+          { step: "MODULE 04", title: "Enterprise AI Guardrails, Security & Human-In-The-Loop", desc: "Implement hard security boundaries against prompt injection, enforce role-based tool authorization, and integrate human approval loops.", skills: ["LlamaGuard & NeMo Scanners", "RBAC Tool Allowlisting", "Human-in-the-Loop Gateways"] },
+        ],
+        ctaTitle: "Ready to Build Industrial Agentic AI?",
+        ctaDesc: "Join senior engineers and enterprise architects in our intensive hands-on Agentic AI program.",
+        ctaBtnText: "Request Academy Briefing & Syllabus",
+        ctaBtnHref: "/contact",
+      },
+      databricks: {
+        heroBadge: "AlphaesAI Academy — Data Engineering Track",
+        title: "Databricks & Delta Lake Mastery",
+        subtitle: "Master Liquid Clustering, PySpark shuffle elimination, Unity Catalog governance, and FinOps DBU cost reduction.",
+        primaryCtaText: "Enroll in Databricks Track",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "Explore Database Tuning",
+        secondaryCtaHref: "/services/database-performance-and-cloud-optimization",
+        highlights: [
+          { title: "FinOps Cost Cuts", desc: "Cut monthly DBU expenditure by up to 60% with liquid clustering and cluster rightsizing.", iconName: "TrendingDown" },
+          { title: "Unity Catalog", desc: "Implement granular fine-grained access control across workspace data assets.", iconName: "Database" },
+        ],
+        modules: [
+          { step: "MODULE 01", title: "Delta Lake Architecture & Liquid Clustering", desc: "Replace Z-Ordering with Liquid Clustering for 4x query acceleration.", skills: ["Liquid Clustering", "Delta Lake 3.0", "DBU Rightsizing"] },
+        ],
+        ctaTitle: "Master Enterprise Lakehouses",
+        ctaDesc: "Accelerate your data engineering career with industrial Databricks optimization.",
+        ctaBtnText: "Request Syllabus",
+        ctaBtnHref: "/contact",
+      },
+      fullstackAi: {
+        heroBadge: "AlphaesAI Academy — Fullstack AI Track",
+        title: "Fullstack Engineering with Next.js 15 & AI Copilots",
+        subtitle: "Build real-time streaming copilots, vector retrieval search, and SSE interfaces with Next.js App Router and React 19.",
+        primaryCtaText: "Enroll in Fullstack AI Track",
+        primaryCtaHref: "/contact",
+        secondaryCtaText: "Explore OneAI Assist",
+        secondaryCtaHref: "/oneai-assist",
+        highlights: [
+          { title: "Token Streaming", desc: "Leverage Server-Sent Events (SSE) and Edge Runtime for sub-50ms token rendering.", iconName: "Zap" },
+        ],
+        modules: [
+          { step: "MODULE 01", title: "Next.js App Router & Streaming Copilots", desc: "Build fluid conversational AI web interfaces with optimistic UI state.", skills: ["Next.js 15 App Router", "Server-Sent Events", "Pinecone Vector RAG"] },
+        ],
+        ctaTitle: "Build SOTA AI Web Applications",
+        ctaDesc: "Master modern AI frontend and fullstack architecture.",
+        ctaBtnText: "Enroll Now",
+        ctaBtnHref: "/contact",
+      },
     },
     drgodly: {
       heroBadge: "AI Healthcare Intelligence",
@@ -467,8 +1359,8 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       title: "Contact Our Engineering & Architecture Team",
       subtitle: "Have a technical inquiry, custom deployment request, or partnership proposal? We'd love to talk.",
       email: "contact@alphaesai.com",
-      phone: "+1 (800) 555-ALPHAES",
-      address: "AlphaesAI Tower, 500 AI Innovation Way, San Francisco, CA 94105",
+      phone: "+91 70106 42399",
+      address: "No. 472/7 Balaji Arcade, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095, India",
       formTitle: "Schedule a 1-on-1 Engineering Briefing",
       faqsHeading: "Frequently Asked Questions",
       faqs: [
@@ -490,15 +1382,163 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       ],
     },
     careers: {
-      heroBadge: "",
+      heroBadge: "Join Our Engineering Team",
       title: "Build the Operating System for Industrial-Scale Agentic AI",
       subtitle: "We are looking for forward-deployed engineers, Databricks optimization architects, and cloud security pioneers to build systems that run real enterprise operations.",
-      jobs: []
-    }
+      jobs: [],
+    },
+  },
+  blog: {
+    heroBadge: "AlphaesAI Engineering Insights",
+    title: "Technical Deep Dives & Industrial AI Blueprints",
+    subtitle: "Production-proven architectures for Agentic AI, Databricks Lakehouse optimization, full-stack AI applications, and zero-trust cloud security.",
+    categories: [
+      "All Articles",
+      "Agentic AI",
+      "Databricks & Lakehouse",
+      "Full-Stack AI",
+      "Security & Compliance",
+      "FDE Case Studies",
+    ],
+    articles: [
+      {
+        id: "art-1",
+        title: "Architecting Production Agentic AI with Zero-Hallucination Guardrails",
+        category: "Agentic AI",
+        readTime: "7 min read",
+        date: "Aug 24, 2026",
+        author: "Forward Deployed AI Team",
+        authorRole: "Principal AI Architect",
+        snippet: "How we design multi-agent swarms using the Antigravity SDK to execute complex enterprise workflows with sub-100ms tool-calling latency and deterministic safety bounds.",
+        featured: true,
+        content: {
+          introduction: "Autonomous agentic systems represent the biggest shift in enterprise software since cloud migration. However, deploying agents into live production environments requires far more than wrapping an LLM API in a loop.",
+          keyTakeaways: [
+            "Use explicit tool schema allowlisting with identity-bound credentials.",
+            "Implement short-circuiting input/output guardrails using LlamaGuard models.",
+            "Separate planning subagents from execution subagents to avoid runaway loops.",
+          ],
+          sections: [
+            {
+              heading: "1. The Anatomy of an Enterprise Agent Loop",
+              body: "An enterprise agent loop must be deterministic in its control flow while remaining flexible in reasoning. By leveraging the Antigravity SDK, we establish explicit state graph boundaries that prevent agents from executing destructive commands without explicit human approval.",
+              codeSnippet: `// Example Antigravity Agent Tool Invocation Guardrail\nimport { createAgent, withGuardrails } from "@alphaesai/antigravity-sdk";\n\nconst agent = createAgent({\n  name: "DBOperationsAgent",\n  tools: [sqlQueryTool, clusterScalingTool],\n  guardrails: withGuardrails({\n    maxToolRetries: 3,\n    disallowedCommands: ["DROP TABLE", "DELETE FROM *"],\n    requireHumanApprovalFor: ["scale_cluster_down"],\n  }),\n});`,
+            },
+            {
+              heading: "2. Mitigating Indirect Prompt Injection in RAG Pipelines",
+              body: "When agents ingest external documents, web pages, or email threads, malicious prompts embedded in context can hijack execution. We enforce context defanging and pre-tokenization sanitization before documents reach the agent's context window.",
+            },
+          ],
+          conclusion: "By combining hierarchical subagent swarms with strict tool allowlisting, enterprises can safely deploy autonomous AI agents that deliver high speed without risk of data loss.",
+        },
+      },
+      {
+        id: "art-2",
+        title: "Cutting Databricks Delta Lake Compute Costs by 60% in 30 Days",
+        category: "Databricks & Lakehouse",
+        readTime: "6 min read",
+        date: "Aug 20, 2026",
+        author: "Data Architecture Lead",
+        authorRole: "Senior Lakehouse Engineer",
+        snippet: "A practical step-by-step guide to Liquid Clustering, PySpark shuffle elimination, and automated DBU cluster auto-scaling for enterprise lakehouses.",
+        content: {
+          introduction: "Databricks compute costs (DBUs) can quickly escalate if queries rely on legacy Z-Ordering or suffer from data skew. In this deep dive, we outline the exact optimization playbook our Forward-Deployed Engineers applied for a Fortune 500 client.",
+          keyTakeaways: [
+            "Replace legacy OPTIMIZE ZORDER WITH Liquid Clustering for up to 4x faster query speeds.",
+            "Eliminate PySpark shuffle spills by tuning spark.sql.shuffle.partitions dynamically.",
+            "Use Graviton3-backed compute instances to cut raw instance costs by 20%.",
+          ],
+          sections: [
+            {
+              heading: "1. Migrating from Z-Ordering to Liquid Clustering",
+              body: "Liquid Clustering provides incremental, low-overhead data layout optimization without requiring full table rewrites. This dramatically reduces DBU consumption during batch ingestion.",
+              codeSnippet: `-- Enabling Liquid Clustering on Databricks Delta Table\nCREATE TABLE telemetry_logs (\n  timestamp TIMESTAMP,\n  device_id STRING,\n  payload STRING\n)\nUSING DELTA\nCLUSTER BY (device_id, timestamp);`,
+            },
+          ],
+          conclusion: "Systematic Lakehouse optimization delivers immediate ROI by slashing monthly DBU expenditure while simultaneously accelerating ETL pipeline throughput.",
+        },
+      },
+      {
+        id: "art-3",
+        title: "Building Full-Stack AI Apps with Next.js App Router & Streaming Copilots",
+        category: "Full-Stack AI",
+        readTime: "5 min read",
+        date: "Aug 16, 2026",
+        author: "Fullstack Engineering Lead",
+        authorRole: "Staff Web Architect",
+        snippet: "Learn how to build real-time conversational UIs with Server-Sent Events, Optimistic State updates, and Pinecone vector retrieval in Next.js 15.",
+        content: {
+          introduction: "Users expect AI web applications to respond instantaneously with streaming tokens, interactive markdown code blocks, and zero page reload lag.",
+          keyTakeaways: [
+            "Use Server-Sent Events (SSE) for low-overhead token streaming.",
+            "Implement optimistic state updates in React 19 to render user messages instantly.",
+            "Pre-fetch vector search embeddings in parallel with user input parsing.",
+          ],
+          sections: [
+            {
+              heading: "1. Streaming Text with Next.js App Router API Routes",
+              body: "By leveraging ReadableStream in Next.js Edge Runtime, you can stream LLM tokens to the browser with microsecond latency.",
+            },
+          ],
+          conclusion: "Combining modern Next.js App Router architecture with vector search delivers a fluid, responsive AI copilot experience.",
+        },
+      },
+      {
+        id: "art-4",
+        title: "HIPAA & SOC-2 Type II Compliance for Enterprise LLM Pipelines",
+        category: "Security & Compliance",
+        readTime: "8 min read",
+        date: "Aug 10, 2026",
+        author: "Cybersecurity Task Force",
+        authorRole: "Head of AI Security",
+        snippet: "Complete blueprint for zero-trust cloud boundaries, automated PII redaction, and audit logging when deploying medical and financial AI models.",
+        content: {
+          introduction: "Security and compliance are non-negotiable when deploying generative AI in healthcare and financial services. Here is how we enforce HIPAA compliance for models like DrGodly AI.",
+          keyTakeaways: [
+            "Encrypt all embeddings and prompt payloads at rest and in transit.",
+            "Implement automatic regex & NER PII redaction prior to LLM submission.",
+            "Maintain immutable append-only audit logs for all model inferences.",
+          ],
+          sections: [
+            {
+              heading: "1. Automated PII Sanitization",
+              body: "Before sending prompts to external or fine-tuned model endpoints, sensitive fields (SSN, medical record numbers, names) must be redacted and tokenized.",
+            },
+          ],
+          conclusion: "Zero-trust AI pipelines enable enterprises to innovate with confidence while meeting rigid regulatory benchmarks.",
+        },
+      },
+      {
+        id: "art-5",
+        title: "Why Forward-Deployed AI Engineering (FDE) Outperforms Traditional Consulting",
+        category: "FDE Case Studies",
+        readTime: "6 min read",
+        date: "Aug 04, 2026",
+        author: "AlphaesAI Leadership",
+        authorRole: "Co-Founder & CTO",
+        snippet: "Why embedding senior AI engineers directly into client codebases ships production systems in weeks, eliminating presentation decks and scope creep.",
+        content: {
+          introduction: "Traditional tech consulting relies on lengthy discovery phases, static slide decks, and handoff friction. Our Forward-Deployed Engineering model embeds senior AI builders directly inside your team.",
+          keyTakeaways: [
+            "FDE engineers write production code directly inside your Git repositories and cloud accounts.",
+            "Deploy working AI prototypes in 14 days rather than 6-month consulting roadmaps.",
+            "Zero knowledge transfer overhead since client engineers co-build the codebase.",
+          ],
+          sections: [
+            {
+              heading: "1. Embedded Production Velocity",
+              body: "Our FDE teams bring pre-tested architecture templates, Antigravity SDK tooling, and Databricks optimization scripts, allowing them to ship production code on Day 1.",
+            },
+          ],
+          conclusion: "Forward-Deployed Engineering ensures that strategic AI initiatives translate directly into shipping software and measurable business value.",
+        },
+      },
+    ],
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v9";
+
+const STORAGE_KEY = "alphaesai_cms_data_v10";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
@@ -549,6 +1589,9 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     if (!sanitizedHeader.primaryCtaText || /get started|start building/i.test(sanitizedHeader.primaryCtaText)) {
       sanitizedHeader.primaryCtaText = "Contact Us";
     }
+    if (!sanitizedHeader.megamenu || !Array.isArray(sanitizedHeader.megamenu?.servicesCategories)) {
+      sanitizedHeader.megamenu = DEFAULT_CMS_DATA.header.megamenu;
+    }
 
     const sanitizedHero = { ...DEFAULT_CMS_DATA.homepage?.hero, ...(parsed.homepage?.hero || {}) };
     if (!sanitizedHero.primaryCtaText || /get started|start building/i.test(sanitizedHero.primaryCtaText)) {
@@ -584,6 +1627,11 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
         },
         testimonial: { ...DEFAULT_CMS_DATA.homepage.testimonial, ...(parsed.homepage?.testimonial || {}) },
         ctaBanner: sanitizedCtaBanner,
+        techStackBar: parsed.homepage?.techStackBar || DEFAULT_CMS_DATA.homepage.techStackBar,
+        hubSpokeArch: parsed.homepage?.hubSpokeArch || DEFAULT_CMS_DATA.homepage.hubSpokeArch,
+        enhancedTestimonials: parsed.homepage?.enhancedTestimonials || DEFAULT_CMS_DATA.homepage.enhancedTestimonials,
+        roiMetricsGrid: Array.isArray(parsed.homepage?.roiMetricsGrid) ? parsed.homepage.roiMetricsGrid : DEFAULT_CMS_DATA.homepage.roiMetricsGrid,
+        fdeInteractiveHub: parsed.homepage?.fdeInteractiveHub || DEFAULT_CMS_DATA.homepage.fdeInteractiveHub,
       },
       pages: {
         services: {
@@ -641,6 +1689,15 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
             ? parsed.pages.careers.jobs
             : DEFAULT_CMS_DATA.pages.careers.jobs,
         },
+        serviceSubpages: parsed.pages?.serviceSubpages || DEFAULT_CMS_DATA.pages.serviceSubpages,
+        academySubpages: parsed.pages?.academySubpages || DEFAULT_CMS_DATA.pages.academySubpages,
+      },
+      blog: {
+        heroBadge: parsed.blog?.heroBadge || DEFAULT_CMS_DATA.blog.heroBadge,
+        title: parsed.blog?.title || DEFAULT_CMS_DATA.blog.title,
+        subtitle: parsed.blog?.subtitle || DEFAULT_CMS_DATA.blog.subtitle,
+        categories: Array.isArray(parsed.blog?.categories) ? parsed.blog.categories : DEFAULT_CMS_DATA.blog.categories,
+        articles: Array.isArray(parsed.blog?.articles) ? parsed.blog.articles : DEFAULT_CMS_DATA.blog.articles,
       },
     };
   } catch (err) {

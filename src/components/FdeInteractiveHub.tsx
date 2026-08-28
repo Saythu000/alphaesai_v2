@@ -110,6 +110,8 @@ const renderIcon = (iconName: string) => {
   }
 };
 
+import { useCMS } from "@/context/CMSContext";
+
 interface Props {
   title?: string;
   badgeText?: string;
@@ -118,13 +120,23 @@ interface Props {
 }
 
 export const FdeInteractiveHub: React.FC<Props> = ({
-  title = "Working alongside you, every step",
-  badgeText = "AlphaesAI FDE Engine",
-  steps = DEFAULT_STEPS,
-  nodes = DEFAULT_NODES,
+  title: propTitle,
+  badgeText: propBadgeText,
+  steps: propSteps,
+  nodes: propNodes,
 }) => {
+  const { data } = useCMS();
+  const cmsHubData = data?.homepage?.fdeInteractiveHub;
+
+  const title = propTitle || cmsHubData?.title || "Working alongside you, every step";
+  const badgeText = propBadgeText || cmsHubData?.badgeText || "AlphaesAI FDE Engine";
+  const steps: FdeStep[] = (propSteps || cmsHubData?.steps || DEFAULT_STEPS) as FdeStep[];
+  const nodes: FdeNode[] = (propNodes || cmsHubData?.nodes || DEFAULT_NODES) as FdeNode[];
+
   const [activeStepIndex, setActiveStepIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+
+
 
   // Auto-cycle through steps every 4.5 seconds unless user hovers/clicks
   useEffect(() => {
@@ -162,7 +174,7 @@ export const FdeInteractiveHub: React.FC<Props> = ({
                 </linearGradient>
               </defs>
 
-              {nodes.map((node) => {
+              {nodes.map((node: FdeNode) => {
                 const isActive = activeNodeIds.includes(node.id);
                 // Convert polar angle to Cartesian x, y coordinates
                 const rad = (node.angle * Math.PI) / 180;
@@ -236,7 +248,7 @@ export const FdeInteractiveHub: React.FC<Props> = ({
             </motion.div>
 
             {/* SATELLITE NODES (Positioned radially around 50%, 50%) */}
-            {nodes.map((node) => {
+            {nodes.map((node: FdeNode) => {
               const isActive = activeNodeIds.includes(node.id);
               const rad = (node.angle * Math.PI) / 180;
               const radiusPercent = 38;
@@ -268,7 +280,7 @@ export const FdeInteractiveHub: React.FC<Props> = ({
                         : "bg-[#241710]/85 border-[#ddc1b0]/30 text-white/80 hover:border-[#ff9d42] hover:text-white"
                     }`}
                     onClick={() => {
-                      const matchingStep = steps.findIndex((s) => s.targetNodeIds.includes(node.id));
+                      const matchingStep = steps.findIndex((s: FdeStep) => s.targetNodeIds.includes(node.id));
                       if (matchingStep !== -1) {
                         setActiveStepIndex(matchingStep);
                       }
@@ -276,7 +288,7 @@ export const FdeInteractiveHub: React.FC<Props> = ({
                   >
                     <div
                       className={`w-7 h-7 rounded-lg flex items-center justify-center mb-1 ${
-                        isActive ? "bg-white text-[#964900]" : "bg-white/10 text-[#ffb07c]"
+                        isActive ? "bg-white text-[#964900]" : "bg-[#ffb07c]"
                       }`}
                     >
                       {renderIcon(node.iconName)}
@@ -310,7 +322,7 @@ export const FdeInteractiveHub: React.FC<Props> = ({
           </div>
 
           <div className="space-y-3">
-            {steps.map((step, idx) => {
+            {steps.map((step: FdeStep, idx: number) => {
               const isActive = activeStepIndex === idx;
 
               return (
@@ -384,8 +396,8 @@ export const FdeInteractiveHub: React.FC<Props> = ({
                       <span className="text-[10px] font-['JetBrains_Mono'] text-white/60 font-bold uppercase tracking-wider mr-1">
                         Active Nodes:
                       </span>
-                      {step.targetNodeIds.map((nid) => {
-                        const targetNode = nodes.find((n) => n.id === nid);
+                      {step.targetNodeIds.map((nid: string) => {
+                        const targetNode = nodes.find((n: FdeNode) => n.id === nid);
                         if (!targetNode) return null;
                         return (
                           <span
@@ -401,6 +413,7 @@ export const FdeInteractiveHub: React.FC<Props> = ({
                 </motion.div>
               );
             })}
+
           </div>
         </div>
       </div>

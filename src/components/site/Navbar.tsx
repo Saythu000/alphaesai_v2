@@ -8,144 +8,13 @@ import {
   X,
   Plus,
   ChevronDown,
-  ChevronRight,
   ArrowDownRight,
-  Sparkles,
-  Database,
-  ShieldCheck,
-  FileCheck,
   ArrowRight,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 
 import { useCMS } from "@/context/CMSContext";
 import Logo from "@/components/ui/Logo";
-
-const servicesCategories = [
-  {
-    id: "ai-engineering",
-    category: "AI & Engineering",
-    icon: Sparkles,
-    description: "Production LLMs, autonomous agentic workflows, and fine-tuned models.",
-    featured: {
-      title: "Forward Deployed AI",
-      tag: "FEATURED CAPABILITY",
-      href: "/services/forward-deployed-ai-engineering",
-      desc: "Embed elite AI engineers directly into your product engineering workflows.",
-    },
-    items: [
-      {
-        href: "/services/forward-deployed-ai-engineering",
-        label: "Forward Deployed AI (FDE)",
-        badge: "Popular",
-      },
-      {
-        href: "/services/forward-deployed-ai-engineering#agentic-workflows",
-        label: "Autonomous AI Agents",
-        badge: "New",
-      },
-      {
-        href: "/services/forward-deployed-ai-engineering#fine-tuning",
-        label: "Custom Model Fine-Tuning",
-      },
-    ],
-  },
-  {
-    id: "data-cloud",
-    category: "Data & Cloud Optimization",
-    icon: Database,
-    description: "High-performance Lakehouse architectures and real-time streaming ETL.",
-    featured: {
-      title: "Database & Cloud Tuning",
-      tag: "OPTIMIZATION",
-      href: "/services/database-performance-and-cloud-optimization",
-      desc: "Sub-second query performance on Databricks & Snowflake Lakehouses.",
-    },
-    items: [
-      {
-        href: "/services/database-performance-and-cloud-optimization",
-        label: "Database & Cloud Tuning",
-      },
-      {
-        href: "/services/database-performance-and-cloud-optimization#lakehouse",
-        label: "Databricks & Snowflake Lakehouse",
-      },
-      {
-        href: "/services/database-performance-and-cloud-optimization#etl",
-        label: "Streaming Real-Time ETL",
-      },
-    ],
-  },
-  {
-    id: "data-rlhf",
-    category: "Data Annotation & RLHF",
-    icon: FileCheck,
-    description: "Human-in-the-loop alignment, RLHF, and domain-specific dataset curation.",
-    featured: {
-      title: "RLHF & Safety Alignment",
-      tag: "ACCURACY & ALIGNMENT",
-      href: "/services/data-annotation-and-rlhf#rlhf",
-      desc: "Align enterprise AI with strict safety and accuracy guardrails.",
-    },
-    items: [
-      {
-        href: "/services/data-annotation-and-rlhf",
-        label: "High-Fidelity Data Annotation",
-      },
-      {
-        href: "/services/data-annotation-and-rlhf#rlhf",
-        label: "RLHF & Model Safety Alignment",
-      },
-      {
-        href: "/services/data-annotation-and-rlhf#benchmarking",
-        label: "Dataset Evaluation & Audits",
-      },
-    ],
-  },
-  {
-    id: "cloud-security",
-    category: "Cloud & Cybersecurity",
-    icon: ShieldCheck,
-    description: "Zero-downtime cloud migration, MLOps pipelines, and AI security guardrails.",
-    featured: {
-      title: "AI Guardrails & Security",
-      tag: "ENTERPRISE SECURITY",
-      href: "/services/cloud-migration-cyber-security-databricks-snowflake#security",
-      desc: "Enterprise compliance, prompt injection prevention, and zero-trust security.",
-    },
-    items: [
-      {
-        href: "/services/cloud-migration-cyber-security-databricks-snowflake",
-        label: "Zero-Downtime Cloud Migration",
-      },
-      {
-        href: "/services/cloud-migration-cyber-security-databricks-snowflake#security",
-        label: "AI Guardrails & Cybersecurity",
-      },
-      {
-        href: "/services/cloud-migration-cyber-security-databricks-snowflake#k8s",
-        label: "DevOps & MLOps Pipelines",
-      },
-    ],
-  },
-];
-
-const productsDropdown = [
-  { href: "/oneai-assist", label: "OneAI Assist — Enterprise Agent Platform" },
-  { href: "/drgodly", label: "DrGodly — AI Telemedicine Suite" },
-];
-
-const academyDropdown = [
-  { href: "/academy/agentic-ai", label: "Agentic AI Architecture" },
-  { href: "/academy/fullstack-developer-with-ai", label: "Fullstack Engineering with AI" },
-  { href: "/academy/databricks", label: "Databricks & Lakehouse Masterclass" },
-];
-
-const directLinks = [
-  { href: "/blog", label: "Blog" },
-  { href: "/partners", label: "Partners" },
-  { href: "/about", label: "About" },
-];
 
 export const Navbar = () => {
   const { data } = useCMS();
@@ -168,6 +37,40 @@ export const Navbar = () => {
     if (href === "/") return pathname === "/";
     return pathname.startsWith(href);
   };
+
+  const megamenu = data.header?.megamenu;
+
+  const servicesCategories = megamenu?.servicesCategories || [
+    {
+      id: "cat-ai",
+      title: "AI & Engineering",
+      items: [
+        { id: "item-1", name: "Forward Deployed AI (FDE)", desc: "", badge: "Popular", href: "/services/forward-deployed-ai-engineering", iconName: "Cpu" },
+        { id: "item-2", name: "Autonomous AI Agents", desc: "", badge: "SOTA", href: "/services/forward-deployed-ai-engineering", iconName: "Bot" },
+      ],
+      featuredTitle: "Forward Deployed AI",
+      featuredDesc: "Embed elite AI engineers directly into your product engineering workflows.",
+      featuredHref: "/services/forward-deployed-ai-engineering",
+      featuredBadge: "FDE Execution",
+    },
+  ];
+
+  const productsDropdown = megamenu?.productsDropdown || [
+    { id: "prod-1", title: "OneAI Assist — Enterprise Agent Platform", desc: "", href: "/oneai-assist" },
+    { id: "prod-2", title: "DrGodly — AI Telemedicine Suite", desc: "", href: "/drgodly" },
+  ];
+
+  const academyDropdown = megamenu?.academyDropdown || [
+    { id: "acad-1", title: "Agentic AI Architecture", desc: "", href: "/academy/agentic-ai" },
+    { id: "acad-2", title: "Fullstack Developer with AI", desc: "", href: "/academy/fullstack-developer-with-ai" },
+    { id: "acad-3", title: "Databricks Lakehouse Mastery", desc: "", href: "/academy/databricks" },
+  ];
+
+  const directLinks = [
+    { href: "/blog", label: "Blog" },
+    { href: "/partners", label: "Partners" },
+    { href: "/about", label: "About" },
+  ];
 
   return (
     <motion.header
@@ -212,7 +115,7 @@ export const Navbar = () => {
 
         {/* Center Desktop Navigation Links & Dropdowns */}
         <nav className="hidden md:flex items-center gap-2 lg:gap-3">
-          {/* CapeStart-Style Cascading Flyout Dropdown for Services */}
+          {/* Cascading Flyout Dropdown for Services */}
           <div
             className="relative"
             onMouseEnter={() => setServicesOpen(true)}
@@ -248,7 +151,7 @@ export const Navbar = () => {
                       const isActive = activeServiceTab === idx;
                       return (
                         <div
-                          key={cat.id}
+                          key={cat.id || idx}
                           onMouseEnter={() => setActiveServiceTab(idx)}
                           onClick={() => setActiveServiceTab(activeServiceTab === idx ? null : idx)}
                           className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-['Inter'] font-semibold transition-all cursor-pointer select-none ${
@@ -257,7 +160,7 @@ export const Navbar = () => {
                               : "text-[#564336] hover:bg-[#ffeade]/60 hover:text-[#241913]"
                           }`}
                         >
-                          <span>{cat.category}</span>
+                          <span>{cat.title}</span>
                           {isActive ? (
                             <X className="w-3.5 h-3.5 text-[#964900] shrink-0" />
                           ) : (
@@ -269,9 +172,9 @@ export const Navbar = () => {
                   </div>
 
                   {/* Secondary Cascading Flyout Card (Popout to Right) */}
-                  {activeServiceTab !== null && (
+                  {activeServiceTab !== null && servicesCategories[activeServiceTab] && (
                     <motion.div
-                      key={servicesCategories[activeServiceTab].id}
+                      key={servicesCategories[activeServiceTab].id || activeServiceTab}
                       initial={{ opacity: 0, x: 8, scale: 0.97 }}
                       animate={{ opacity: 1, x: 0, scale: 1 }}
                       exit={{ opacity: 0, x: 8, scale: 0.97 }}
@@ -279,16 +182,16 @@ export const Navbar = () => {
                       className="absolute top-0 left-[calc(100%+0.5rem)] w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50 flex flex-col gap-1 before:absolute before:-left-4 before:top-0 before:w-5 before:h-full before:content-['']"
                     >
                       <div className="px-3 py-1 text-[10px] font-['JetBrains_Mono'] font-extrabold uppercase tracking-wider text-[#964900]">
-                        {servicesCategories[activeServiceTab].category}
+                        {servicesCategories[activeServiceTab].title}
                       </div>
                       {servicesCategories[activeServiceTab].items.map((item) => (
                         <Link
-                          key={item.label}
+                          key={item.id || item.name}
                           href={item.href}
                           className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 transition-all group"
                         >
                           <span className="flex items-center gap-2">
-                            {item.label}
+                            {item.name}
                             {item.badge && (
                               <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#964900]/15 text-[#964900]">
                                 {item.badge}
@@ -338,7 +241,7 @@ export const Navbar = () => {
                       href={item.href}
                       className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
                     >
-                      <span>{item.label}</span>
+                      <span>{item.title}</span>
                       <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </Link>
                   ))}
@@ -380,7 +283,7 @@ export const Navbar = () => {
                       href={item.href}
                       className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
                     >
-                      <span>{item.label}</span>
+                      <span>{item.title}</span>
                       <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                     </Link>
                   ))}
@@ -407,7 +310,6 @@ export const Navbar = () => {
 
         {/* Right CTA Section */}
         <div className="hidden md:flex items-center gap-4">
-          {/* Split-Badge React Bits CTA Button */}
           <Link href={data.header?.primaryCtaHref || "/contact"} className="group relative inline-flex items-center shadow-md hover:shadow-lg transition-shadow">
             <span className="absolute right-0 inset-y-0 w-[calc(100%-1.25rem)] rounded-xl bg-[#964900]" />
             <span className="relative z-10 px-4 py-2.5 rounded-xl bg-[#241913] text-white text-xs font-['JetBrains_Mono'] font-bold tracking-wide">
@@ -438,17 +340,17 @@ export const Navbar = () => {
             </div>
             
             {servicesCategories.map((cat) => (
-              <div key={cat.category} className="flex flex-col gap-1.5">
+              <div key={cat.title} className="flex flex-col gap-1.5">
                 <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] px-2 py-1 bg-[#ffeade]/50 rounded-lg">
-                  {cat.category}
+                  {cat.title}
                 </div>
                 {cat.items.map((item) => (
                   <Link
-                    key={item.label}
+                    key={item.name}
                     href={item.href}
                     className="px-3 py-1 text-xs font-['Inter'] text-[#564336] hover:text-[#964900]"
                   >
-                    {item.label}
+                    {item.name}
                   </Link>
                 ))}
               </div>
@@ -463,7 +365,7 @@ export const Navbar = () => {
                 href={item.href}
                 className="px-3 py-1.5 rounded-xl text-xs font-['JetBrains_Mono'] text-[#241913] hover:bg-[#ffeade]"
               >
-                {item.label}
+                {item.title}
               </Link>
             ))}
 
@@ -476,7 +378,7 @@ export const Navbar = () => {
                 href={item.href}
                 className="px-3 py-1.5 rounded-xl text-xs font-['JetBrains_Mono'] text-[#241913] hover:bg-[#ffeade]"
               >
-                {item.label}
+                {item.title}
               </Link>
             ))}
 

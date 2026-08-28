@@ -2,58 +2,32 @@
 
 import { motion } from "framer-motion";
 import { ShieldCheck, Lock, Activity, Database, Cpu, Sparkles, Server, Code2 } from "lucide-react";
+import { useCMS } from "@/context/CMSContext";
 
 const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
 
-// Data Analytics & AI Stack Items
-const TECH_STACK = [
-  { name: "Databricks", category: "Lakehouse & Delta Analytics", icon: Database },
-  { name: "Snowflake", category: "Cloud Data Warehouse", icon: Server },
-  { name: "Apache Spark", category: "Distributed Big Data Analytics", icon: Cpu },
-  { name: "Google BigQuery", category: "Serverless Analytics Engine", icon: Database },
-  { name: "PyTorch", category: "Deep Learning Framework", icon: Code2 },
-  { name: "Hugging Face", category: "Model Hub & Transformers", icon: Sparkles },
-  { name: "OpenAI", category: "Foundation LLMs & Embeddings", icon: Activity },
-  { name: "LangChain", category: "LLM Agent Orchestration", icon: Code2 },
-  { name: "Pinecone", category: "High-Scale Vector DB", icon: Database },
-  { name: "dbt", category: "Analytics Engineering", icon: Server },
-  { name: "Neon DB", category: "Serverless PostgreSQL", icon: Database },
-  { name: "Antigravity SDK", category: "Autonomous Agent Core", icon: Sparkles },
-];
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Database,
+  Server,
+  Cpu,
+  Code2,
+  Sparkles,
+  Activity,
+  ShieldCheck,
+  Lock,
+};
 
-// Operational Compliance Shields
-const COMPLIANCE_SHIELDS = [
-  {
-    title: "SOC-2 Type II Standards",
-    badge: "SOC 2 TYPE II",
-    desc: "Verified Enterprise Data Isolation & Access Auditing",
-    icon: ShieldCheck,
-    color: "#ff5722",
-  },
-  {
-    title: "HIPAA Regulated Ready",
-    badge: "HIPAA COMPLIANT",
-    desc: "BAA-Ready ePHI Encryption at Rest & In-Transit",
-    icon: Lock,
-    color: "#964900",
-  },
-  {
-    title: "ISO 27001 Controls",
-    badge: "ISO 27001",
-    desc: "Rigorous Information Security System Controls",
-    icon: ShieldCheck,
-    color: "#ff5722",
-  },
-  {
-    title: "GDPR Privacy Shield",
-    badge: "GDPR ENFORCED",
-    desc: "EU Data Sovereignty & Zero Unauthorized Retention",
-    icon: Lock,
-    color: "#964900",
-  },
-];
 
 export function SupportedTechStackBar() {
+  const { data } = useCMS();
+  const techStackData = data?.homepage?.techStackBar || {
+    badge: "Enterprise Stack & Security Standards",
+    title: "Data Analytics & Enterprise AI Infrastructure Stack",
+    subtitle: "Built directly on industry-standard Data Warehouses, Distributed Analytics Engines, and SOTA AI Frameworks.",
+    techStack: [],
+    complianceShields: []
+  };
+
   return (
     <section className="py-16 px-4 bg-[#fff8f5] border-b border-[#ddc1b0] relative overflow-hidden">
       <div className="max-w-[1280px] mx-auto relative z-10">
@@ -66,13 +40,13 @@ export function SupportedTechStackBar() {
           className="text-center mb-10"
         >
           <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#964900] uppercase tracking-widest bg-[#fff1ea] border border-[#ddc1b0] px-3.5 py-1.5 rounded-full inline-block mb-3">
-            Enterprise Stack & Security Standards
+            {techStackData.badge}
           </span>
           <h3 className="font-['Hanken_Grotesk'] text-2xl sm:text-3xl font-extrabold text-[#241913]">
-            Data Analytics & Enterprise AI Infrastructure Stack
+            {techStackData.title}
           </h3>
           <p className="font-['Inter'] text-sm text-[#564336] max-w-xl mx-auto mt-2">
-            Built directly on industry-standard Data Warehouses, Distributed Analytics Engines, and SOTA AI Frameworks.
+            {techStackData.subtitle}
           </p>
         </motion.div>
 
@@ -84,8 +58,8 @@ export function SupportedTechStackBar() {
           transition={{ duration: 0.7, ease: SMOOTH_EASE, delay: 0.1 }}
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-14"
         >
-          {TECH_STACK.map((tech, idx) => {
-            const Icon = tech.icon;
+          {(techStackData.techStack || []).map((tech) => {
+            const Icon = ICON_MAP[tech.iconName] || Database;
             return (
               <motion.div
                 key={tech.name}
@@ -109,11 +83,12 @@ export function SupportedTechStackBar() {
 
         {/* Security & Compliance Shield Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {COMPLIANCE_SHIELDS.map((item, idx) => {
-            const ShieldIcon = item.icon;
+          {(techStackData.complianceShields || []).map((item, idx) => {
+            const ShieldIcon = ShieldCheck;
             return (
               <motion.div
                 key={item.title}
+
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -135,8 +110,9 @@ export function SupportedTechStackBar() {
                     {item.title}
                   </h4>
                   <p className="font-['Inter'] text-xs text-white/70 leading-relaxed">
-                    {item.desc}
+                    {item.description}
                   </p>
+
                 </div>
               </motion.div>
             );
@@ -146,3 +122,4 @@ export function SupportedTechStackBar() {
     </section>
   );
 }
+

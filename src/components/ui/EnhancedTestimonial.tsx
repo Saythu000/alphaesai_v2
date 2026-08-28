@@ -2,69 +2,44 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Quote, Play, CheckCircle2, X, Award, ChevronLeft, ChevronRight } from "lucide-react";
+import { Quote, Play, CheckCircle2, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useCMS } from "@/context/CMSContext";
 
 const SMOOTH_EASE = [0.16, 1, 0.3, 1] as const;
 
-interface TestimonialItem {
-  id: string;
-  quote: string;
-  authorName: string;
-  authorTitle: string;
-  authorAvatar: string;
-  domain: string;
-  roiChips: string[];
-  videoThumbnail: string;
-  videoTitle: string;
-}
-
-const TESTIMONIALS: TestimonialItem[] = [
-  {
-    id: "fintech",
-    quote: "AlphaesAI's Forward-Deployed Engineers transformed our Databricks analytics pipeline, cutting query latency by 72% and saving over $18,000 per month in GPU compute costs within 3 weeks.",
-    authorName: "Sarah Jenkins",
-    authorTitle: "VP of Enterprise Data Engineering, Flowstate Fintech",
-    authorAvatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-    domain: "Fintech & Data Warehousing",
-    roiChips: ["72% Latency Reduction", "$18.5k/mo Savings", "3-Week Rollout"],
-    videoThumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&auto=format&fit=crop&q=80",
-    videoTitle: "Case Study: Scaling High-Throughput Analytics at Flowstate",
-  },
-  {
-    id: "healthcare",
-    quote: "With DrGodly AI and AlphaesAI's HIPAA-ready data pipeline, our clinical research teams process complex patient records 5x faster while maintaining 100% data privacy compliance.",
-    authorName: "Dr. Marcus Vance, Ph.D.",
-    authorTitle: "Director of Clinical Informatics, BioGenesis Health",
-    authorAvatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-    domain: "Healthcare & Life Sciences",
-    roiChips: ["5x Faster Intake", "100% HIPAA BAA", "Zero Data Leakage"],
-    videoThumbnail: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=600&auto=format&fit=crop&q=80",
-    videoTitle: "Case Study: Secure Medical NLP at BioGenesis",
-  },
-  {
-    id: "logistics",
-    quote: "Deploying OneAI Assist automated 85% of our tier-1 support tickets instantly. Their custom fine-tuned model outperformed off-the-shelf APIs with 99.4% resolution accuracy.",
-    authorName: "David Sterling",
-    authorTitle: "Head of Operations & AI Systems, Global LogiTech",
-    authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
-    domain: "Global Supply Chain & SaaS",
-    roiChips: ["85% Automated Tickets", "99.4% Accuracy", "< 500ms Response"],
-    videoThumbnail: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&auto=format&fit=crop&q=80",
-    videoTitle: "Case Study: Customer Automation at Global LogiTech",
-  },
-];
-
 export function EnhancedTestimonial() {
+  const { data } = useCMS();
+  const testimonialData = data?.homepage?.enhancedTestimonials || {
+    badgeText: "Client Success & Proven ROI",
+    title: "Trusted by Engineering & Data Leaders",
+    subtitle: "Real results delivered by our Forward-Deployed AI Engineers and cloud data optimization stack.",
+    items: []
+  };
+
+  const testimonials = testimonialData.items || [];
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const activeTestimonial = TESTIMONIALS[currentIndex];
+
+  const activeTestimonial = testimonials[currentIndex] || {
+    id: "default",
+    quote: "AlphaesAI's Forward-Deployed Engineers transformed our Databricks analytics pipeline.",
+    authorName: "Sarah Jenkins",
+    authorTitle: "VP of Enterprise Data Engineering",
+    authorAvatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+    domain: "Fintech & Data Warehousing",
+    roiChips: ["72% Latency Reduction", "$18.5k/mo Savings"],
+    videoThumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=600&auto=format&fit=crop&q=80",
+    videoTitle: "Case Study Overview"
+  };
 
   const handleNext = () => {
-    setCurrentIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    if (testimonials.length === 0) return;
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
   };
 
   const handlePrev = () => {
-    setCurrentIndex((prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length);
+    if (testimonials.length === 0) return;
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
   };
 
   return (
@@ -79,15 +54,16 @@ export function EnhancedTestimonial() {
           className="mb-10 text-center"
         >
           <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#964900] uppercase tracking-widest bg-[#fff1ea] border border-[#ddc1b0] px-3.5 py-1.5 rounded-full inline-block mb-3">
-            Client Success & Proven ROI
+            {testimonialData.badgeText}
           </span>
           <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#241913] mb-3">
-            Trusted by Engineering & Data Leaders
+            {testimonialData.title}
           </h2>
           <p className="font-['Inter'] text-base text-[#564336]">
-            Real results delivered by our Forward-Deployed AI Engineers and cloud data optimization stack.
+            {testimonialData.subtitle}
           </p>
         </motion.div>
+
 
         {/* Testimonial Card */}
         <div className="w-full relative">
@@ -121,7 +97,7 @@ export function EnhancedTestimonial() {
 
                 {/* Quantifiable ROI Chips */}
                 <div className="flex flex-wrap gap-2 mb-8">
-                  {activeTestimonial.roiChips.map((chip) => (
+                  {(activeTestimonial.roiChips || []).map((chip) => (
                     <span
                       key={chip}
                       className="font-['JetBrains_Mono'] text-xs font-bold text-[#964900] bg-[#fff1ea] border border-[#ddc1b0] px-3 py-1 rounded-full"
@@ -165,7 +141,7 @@ export function EnhancedTestimonial() {
           {/* Carousel Controls */}
           <div className="flex items-center justify-between mt-6 px-2">
             <div className="flex items-center gap-2">
-              {TESTIMONIALS.map((t, idx) => (
+              {testimonials.map((t, idx) => (
                 <button
                   key={t.id}
                   onClick={() => setCurrentIndex(idx)}
@@ -263,3 +239,4 @@ export function EnhancedTestimonial() {
     </section>
   );
 }
+

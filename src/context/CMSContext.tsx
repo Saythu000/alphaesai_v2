@@ -8,6 +8,7 @@ import {
   saveCMSData,
   resetCMSData,
   sanitizeCMSData,
+  BlogPostCMSData,
 } from "@/lib/cms-store";
 
 interface CMSContextType {
@@ -15,6 +16,9 @@ interface CMSContextType {
   updateData: (newData: FullCMSData) => void;
   resetData: () => void;
   isLoaded: boolean;
+  addBlogPost: (article: BlogPostCMSData) => void;
+  updateBlogPost: (id: string, updated: BlogPostCMSData) => void;
+  deleteBlogPost: (id: string) => void;
 }
 
 const CMSContext = createContext<CMSContextType>({
@@ -22,6 +26,9 @@ const CMSContext = createContext<CMSContextType>({
   updateData: () => {},
   resetData: () => {},
   isLoaded: false,
+  addBlogPost: () => {},
+  updateBlogPost: () => {},
+  deleteBlogPost: () => {},
 });
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -41,7 +48,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           const sanitized = sanitizeCMSData(resData.data);
           setData(sanitized);
           saveCMSData(sanitized);
-          // Sync sanitized data back to Neon DB if DB had stale content
+          // Sync sanitized data back to Neon DB if DB had missing keys
           fetch("/api/cms", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -81,8 +88,55 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }).catch((err) => console.error("Failed to reset CMS data in Neon DB:", err));
   };
 
+  const addBlogPost = (article: BlogPostCMSData) => {
+    const updated: FullCMSData = {
+      ...data,
+      blog: {
+        ...data.blog,
+        articles: [article, ...(data.blog?.articles || [])],
+      },
+    };
+    updateData(updated);
+  };
+
+  const updateBlogPost = (id: string, updatedArticle: BlogPostCMSData) => {
+    const articles = (data.blog?.articles || []).map((art) =>
+      art.id === id ? updatedArticle : art
+    );
+    const updated: FullCMSData = {
+      ...data,
+      blog: {
+        ...data.blog,
+        articles,
+      },
+    };
+    updateData(updated);
+  };
+
+  const deleteBlogPost = (id: string) => {
+    const articles = (data.blog?.articles || []).filter((art) => art.id !== id);
+    const updated: FullCMSData = {
+      ...data,
+      blog: {
+        ...data.blog,
+        articles,
+      },
+    };
+    updateData(updated);
+  };
+
   return (
-    <CMSContext.Provider value={{ data, updateData, resetData, isLoaded }}>
+    <CMSContext.Provider
+      value={{
+        data,
+        updateData,
+        resetData,
+        isLoaded,
+        addBlogPost,
+        updateBlogPost,
+        deleteBlogPost,
+      }}
+    >
       {children}
     </CMSContext.Provider>
   );
