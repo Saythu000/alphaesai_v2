@@ -1,14 +1,34 @@
 "use client";
 
-import Link from "next/link";
+import { useState } from "react";
 import { useCMS } from "@/context/CMSContext";
-import { Phone, Mail, MapPin, Calendar, Check, ArrowRight, Triangle } from "lucide-react";
+import { Phone, Mail, MapPin, Triangle, Send, CheckCircle2, User, FileText } from "lucide-react";
 
 export default function Contact() {
   const { data } = useCMS();
   const contactEmail = data.footer?.contactEmail || "contact@alphaesai.com";
   const contactPhone = data.footer?.contactPhone || "+91 70106 42399";
   const contactAddress = data.footer?.contactAddress || "No. 472/7 Balaji Arcade, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095, India";
+
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    description: "",
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    // Simulate form submission process
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+    }, 800);
+  };
 
   return (
     <div className="w-full bg-[#fff8f5] text-[#241913] min-h-screen">
@@ -94,54 +114,134 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Executive Briefing Checklist & Action */}
+            {/* Interactive Contact Form */}
             <div className="bg-[#fff8f5] border-2 border-[#964900] rounded-xl p-8 sm:p-10 shadow-md space-y-6">
               <div className="text-xs font-mono-tech text-[#964900] uppercase font-bold tracking-widest">
-                Executive Briefing Topics
+                Direct Inquiry Form
               </div>
               <h2 className="font-hanken text-3xl font-bold text-[#241913]">
-                What We Cover In 45 Minutes
+                Get in Touch with Our Team
               </h2>
 
-              <ul className="space-y-4 text-xs sm:text-sm text-[#241913] font-inter">
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#964900] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Database & Cloud FinOps Audit</strong>: Identify 30–50% query and infrastructure savings.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#964900] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>Databricks & Snowflake Modernization</strong>: Evaluate Delta Lake readiness for AI RAG pipelines.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#964900] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>OneAI Assist Platform Demo</strong>: Review live lead scoring & autonomous agent workflows.
-                  </span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <Check className="w-5 h-5 text-[#964900] shrink-0 mt-0.5" />
-                  <span>
-                    <strong>FDE Engagement Scoping</strong>: Map out a 2–6 week embedded engineering sprint timeline.
-                  </span>
-                </li>
-              </ul>
+              {isSubmitted ? (
+                <div className="p-6 bg-[#fff1ea] border border-[#964900]/30 rounded-xl space-y-4 text-center py-10">
+                  <CheckCircle2 className="w-12 h-12 text-[#964900] mx-auto" />
+                  <h3 className="font-hanken text-xl font-bold text-[#241913]">
+                    Message Received Successfully!
+                  </h3>
+                  <p className="font-inter text-sm text-[#564336] max-w-md mx-auto">
+                    Thank you, <strong>{formData.name}</strong>. A principal architect will review your message and get back to you within 4 business hours.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setIsSubmitted(false);
+                      setFormData({ name: "", phone: "", email: "", description: "" });
+                    }}
+                    className="mt-4 px-6 py-2.5 bg-[#964900] text-white font-inter text-xs font-bold rounded-lg hover:bg-[#7a3b00] transition-colors"
+                  >
+                    Send Another Message
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-4 font-inter text-sm">
+                  {/* Full Name Field */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-mono-tech font-bold uppercase text-[#564336]">
+                      Your Name <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <User className="w-4 h-4 text-[#964900] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                      <input
+                        type="text"
+                        required
+                        placeholder="John Doe"
+                        value={formData.name}
+                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        className="w-full bg-white border border-[#241913]/20 rounded-lg pl-10 pr-4 py-3 text-[#241913] placeholder-[#241913]/40 focus:outline-none focus:border-[#964900] focus:ring-1 focus:ring-[#964900] transition-all"
+                      />
+                    </div>
+                  </div>
 
-              <div className="pt-6 border-t border-[#241913]/10 space-y-4">
-                <a
-                  href="mailto:contact@alphaesai.com?subject=Executive%20Briefing%20Request"
-                  className="bg-[#964900] text-white font-inter text-sm px-6 py-3.5 rounded-md font-semibold hover:bg-[#7a3b00] transition-colors shadow-md flex items-center justify-center gap-2 text-center w-full"
-                >
-                  <span>Email Us to Book Briefing</span>
-                  <ArrowRight className="w-4 h-4" />
-                </a>
-                <p className="text-[11px] text-[#564336] text-center font-mono-tech">
-                  Guaranteed response from a principal architect within 4 business hours.
-                </p>
-              </div>
+                  {/* Grid: Phone & Email */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Phone Number Field */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-mono-tech font-bold uppercase text-[#564336]">
+                        Phone Number <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <Phone className="w-4 h-4 text-[#964900] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="tel"
+                          required
+                          placeholder="+1 (555) 000-0000"
+                          value={formData.phone}
+                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                          className="w-full bg-white border border-[#241913]/20 rounded-lg pl-10 pr-4 py-3 text-[#241913] placeholder-[#241913]/40 focus:outline-none focus:border-[#964900] focus:ring-1 focus:ring-[#964900] transition-all"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Email Address Field */}
+                    <div className="space-y-1.5">
+                      <label className="block text-xs font-mono-tech font-bold uppercase text-[#564336]">
+                        Email Address <span className="text-red-500">*</span>
+                      </label>
+                      <div className="relative">
+                        <Mail className="w-4 h-4 text-[#964900] absolute left-3.5 top-1/2 -translate-y-1/2" />
+                        <input
+                          type="email"
+                          required
+                          placeholder="you@company.com"
+                          value={formData.email}
+                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                          className="w-full bg-white border border-[#241913]/20 rounded-lg pl-10 pr-4 py-3 text-[#241913] placeholder-[#241913]/40 focus:outline-none focus:border-[#964900] focus:ring-1 focus:ring-[#964900] transition-all"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Description Field */}
+                  <div className="space-y-1.5">
+                    <label className="block text-xs font-mono-tech font-bold uppercase text-[#564336]">
+                      Why do you need to contact us? <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <FileText className="w-4 h-4 text-[#964900] absolute left-3.5 top-3.5" />
+                      <textarea
+                        required
+                        rows={4}
+                        placeholder="Tell us about your project, database performance bottlenecks, cloud migration goals, or AI engineering needs..."
+                        value={formData.description}
+                        onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                        className="w-full bg-white border border-[#241913]/20 rounded-lg pl-10 pr-4 py-3 text-[#241913] placeholder-[#241913]/40 focus:outline-none focus:border-[#964900] focus:ring-1 focus:ring-[#964900] transition-all resize-none"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Submit Button */}
+                  <div className="pt-2">
+                    <button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full bg-[#964900] text-white font-inter text-sm px-6 py-3.5 rounded-md font-semibold hover:bg-[#7a3b00] disabled:opacity-50 transition-colors shadow-md flex items-center justify-center gap-2 text-center"
+                    >
+                      {isSubmitting ? (
+                        <span>Sending Request...</span>
+                      ) : (
+                        <>
+                          <span>Submit Contact Request</span>
+                          <Send className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+                    <p className="text-[11px] text-[#564336] text-center font-mono-tech mt-3">
+                      Guaranteed response from a principal architect within 4 business hours.
+                    </p>
+                  </div>
+                </form>
+              )}
             </div>
           </div>
         </div>
@@ -149,4 +249,3 @@ export default function Contact() {
     </div>
   );
 }
-
