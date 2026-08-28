@@ -41,8 +41,8 @@
     scroll-behavior: smooth;
   }
   body {
-    background-color: #F4F7FC;
-    color: #0B132B;
+    background-color: #030712;
+    color: #F9FAFB;
     font-family: var(--font-inter), 'Inter', sans-serif;
     @apply antialiased;
   }
