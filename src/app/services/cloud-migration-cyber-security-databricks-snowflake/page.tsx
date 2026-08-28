@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCMS } from "@/context/CMSContext";
 import {
   Cloud,
   ShieldCheck,
@@ -196,6 +197,20 @@ const faqs = [
 
 export default function CloudSecurityDatabricksPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const { data } = useCMS();
+  const cmsCloud = data?.pages?.serviceSubpages?.cloudMigration;
+
+  const badgeText = cmsCloud?.heroBadge || "CLOUD MIGRATION · CYBER SECURITY · DATABRICKS & SNOWFLAKE";
+  const titleText = cmsCloud?.title || "Cloud Infrastructure Built for the AI Era.";
+  const taglineText = cmsCloud?.subtitle || "Scalable. Secure. Optimized.";
+  const descText = cmsCloud?.description || "Traditional cloud infrastructure was never designed for the demands of modern AI. From volatile GPU requirements and complex data pipelines to the security implications of large-scale LLMs, the old playbooks no longer apply. AlphaesAI engineers high-performance cloud environments—across AWS, Azure, GCP, and OCI—that integrate security, cost-optimization, and data architecture from Day 1. We don’t just move workloads; we build foundations that make your AI systems viable, scalable, and secure.";
+  const displayCapabilities = cmsCloud?.capabilitiesBadges && cmsCloud.capabilitiesBadges.length > 0
+    ? cmsCloud.capabilitiesBadges
+    : ["AWS", "Azure", "GCP", "OCI", "Databricks", "Snowflake", "Production Kubernetes", "Policy-as-Code"];
+  const primaryCtaText = cmsCloud?.primaryCtaText || "Schedule an Executive Briefing";
+  const primaryCtaHref = cmsCloud?.primaryCtaHref || "/contact";
+  const secondaryCtaText = cmsCloud?.secondaryCtaText || "Explore Capabilities";
+  const secondaryCtaHref = cmsCloud?.secondaryCtaHref || "#capabilities";
 
   return (
     <div className="w-full bg-[#fff8f5] text-[#241913]">
@@ -205,34 +220,24 @@ export default function CloudSecurityDatabricksPage() {
           {/* Breadcrumb / Tagline Pill */}
           <div className="inline-flex items-center gap-2 border border-[#ddc1b0] bg-[#ffffff] px-4 py-1.5 rounded-full font-['JetBrains_Mono'] text-xs font-bold text-[#964900] mb-6 tracking-widest uppercase shadow-sm">
             <Cloud className="w-3.5 h-3.5 text-[#964900]" />
-            <span>CLOUD MIGRATION · CYBER SECURITY · DATABRICKS & SNOWFLAKE</span>
+            <span>{badgeText}</span>
           </div>
 
           <h1 className="font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-[62px] font-extrabold text-[#241913] mb-4 tracking-tight leading-[1.1]">
-            Cloud Infrastructure Built for the{" "}
-            <span className="text-[#964900]">AI Era.</span>
+            {titleText}
           </h1>
 
           <p className="font-['JetBrains_Mono'] text-lg font-bold text-[#964900] mb-6 tracking-wide">
-            Scalable. Secure. Optimized.
+            {taglineText}
           </p>
 
           <p className="font-['Inter'] text-base sm:text-lg text-[#564336] max-w-3xl mb-8 leading-relaxed font-normal">
-            Traditional cloud infrastructure was never designed for the demands of modern AI. From volatile GPU requirements and complex data pipelines to the security implications of large-scale LLMs, the old playbooks no longer apply. AlphaesAI engineers high-performance cloud environments—across AWS, Azure, GCP, and OCI—that integrate security, cost-optimization, and data architecture from Day 1. We don’t just move workloads; we build foundations that make your AI systems viable, scalable, and secure.
+            {descText}
           </p>
 
           {/* Capabilities Badges Strip */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-            {[
-              "AWS",
-              "Azure",
-              "GCP",
-              "OCI",
-              "Databricks",
-              "Snowflake",
-              "Production Kubernetes",
-              "Policy-as-Code",
-            ].map((cap) => (
+            {displayCapabilities.map((cap) => (
               <span
                 key={cap}
                 className="px-3 py-1 bg-[#fff1ea] border border-[#ddc1b0] rounded-full text-xs font-['JetBrains_Mono'] font-medium text-[#241913]"
@@ -245,17 +250,17 @@ export default function CloudSecurityDatabricksPage() {
           {/* Action CTAs */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <Link
-              href="/contact"
+              href={primaryCtaHref}
               className="bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#723600] transition-all duration-200 shadow-md flex items-center gap-2 group text-center"
             >
-              <span>Schedule an Executive Briefing</span>
+              <span>{primaryCtaText}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <a
-              href="#capabilities"
+              href={secondaryCtaHref}
               className="border border-[#ddc1b0] bg-[#ffffff] text-[#241913] font-['JetBrains_Mono'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#fff1ea] transition-colors text-center"
             >
-              Explore Capabilities
+              {secondaryCtaText}
             </a>
           </div>
         </div>

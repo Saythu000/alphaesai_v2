@@ -129,10 +129,10 @@ export default function ServicesPage() {
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <Link
-            href="/contact"
+            href={cmsServices?.fdeCtaHref || "/contact"}
             className="bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-base px-8 py-3.5 rounded-full hover:bg-[#723600] transition-colors shadow-md text-center"
           >
-            Schedule an Executive Briefing
+            {cmsServices?.fdeCtaText || "Schedule an Executive Briefing"}
           </Link>
           <a
             href="#fde"
@@ -176,13 +176,13 @@ export default function ServicesPage() {
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-2">
-              Core Delivery Model
+              {cmsServices?.fdeSubtitle || "Core Delivery Model"}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Forward Deployed Engineering (FDE)
+              {cmsServices?.fdeTitle || "Forward Deployed Engineering (FDE)"}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              We act as an extension of your engineering team. We architect scalable RAG systems, autonomous agents, and custom ML models that integrate into your operational stack—designed for production, not just experiments.
+              {cmsServices?.fdeDescription || "We act as an extension of your engineering team. We architect scalable RAG systems, autonomous agents, and custom ML models that integrate into your operational stack—designed for production, not just experiments."}
             </p>
           </div>
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCMS } from "@/context/CMSContext";
 import {
   ArrowDownRight,
   ArrowRight,
@@ -207,6 +208,12 @@ const faqs = [
 export default function DatabaseOptimizationPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [activePhase, setActivePhase] = useState<number>(0);
+  const { data } = useCMS();
+  const cmsDbTuning = data.pages?.serviceSubpages?.databaseTuning;
+
+  const displayCapabilities = cmsDbTuning?.capabilitiesBadges?.length
+    ? cmsDbTuning.capabilitiesBadges
+    : capabilities;
 
   return (
     <div className="min-h-screen bg-[#fff8f5] text-[#241913] font-['Inter'] selection:bg-[#964900] selection:text-white">
@@ -238,7 +245,7 @@ export default function DatabaseOptimizationPage() {
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#ffeade] border border-[#ddc1b0] text-[#964900] text-xs font-['JetBrains_Mono'] font-bold mb-6"
           >
             <Database className="w-3.5 h-3.5" />
-            <span>Database Performance & Cloud Optimization</span>
+            <span>{cmsDbTuning?.heroBadge || "Database Performance & Cloud Optimization"}</span>
           </motion.div>
 
           {/* Tagline Badge */}
@@ -258,8 +265,14 @@ export default function DatabaseOptimizationPage() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-4xl sm:text-6xl font-extrabold font-['JetBrains_Mono'] tracking-tight text-[#241913] leading-[1.1] max-w-4xl"
           >
-            Make Your Database <br />
-            <span className="text-[#964900]">Faster, Leaner,</span> and Ready to Scale.
+            {cmsDbTuning?.title ? (
+              <span>{cmsDbTuning.title}</span>
+            ) : (
+              <>
+                Make Your Database <br />
+                <span className="text-[#964900]">Faster, Leaner,</span> and Ready to Scale.
+              </>
+            )}
           </motion.h1>
 
           {/* Hero Summary */}
@@ -269,7 +282,7 @@ export default function DatabaseOptimizationPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="mt-6 text-lg sm:text-xl text-[#564336] max-w-2xl font-normal leading-relaxed"
           >
-            We identify bottlenecks, eliminate expensive query inefficiencies, and architect scalable database systems. We solve performance issues at the root—without requiring full-scale application rewrites.
+            {cmsDbTuning?.description || cmsDbTuning?.subtitle || "We identify bottlenecks, eliminate expensive query inefficiencies, and architect scalable database systems. We solve performance issues at the root—without requiring full-scale application rewrites."}
           </motion.p>
 
           {/* Capability Pills Bar */}
@@ -282,7 +295,7 @@ export default function DatabaseOptimizationPage() {
             <span className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] uppercase tracking-wider mr-2">
               Capabilities:
             </span>
-            {capabilities.map((cap) => (
+            {displayCapabilities.map((cap) => (
               <span
                 key={cap}
                 className="px-3 py-1 rounded-full bg-white border border-[#ddc1b0]/80 shadow-sm text-xs font-['JetBrains_Mono'] text-[#564336] font-medium hover:border-[#964900] hover:text-[#964900] transition-colors"
@@ -300,12 +313,12 @@ export default function DatabaseOptimizationPage() {
             className="mt-10 flex flex-wrap items-center gap-4"
           >
             <Link
-              href="/contact"
+              href={cmsDbTuning?.primaryCtaHref || "/contact"}
               className="group relative inline-flex items-center shadow-lg hover:shadow-xl transition-shadow"
             >
               <span className="absolute right-0 inset-y-0 w-[calc(100%-1.25rem)] rounded-xl bg-[#964900]" />
               <span className="relative z-10 px-6 py-3.5 rounded-xl bg-[#241913] text-white text-sm font-['JetBrains_Mono'] font-bold tracking-wide">
-                Book a Database Assessment
+                {cmsDbTuning?.primaryCtaText || "Book a Database Assessment"}
               </span>
               <span className="relative -left-px z-10 w-11 h-11 rounded-xl flex items-center justify-center text-white bg-[#964900]">
                 <ArrowDownRight className="w-5 h-5 transition-transform duration-300 group-hover:-rotate-45" />
@@ -313,10 +326,10 @@ export default function DatabaseOptimizationPage() {
             </Link>
 
             <Link
-              href="/contact"
+              href={cmsDbTuning?.secondaryCtaHref || "/contact"}
               className="inline-flex items-center gap-2 px-6 py-3.5 rounded-xl bg-white border border-[#ddc1b0] text-sm font-['JetBrains_Mono'] font-bold text-[#241913] hover:bg-[#ffeade] hover:border-[#964900] transition-colors"
             >
-              <span>Talk to an Expert</span>
+              <span>{cmsDbTuning?.secondaryCtaText || "Talk to an Expert"}</span>
               <ArrowRight className="w-4 h-4 text-[#964900]" />
             </Link>
           </motion.div>

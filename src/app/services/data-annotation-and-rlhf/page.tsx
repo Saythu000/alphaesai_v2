@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCMS } from "@/context/CMSContext";
 import {
   FileCheck,
   ShieldCheck,
@@ -181,6 +182,27 @@ const faqs = [
 
 export default function DataAnnotationAndRlhfPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const { data } = useCMS();
+  const cmsDataAnnot = data?.pages?.serviceSubpages?.dataAnnotation;
+
+  const badgeText = cmsDataAnnot?.heroBadge || "DATA ANNOTATION & RLHF · PRECISION TRAINING DATA";
+  const titleText = cmsDataAnnot?.title || "DATA ANNOTATION & RLHF";
+  const subtitleText = cmsDataAnnot?.subtitle || "Precision Labeling · Engineering-Aligned · Production-Grade";
+  const descText = cmsDataAnnot?.description || "Most annotation platforms sell volume. We sell model performance. If your data isn’t mapped to your engineering goals, your model fails regardless of the architecture. We integrate domain experts directly into your training pipeline to ensure the feedback fed into your model is as precise as the code you write.";
+  const displayBadges = cmsDataAnnot?.capabilitiesBadges && cmsDataAnnot.capabilitiesBadges.length > 0
+    ? cmsDataAnnot.capabilitiesBadges
+    : [
+        "RLHF & Preference Scoring",
+        "SFT Fine-Tuning Curation",
+        "Adversarial Red-Teaming",
+        "Healthcare & Medical Annotators",
+        "Legal & Financial Experts",
+        "Human-in-the-Loop Eval",
+      ];
+  const primaryCtaText = cmsDataAnnot?.primaryCtaText || "Schedule an Executive Briefing";
+  const primaryCtaHref = cmsDataAnnot?.primaryCtaHref || "/contact";
+  const secondaryCtaText = cmsDataAnnot?.secondaryCtaText || "Explore Approach";
+  const secondaryCtaHref = cmsDataAnnot?.secondaryCtaHref || "#approach";
 
   return (
     <div className="w-full bg-[#fff8f5] text-[#241913]">
@@ -190,31 +212,24 @@ export default function DataAnnotationAndRlhfPage() {
           {/* Breadcrumb / Tagline Pill */}
           <div className="inline-flex items-center gap-2 border border-[#ddc1b0] bg-[#ffffff] px-4 py-1.5 rounded-full font-['JetBrains_Mono'] text-xs font-bold text-[#964900] mb-6 tracking-widest uppercase shadow-sm">
             <FileCheck className="w-3.5 h-3.5 text-[#964900]" />
-            <span>DATA ANNOTATION & RLHF · PRECISION TRAINING DATA</span>
+            <span>{badgeText}</span>
           </div>
 
           <h1 className="font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-[62px] font-extrabold text-[#241913] mb-4 tracking-tight leading-[1.1]">
-            DATA ANNOTATION & <span className="text-[#964900]">RLHF</span>
+            {titleText}
           </h1>
 
           <p className="font-['JetBrains_Mono'] text-lg font-bold text-[#964900] mb-6 tracking-wide">
-            Precision Labeling · Engineering-Aligned · Production-Grade
+            {subtitleText}
           </p>
 
           <p className="font-['Inter'] text-base sm:text-lg text-[#564336] max-w-3xl mb-8 leading-relaxed font-normal">
-            Most annotation platforms sell volume. We sell model performance. If your data isn’t mapped to your engineering goals, your model fails regardless of the architecture. We integrate domain experts directly into your training pipeline to ensure the feedback fed into your model is as precise as the code you write.
+            {descText}
           </p>
 
           {/* Value Badges Strip */}
           <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-            {[
-              "RLHF & Preference Scoring",
-              "SFT Fine-Tuning Curation",
-              "Adversarial Red-Teaming",
-              "Healthcare & Medical Annotators",
-              "Legal & Financial Experts",
-              "Human-in-the-Loop Eval",
-            ].map((badge) => (
+            {displayBadges.map((badge) => (
               <span
                 key={badge}
                 className="px-3.5 py-1 bg-[#fff1ea] border border-[#ddc1b0] rounded-full text-xs font-['JetBrains_Mono'] font-medium text-[#241913]"
@@ -227,17 +242,17 @@ export default function DataAnnotationAndRlhfPage() {
           {/* Action CTAs */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <Link
-              href="/contact"
+              href={primaryCtaHref}
               className="bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#723600] transition-all duration-200 shadow-md flex items-center gap-2 group text-center"
             >
-              <span>Schedule an Executive Briefing</span>
+              <span>{primaryCtaText}</span>
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
             <a
-              href="#approach"
+              href={secondaryCtaHref}
               className="border border-[#ddc1b0] bg-[#ffffff] text-[#241913] font-['JetBrains_Mono'] font-bold text-base px-8 py-4 rounded-full hover:bg-[#fff1ea] transition-colors text-center"
             >
-              Explore Approach
+              {secondaryCtaText}
             </a>
           </div>
         </div>

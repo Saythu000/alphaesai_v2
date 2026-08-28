@@ -259,6 +259,8 @@ export interface ServicesCMSData {
   badge: string;
   title: string;
   subtitle: string;
+  primaryCtaText?: string;
+  primaryCtaHref?: string;
   cards: ServiceCardCMS[];
   fdeTitle: string;
   fdeSubtitle: string;
