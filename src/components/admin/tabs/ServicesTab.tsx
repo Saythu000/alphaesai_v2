@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Briefcase, LayoutGrid, Layers, MousePointer, ShieldCheck } from "lucide-react";
+import { Briefcase, LayoutGrid, Layers, MousePointer, ShieldCheck, Database, Cloud, CheckSquare } from "lucide-react";
 import { FullCMSData, ServiceSubpagesCMSData } from "@/lib/cms-store";
 import { SectionHeader } from "../common/SectionHeader";
 import { FormField } from "../common/FormField";
@@ -96,7 +96,7 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
           <div className="space-y-6">
             <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
               <LayoutGrid className="w-4 h-4" />
-              <span>Main Services Landing Page (/services)</span>
+              <span>Main Services Hero Section</span>
             </div>
 
             <FormField
@@ -112,7 +112,7 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
                 onChange={(val) => updateMainServices({ title: val })}
               />
               <FormField
-                label="Subtitle"
+                label="Hero Subtitle"
                 value={formData.pages.services?.subtitle || ""}
                 onChange={(val) => updateMainServices({ subtitle: val })}
               />
@@ -132,22 +132,37 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
               />
             </div>
 
-            <div className="pt-4 border-t border-[#ddc1b0]/60 space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="Secondary CTA Text"
+                value={formData.pages.services?.secondaryCtaText || ""}
+                onChange={(val) => updateMainServices({ secondaryCtaText: val })}
+              />
+              <FormField
+                label="Secondary CTA Href"
+                type="mono"
+                value={formData.pages.services?.secondaryCtaHref || ""}
+                onChange={(val) => updateMainServices({ secondaryCtaHref: val })}
+              />
+            </div>
+
+            {/* 1. FDE SECTION */}
+            <div className="pt-6 border-t border-[#ddc1b0] space-y-4">
               <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
                 <Layers className="w-4 h-4" />
-                <span>Forward-Deployed Engineering (FDE) Banner Section</span>
+                <span>1. Forward-Deployed Engineering (FDE) Section</span>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                  label="FDE Banner Title"
-                  value={formData.pages.services?.fdeTitle || ""}
-                  onChange={(val) => updateMainServices({ fdeTitle: val })}
-                />
-                <FormField
-                  label="FDE Banner Subtitle"
+                  label="FDE Category Subtitle"
                   value={formData.pages.services?.fdeSubtitle || ""}
                   onChange={(val) => updateMainServices({ fdeSubtitle: val })}
+                />
+                <FormField
+                  label="FDE Section Title"
+                  value={formData.pages.services?.fdeTitle || ""}
+                  onChange={(val) => updateMainServices({ fdeTitle: val })}
                 />
               </div>
 
@@ -161,15 +176,201 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
-                  label="FDE CTA Text"
-                  value={formData.pages.services?.fdeCtaText || ""}
-                  onChange={(val) => updateMainServices({ fdeCtaText: val })}
+                  label="FDE Process Hub Badge"
+                  value={formData.pages.services?.fdeProcessBadge || ""}
+                  onChange={(val) => updateMainServices({ fdeProcessBadge: val })}
                 />
                 <FormField
-                  label="FDE CTA Href"
+                  label="FDE Process Hub Title"
+                  value={formData.pages.services?.fdeProcessTitle || ""}
+                  onChange={(val) => updateMainServices({ fdeProcessTitle: val })}
+                />
+              </div>
+
+              <div className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl space-y-4">
+                <div className="text-xs font-mono font-bold text-[#964900] uppercase">FDE Accountability Guarantee Banner</div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    label="Guarantee Badge"
+                    value={formData.pages.services?.fdeGuaranteeBadge || ""}
+                    onChange={(val) => updateMainServices({ fdeGuaranteeBadge: val })}
+                  />
+                  <FormField
+                    label="Guarantee Title"
+                    value={formData.pages.services?.fdeGuaranteeTitle || ""}
+                    onChange={(val) => updateMainServices({ fdeGuaranteeTitle: val })}
+                  />
+                </div>
+                <FormField
+                  label="Guarantee Subtitle"
+                  value={formData.pages.services?.fdeGuaranteeSubtitle || ""}
+                  onChange={(val) => updateMainServices({ fdeGuaranteeSubtitle: val })}
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    label="Guarantee CTA Text"
+                    value={formData.pages.services?.fdeGuaranteeCtaText || ""}
+                    onChange={(val) => updateMainServices({ fdeGuaranteeCtaText: val })}
+                  />
+                  <FormField
+                    label="Guarantee CTA Href"
+                    type="mono"
+                    value={formData.pages.services?.fdeGuaranteeCtaHref || ""}
+                    onChange={(val) => updateMainServices({ fdeGuaranteeCtaHref: val })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 2. DATABASE & CLOUD OPTIMIZATION */}
+            <div className="pt-6 border-t border-[#ddc1b0] space-y-4">
+              <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                <Database className="w-4 h-4" />
+                <span>2. Database & Cloud Optimization Section</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  label="Category Subtitle"
+                  value={formData.pages.services?.dbSubtitle || ""}
+                  onChange={(val) => updateMainServices({ dbSubtitle: val })}
+                />
+                <FormField
+                  label="Section Title"
+                  value={formData.pages.services?.dbTitle || ""}
+                  onChange={(val) => updateMainServices({ dbTitle: val })}
+                />
+              </div>
+
+              <FormField
+                label="Description"
+                type="textarea"
+                rows={3}
+                value={formData.pages.services?.dbDescription || ""}
+                onChange={(val) => updateMainServices({ dbDescription: val })}
+              />
+
+              <div className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl space-y-4">
+                <div className="text-xs font-mono font-bold text-[#964900] uppercase">Dark Stat Callout Box</div>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <FormField
+                    label="Stat Badge"
+                    value={formData.pages.services?.dbStatBadge || ""}
+                    onChange={(val) => updateMainServices({ dbStatBadge: val })}
+                  />
+                  <FormField
+                    label="Metric 1 (e.g. 30-50%)"
+                    value={formData.pages.services?.dbStatMetric1 || ""}
+                    onChange={(val) => updateMainServices({ dbStatMetric1: val })}
+                  />
+                  <FormField
+                    label="Label 1"
+                    value={formData.pages.services?.dbStatLabel1 || ""}
+                    onChange={(val) => updateMainServices({ dbStatLabel1: val })}
+                  />
+                </div>
+                <FormField
+                  label="Stat 1 Description"
+                  value={formData.pages.services?.dbStatDesc1 || ""}
+                  onChange={(val) => updateMainServices({ dbStatDesc1: val })}
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    label="Metric 2 (e.g. 10x Throughput)"
+                    value={formData.pages.services?.dbStatMetric2 || ""}
+                    onChange={(val) => updateMainServices({ dbStatMetric2: val })}
+                  />
+                  <FormField
+                    label="Label 2"
+                    value={formData.pages.services?.dbStatLabel2 || ""}
+                    onChange={(val) => updateMainServices({ dbStatLabel2: val })}
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* 3. CLOUD MIGRATION & CYBER SECURITY */}
+            <div className="pt-6 border-t border-[#ddc1b0] space-y-4">
+              <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                <Cloud className="w-4 h-4" />
+                <span>3. Cloud Migration, Cyber Security, Databricks & Snowflake Section</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  label="Category Subtitle"
+                  value={formData.pages.services?.cloudSecuritySubtitle || ""}
+                  onChange={(val) => updateMainServices({ cloudSecuritySubtitle: val })}
+                />
+                <FormField
+                  label="Section Title"
+                  value={formData.pages.services?.cloudSecurityTitle || ""}
+                  onChange={(val) => updateMainServices({ cloudSecurityTitle: val })}
+                />
+              </div>
+
+              <FormField
+                label="Description"
+                type="textarea"
+                rows={3}
+                value={formData.pages.services?.cloudSecurityDescription || ""}
+                onChange={(val) => updateMainServices({ cloudSecurityDescription: val })}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  label="Dedicated Page Button Text"
+                  value={formData.pages.services?.cloudSecurityCtaText || ""}
+                  onChange={(val) => updateMainServices({ cloudSecurityCtaText: val })}
+                />
+                <FormField
+                  label="Button Href"
                   type="mono"
-                  value={formData.pages.services?.fdeCtaHref || ""}
-                  onChange={(val) => updateMainServices({ fdeCtaHref: val })}
+                  value={formData.pages.services?.cloudSecurityCtaHref || ""}
+                  onChange={(val) => updateMainServices({ cloudSecurityCtaHref: val })}
+                />
+              </div>
+            </div>
+
+            {/* 4. DATA ANNOTATION & RLHF */}
+            <div className="pt-6 border-t border-[#ddc1b0] space-y-4">
+              <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                <CheckSquare className="w-4 h-4" />
+                <span>4. Data Annotation & RLHF Section</span>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  label="Category Subtitle"
+                  value={formData.pages.services?.rlhfSubtitle || ""}
+                  onChange={(val) => updateMainServices({ rlhfSubtitle: val })}
+                />
+                <FormField
+                  label="Section Title"
+                  value={formData.pages.services?.rlhfTitle || ""}
+                  onChange={(val) => updateMainServices({ rlhfTitle: val })}
+                />
+              </div>
+
+              <FormField
+                label="Description"
+                type="textarea"
+                rows={3}
+                value={formData.pages.services?.rlhfDescription || ""}
+                onChange={(val) => updateMainServices({ rlhfDescription: val })}
+              />
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  label="Dedicated Page Button Text"
+                  value={formData.pages.services?.rlhfCtaText || ""}
+                  onChange={(val) => updateMainServices({ rlhfCtaText: val })}
+                />
+                <FormField
+                  label="Button Href"
+                  type="mono"
+                  value={formData.pages.services?.rlhfCtaHref || ""}
+                  onChange={(val) => updateMainServices({ rlhfCtaHref: val })}
                 />
               </div>
             </div>

@@ -255,18 +255,65 @@ export interface FAQItemCMS {
   answer: string;
 }
 
+export interface ServiceItemFeatureCMS {
+  id?: string;
+  title: string;
+  desc: string;
+  iconName?: string;
+}
+
 export interface ServicesCMSData {
   badge: string;
   title: string;
   subtitle: string;
   primaryCtaText?: string;
   primaryCtaHref?: string;
+  secondaryCtaText?: string;
+  secondaryCtaHref?: string;
   cards: ServiceCardCMS[];
+
+  // FDE Section
   fdeTitle: string;
   fdeSubtitle: string;
   fdeDescription: string;
   fdeCtaText: string;
   fdeCtaHref: string;
+  fdeFeatures?: ServiceItemFeatureCMS[];
+  fdeProcessBadge?: string;
+  fdeProcessTitle?: string;
+  fdeGuaranteeBadge?: string;
+  fdeGuaranteeTitle?: string;
+  fdeGuaranteeSubtitle?: string;
+  fdeGuaranteeCtaText?: string;
+  fdeGuaranteeCtaHref?: string;
+
+  // Database Optimization Section
+  dbSubtitle?: string;
+  dbTitle?: string;
+  dbDescription?: string;
+  dbStatBadge?: string;
+  dbStatMetric1?: string;
+  dbStatLabel1?: string;
+  dbStatDesc1?: string;
+  dbStatMetric2?: string;
+  dbStatLabel2?: string;
+  dbFeatures?: ServiceItemFeatureCMS[];
+
+  // Cloud Security Section
+  cloudSecuritySubtitle?: string;
+  cloudSecurityTitle?: string;
+  cloudSecurityDescription?: string;
+  cloudSecurityCtaText?: string;
+  cloudSecurityCtaHref?: string;
+  cloudSecurityFeatures?: ServiceItemFeatureCMS[];
+
+  // Data Annotation & RLHF Section
+  rlhfSubtitle?: string;
+  rlhfTitle?: string;
+  rlhfDescription?: string;
+  rlhfCtaText?: string;
+  rlhfCtaHref?: string;
+  rlhfFeatures?: ServiceItemFeatureCMS[];
 }
 
 export interface ServiceFrictionPointCMS {
@@ -1033,11 +1080,127 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
           href: "/services/database-performance-and-cloud-optimization",
         },
       ],
-      fdeTitle: "Forward-Deployed Engineering (FDE) Embedded Teams",
-      fdeSubtitle: "We build alongside your engineers to ship production AI in weeks, not years.",
-      fdeDescription: "Our senior AI engineers operate within your codebase, infrastructure, and security boundary to deliver fully custom AI agents, automated pipelines, and cloud optimizations.",
-      fdeCtaText: "Request FDE Deployment",
+      fdeTitle: "Forward-Deployed Engineering (FDE)",
+      fdeSubtitle: "Core Delivery Model",
+      fdeDescription: "We act as an extension of your engineering team. We architect scalable RAG systems, autonomous agents, and custom ML models that integrate into your operational stack—designed for production, not just experiments.",
+      fdeCtaText: "Schedule an Executive Briefing",
       fdeCtaHref: "/contact",
+      fdeFeatures: [
+        {
+          title: "Embedded Side-by-Side Team",
+          desc: "Our senior engineers work directly inside your Slack, GitHub, AWS/GCP, and JIRA workflows as part of your team.",
+          iconName: "Users",
+        },
+        {
+          title: "Autonomous AI & RAG Systems",
+          desc: "Architect and deploy scalable RAG pipelines, multi-agent workflows, and custom ML integrations into your operational stack.",
+          iconName: "Terminal",
+        },
+        {
+          title: "Production Accountability",
+          desc: "We don't leave after writing slide decks. We take full responsibility for shipping working, tested production code.",
+          iconName: "Zap",
+        },
+        {
+          title: "Zero Vendor Lock-in",
+          desc: "All infrastructure, code, and CI/CD pipelines belong entirely to your organization with full documentation transfer.",
+          iconName: "Lock",
+        },
+      ],
+      fdeProcessBadge: "Interactive Delivery Framework",
+      fdeProcessTitle: "From Discovery to Continuous Optimization",
+      fdeGuaranteeBadge: "ACCOUNTABILITY GUARANTEE",
+      fdeGuaranteeTitle: "Engineers inside your codebase within 48 hours",
+      fdeGuaranteeSubtitle: "No long procurement cycles. Immediate impact on active production sprints.",
+      fdeGuaranteeCtaText: "Book FDE Scoping Call",
+      fdeGuaranteeCtaHref: "/contact",
+
+      // Database Optimization
+      dbSubtitle: "Performance Tuning & FinOps",
+      dbTitle: "Database & Cloud Optimization",
+      dbDescription: "Your database is likely costing you more than it should. We identify bottlenecks, optimize query execution, and manage resource allocation to cut your infrastructure costs by 30-50% while improving latency.",
+      dbStatBadge: "Immediate Cost Reduction",
+      dbStatMetric1: "30–50%",
+      dbStatLabel1: "Infrastructure Cost Cut",
+      dbStatDesc1: "Average monthly spend reduction across PostgreSQL, Aurora, RDS, and Snowflake without degrading response times.",
+      dbStatMetric2: "10x Throughput",
+      dbStatLabel2: "P99 Query Latency & Scaling Improvement",
+      dbFeatures: [
+        {
+          title: "Slow Query & Index Optimization",
+          desc: "Deep analysis of query execution plans, missing indexes, and buffer pool contention across PostgreSQL, MySQL, SQL Server, Aurora, and Snowflake.",
+        },
+        {
+          title: "FinOps Cost Rightsizing",
+          desc: "Identify over-provisioned cloud database instances, read-replicas, and storage tiers to reduce monthly AWS/GCP database spend by 30–50%.",
+        },
+        {
+          title: "Zero-Downtime Migration & Tuning",
+          desc: "Execute index creation, table partitioning, and database migrations live in production without causing application downtime.",
+        },
+        {
+          title: "Connection Pooling & Latency Reduction",
+          desc: "Implement Redis caching layers, PgBouncer pooling, and query result caching to sustain 10x user throughput spikes with ultra-low latency.",
+        },
+      ],
+
+      // Cloud Migration & Security
+      cloudSecuritySubtitle: "Resilient Cloud & Security",
+      cloudSecurityTitle: "Cloud Migration, Cyber Security, Databricks & Snowflake",
+      cloudSecurityDescription: "We migrate workloads without the downtime. Using infrastructure-as-code, we build secure, reproducible environments across AWS, Azure, GCP, and OCI, with security-by-design at the core to protect your data assets.",
+      cloudSecurityCtaText: "Dedicated Service Page",
+      cloudSecurityCtaHref: "/services/cloud-migration-cyber-security-databricks-snowflake",
+      cloudSecurityFeatures: [
+        {
+          title: "Zero-Downtime Cloud Migrations",
+          desc: "Seamlessly move workloads across AWS, Azure, and GCP using blue-green deployments and automated failovers without impacting users.",
+          iconName: "Cloud",
+        },
+        {
+          title: "Infrastructure as Code (IaC)",
+          desc: "Build reproducible, versioned infrastructure modules using Terraform, OpenTofu, and CloudFormation for predictable deployments.",
+          iconName: "Terminal",
+        },
+        {
+          title: "Hardened Security Environments",
+          desc: "Implement zero-trust network segmentation, IAM least-privilege scoping, and continuous compliance scanning by design.",
+          iconName: "ShieldCheck",
+        },
+        {
+          title: "Data Asset Protection & Guardrails",
+          desc: "Enforce encryption at rest and in transit, secrets management via HashiCorp Vault, and data loss prevention policies.",
+          iconName: "Lock",
+        },
+      ],
+
+      // Data Annotation & RLHF
+      rlhfSubtitle: "High-Fidelity AI Training Data",
+      rlhfTitle: "Data Annotation & RLHF",
+      rlhfDescription: "High-quality models require high-quality data. We provide expert-level data annotation and RLHF services, ensuring your AI models receive the precision training necessary to perform reliably in real-world scenarios.",
+      rlhfCtaText: "Dedicated Service Page",
+      rlhfCtaHref: "/services/data-annotation-and-rlhf",
+      rlhfFeatures: [
+        {
+          title: "High-Fidelity Data Labeling",
+          desc: "Domain-expert annotated datasets tailored for complex NLP, computer vision, and multimodal model training requirements.",
+          iconName: "FileCheck",
+        },
+        {
+          title: "Reinforcement Learning (RLHF)",
+          desc: "Iterative preference feedback loops and reward model design to align AI outputs with human intent and safety standards.",
+          iconName: "Zap",
+        },
+        {
+          title: "Precision Curated Evaluation",
+          desc: "Rigorously audit training datasets to eliminate bias, hallucinations, and edge-case errors before model deployment.",
+          iconName: "Check",
+        },
+        {
+          title: "Custom Domain Fine-Tuning",
+          desc: "Prepare domain-specific datasets (Legal, Healthcare, Finance) for targeted model fine-tuning with strict privacy controls.",
+          iconName: "Users",
+        },
+      ],
     },
     serviceSubpages: {
       cloudMigration: {
@@ -1709,6 +1872,18 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
           cards: Array.isArray(parsed.pages?.services?.cards)
             ? parsed.pages.services.cards
             : DEFAULT_CMS_DATA.pages.services.cards,
+          fdeFeatures: Array.isArray(parsed.pages?.services?.fdeFeatures)
+            ? parsed.pages.services.fdeFeatures
+            : DEFAULT_CMS_DATA.pages.services.fdeFeatures,
+          dbFeatures: Array.isArray(parsed.pages?.services?.dbFeatures)
+            ? parsed.pages.services.dbFeatures
+            : DEFAULT_CMS_DATA.pages.services.dbFeatures,
+          cloudSecurityFeatures: Array.isArray(parsed.pages?.services?.cloudSecurityFeatures)
+            ? parsed.pages.services.cloudSecurityFeatures
+            : DEFAULT_CMS_DATA.pages.services.cloudSecurityFeatures,
+          rlhfFeatures: Array.isArray(parsed.pages?.services?.rlhfFeatures)
+            ? parsed.pages.services.rlhfFeatures
+            : DEFAULT_CMS_DATA.pages.services.rlhfFeatures,
         },
         drgodly: {
           ...DEFAULT_CMS_DATA.pages.drgodly,

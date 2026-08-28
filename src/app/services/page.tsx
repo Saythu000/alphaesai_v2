@@ -18,30 +18,50 @@ import {
   ArrowDownRight,
 } from "lucide-react";
 
-const fdePillars = [
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  Users,
+  Terminal,
+  Zap,
+  Lock,
+  Cloud,
+  ShieldCheck,
+  FileCheck,
+  Check,
+  Database,
+  TrendingDown,
+};
+
+function getIcon(name?: string, fallback = Check) {
+  if (name && ICON_MAP[name]) {
+    return ICON_MAP[name];
+  }
+  return fallback;
+}
+
+const defaultFdePillars = [
   {
     title: "Embedded Side-by-Side Team",
     desc: "Our senior engineers work directly inside your Slack, GitHub, AWS/GCP, and JIRA workflows as part of your team.",
-    icon: Users,
+    iconName: "Users",
   },
   {
     title: "Autonomous AI & RAG Systems",
     desc: "Architect and deploy scalable RAG pipelines, multi-agent workflows, and custom ML integrations into your operational stack.",
-    icon: Terminal,
+    iconName: "Terminal",
   },
   {
     title: "Production Accountability",
     desc: "We don't leave after writing slide decks. We take full responsibility for shipping working, tested production code.",
-    icon: Zap,
+    iconName: "Zap",
   },
   {
     title: "Zero Vendor Lock-in",
     desc: "All infrastructure, code, and CI/CD pipelines belong entirely to your organization with full documentation transfer.",
-    icon: Lock,
+    iconName: "Lock",
   },
 ];
 
-const dbopsFeatures = [
+const defaultDbopsFeatures = [
   {
     title: "Slow Query & Index Optimization",
     desc: "Deep analysis of query execution plans, missing indexes, and buffer pool contention across PostgreSQL, MySQL, SQL Server, Aurora, and Snowflake.",
@@ -60,49 +80,49 @@ const dbopsFeatures = [
   },
 ];
 
-const cloudSecurityPillars = [
+const defaultCloudSecurityPillars = [
   {
     title: "Zero-Downtime Cloud Migrations",
     desc: "Seamlessly move workloads across AWS, Azure, and GCP using blue-green deployments and automated failovers without impacting users.",
-    icon: Cloud,
+    iconName: "Cloud",
   },
   {
     title: "Infrastructure as Code (IaC)",
     desc: "Build reproducible, versioned infrastructure modules using Terraform, OpenTofu, and CloudFormation for predictable deployments.",
-    icon: Terminal,
+    iconName: "Terminal",
   },
   {
     title: "Hardened Security Environments",
     desc: "Implement zero-trust network segmentation, IAM least-privilege scoping, and continuous compliance scanning by design.",
-    icon: ShieldCheck,
+    iconName: "ShieldCheck",
   },
   {
     title: "Data Asset Protection & Guardrails",
     desc: "Enforce encryption at rest and in transit, secrets management via HashiCorp Vault, and data loss prevention policies.",
-    icon: Lock,
+    iconName: "Lock",
   },
 ];
 
-const rlhfPillars = [
+const defaultRlhfPillars = [
   {
     title: "High-Fidelity Data Labeling",
     desc: "Domain-expert annotated datasets tailored for complex NLP, computer vision, and multimodal model training requirements.",
-    icon: FileCheck,
+    iconName: "FileCheck",
   },
   {
     title: "Reinforcement Learning (RLHF)",
     desc: "Iterative preference feedback loops and reward model design to align AI outputs with human intent and safety standards.",
-    icon: Zap,
+    iconName: "Zap",
   },
   {
     title: "Precision Curated Evaluation",
     desc: "Rigorously audit training datasets to eliminate bias, hallucinations, and edge-case errors before model deployment.",
-    icon: Check,
+    iconName: "Check",
   },
   {
     title: "Custom Domain Fine-Tuning",
     desc: "Prepare domain-specific datasets (Legal, Healthcare, Finance) for targeted model fine-tuning with strict privacy controls.",
-    icon: Users,
+    iconName: "Users",
   },
 ];
 
@@ -110,35 +130,40 @@ export default function ServicesPage() {
   const { data } = useCMS();
   const cmsServices = data.pages?.services;
 
+  const fdeFeatures = cmsServices?.fdeFeatures?.length ? cmsServices.fdeFeatures : defaultFdePillars;
+  const dbFeatures = cmsServices?.dbFeatures?.length ? cmsServices.dbFeatures : defaultDbopsFeatures;
+  const cloudSecurityFeatures = cmsServices?.cloudSecurityFeatures?.length ? cmsServices.cloudSecurityFeatures : defaultCloudSecurityPillars;
+  const rlhfFeatures = cmsServices?.rlhfFeatures?.length ? cmsServices.rlhfFeatures : defaultRlhfPillars;
+
   return (
     <div className="w-full bg-[#fff8f5] text-[#241913]">
       {/* Hero Header */}
       <section className="py-20 px-4 max-w-[1280px] mx-auto text-center relative overflow-hidden border-b border-[#ddc1b0]">
         <div className="inline-flex items-center gap-2 border border-[#ddc1b0] bg-[#ffffff] px-4 py-1.5 rounded-full font-['JetBrains_Mono'] text-xs font-bold text-[#964900] mb-6 tracking-widest uppercase shadow-sm">
           <Triangle className="w-3.5 h-3.5 fill-[#964900]" />
-          <span>{cmsServices?.badge || "ALPHAESAI ENGINEERING SERVICES"}</span>
+          <span>{cmsServices?.badge || "Enterprise Capabilities"}</span>
         </div>
 
         <h1 className="font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-[#241913] mb-6 tracking-tight leading-tight">
-          {cmsServices?.title || "Systems That Ship. Architecture That Scales."}
+          {cmsServices?.title || "Cloud Migration, Cyber Security, Databricks & Snowflake Optimization"}
         </h1>
 
         <p className="font-['Inter'] text-lg text-[#564336] max-w-3xl mx-auto mb-8 font-normal leading-relaxed">
-          {cmsServices?.subtitle || "We don't build prototypes that collect dust. We design, deploy, and maintain the production-grade systems that run your business."}
+          {cmsServices?.subtitle || "Architecting, optimizing, and securing enterprise data platforms at global scale with zero compromise on speed."}
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-10">
           <Link
-            href={cmsServices?.fdeCtaHref || "/contact"}
+            href={cmsServices?.primaryCtaHref || cmsServices?.fdeCtaHref || "/contact"}
             className="bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-base px-8 py-3.5 rounded-full hover:bg-[#723600] transition-colors shadow-md text-center"
           >
-            {cmsServices?.fdeCtaText || "Schedule an Executive Briefing"}
+            {cmsServices?.primaryCtaText || cmsServices?.fdeCtaText || "Schedule an Executive Briefing"}
           </Link>
           <a
             href="#fde"
             className="border border-[#ddc1b0] bg-[#ffffff] text-[#241913] font-['JetBrains_Mono'] font-bold text-base px-8 py-3.5 rounded-full hover:bg-[#fff1ea] transition-colors text-center"
           >
-            Explore Capability Pillars
+            {cmsServices?.secondaryCtaText || "Explore Capability Pillars"}
           </a>
         </div>
 
@@ -179,19 +204,19 @@ export default function ServicesPage() {
               {cmsServices?.fdeSubtitle || "Core Delivery Model"}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              {cmsServices?.fdeTitle || "Forward Deployed Engineering (FDE)"}
+              {cmsServices?.fdeTitle || "Forward-Deployed Engineering (FDE)"}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              {cmsServices?.fdeDescription || "We act as an extension of your engineering team. We architect scalable RAG systems, autonomous agents, and custom ML models that integrate into your operational stack—designed for production, not just experiments."}
+              {cmsServices?.fdeDescription || "Our senior AI engineers operate within your codebase, infrastructure, and security boundary to deliver fully custom AI agents, automated pipelines, and cloud optimizations."}
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            {fdePillars.map((p) => {
-              const IconComp = p.icon;
+            {fdeFeatures.map((p, idx) => {
+              const IconComp = getIcon(p.iconName, Users);
               return (
                 <div
-                  key={p.title}
+                  key={p.title + idx}
                   className="bg-[#F3F3F3] border border-[#ddc1b0] hover:border-[#964900] rounded-xl p-6 transition-all duration-300 shadow-sm hover-lift"
                 >
                   <div className="w-10 h-10 rounded bg-[#ffffff] border border-[#ddc1b0] flex items-center justify-center text-[#964900] mb-4 shadow-sm">
@@ -211,28 +236,28 @@ export default function ServicesPage() {
           {/* INTERACTIVE FDE HUB & SPOKE PROCESS ENGINE */}
           <div className="my-14 bg-white rounded-2xl border border-[#ddc1b0]/60 p-4 sm:p-8 shadow-sm">
             <FdeInteractiveHub
-              badgeText="Interactive Delivery Framework"
-              title="From Discovery to Continuous Optimization"
+              badgeText={cmsServices?.fdeProcessBadge || "Interactive Delivery Framework"}
+              title={cmsServices?.fdeProcessTitle || "From Discovery to Continuous Optimization"}
             />
           </div>
 
           <div className="bg-[#fff1ea] border border-[#ddc1b0] rounded-xl p-8 shadow-sm flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <div className="text-xs font-['JetBrains_Mono'] text-[#964900] uppercase font-bold mb-1">
-                ACCOUNTABILITY GUARANTEE
+                {cmsServices?.fdeGuaranteeBadge || "ACCOUNTABILITY GUARANTEE"}
               </div>
               <h4 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#241913]">
-                Engineers inside your codebase within 48 hours
+                {cmsServices?.fdeGuaranteeTitle || "Engineers inside your codebase within 48 hours"}
               </h4>
               <p className="font-['Inter'] text-xs text-[#564336] mt-1">
-                No long procurement cycles. Immediate impact on active production sprints.
+                {cmsServices?.fdeGuaranteeSubtitle || "No long procurement cycles. Immediate impact on active production sprints."}
               </p>
             </div>
             <Link
-              href="/contact"
+              href={cmsServices?.fdeGuaranteeCtaHref || "/contact"}
               className="bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-sm px-6 py-3 rounded-full hover:bg-[#723600] transition-colors shadow-sm shrink-0"
             >
-              Book FDE Scoping Call
+              {cmsServices?.fdeGuaranteeCtaText || "Book FDE Scoping Call"}
             </Link>
           </div>
         </div>
@@ -243,13 +268,13 @@ export default function ServicesPage() {
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-2">
-              Performance Tuning & FinOps
+              {cmsServices?.dbSubtitle || "Performance Tuning & FinOps"}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Database & Cloud Optimization
+              {cmsServices?.dbTitle || "Database & Cloud Optimization"}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              Your database is likely costing you more than it should. We identify bottlenecks, optimize query execution, and manage resource allocation to cut your infrastructure costs by 30-50% while improving latency.
+              {cmsServices?.dbDescription || "Your database is likely costing you more than it should. We identify bottlenecks, optimize query execution, and manage resource allocation to cut your infrastructure costs by 30-50% while improving latency."}
             </p>
           </div>
 
@@ -258,30 +283,32 @@ export default function ServicesPage() {
               <div>
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[#964900]/30 text-[#ffb786] border border-[#964900]/50 text-xs font-['JetBrains_Mono'] mb-6">
                   <TrendingDown className="w-3.5 h-3.5" />
-                  <span>Immediate Cost Reduction</span>
+                  <span>{cmsServices?.dbStatBadge || "Immediate Cost Reduction"}</span>
                 </div>
                 <div className="text-4xl font-extrabold text-[#ffb786] font-['JetBrains_Mono'] mb-2">
-                  30–50%
+                  {cmsServices?.dbStatMetric1 || "30–50%"}
                 </div>
                 <div className="text-lg font-bold font-['Hanken_Grotesk'] text-white mb-2">
-                  Infrastructure Cost Cut
+                  {cmsServices?.dbStatLabel1 || "Infrastructure Cost Cut"}
                 </div>
                 <p className="text-xs font-['Inter'] text-white/70 leading-relaxed">
-                  Average monthly spend reduction across PostgreSQL, Aurora, RDS, and Snowflake without degrading response times.
+                  {cmsServices?.dbStatDesc1 || "Average monthly spend reduction across PostgreSQL, Aurora, RDS, and Snowflake without degrading response times."}
                 </p>
               </div>
               <div className="pt-8 border-t border-white/10 mt-8">
                 <div className="text-2xl font-extrabold text-[#ffb786] font-['JetBrains_Mono'] mb-1">
-                  10x Throughput
+                  {cmsServices?.dbStatMetric2 || "10x Throughput"}
                 </div>
-                <div className="text-xs font-['Inter'] text-white/70">P99 Query Latency & Scaling Improvement</div>
+                <div className="text-xs font-['Inter'] text-white/70">
+                  {cmsServices?.dbStatLabel2 || "P99 Query Latency & Scaling Improvement"}
+                </div>
               </div>
             </div>
 
             <div className="lg:col-span-2 grid sm:grid-cols-2 gap-6">
-              {dbopsFeatures.map((f) => (
+              {dbFeatures.map((f, idx) => (
                 <div
-                  key={f.title}
+                  key={f.title + idx}
                   className="bg-[#ffffff] border border-[#ddc1b0] hover:border-[#964900] rounded-xl p-6 transition-all duration-300 shadow-sm hover-lift"
                 >
                   <div className="w-8 h-8 rounded bg-[#fff1ea] flex items-center justify-center text-[#964900] mb-3">
@@ -306,30 +333,30 @@ export default function ServicesPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div className="max-w-3xl">
               <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-2">
-                Resilient Cloud & Security
+                {cmsServices?.cloudSecuritySubtitle || "Resilient Cloud & Security"}
               </div>
               <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-                Cloud Migration, Cyber Security, Databricks & Snowflake
+                {cmsServices?.cloudSecurityTitle || "Cloud Migration, Cyber Security, Databricks & Snowflake"}
               </h2>
               <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-                We migrate workloads without the downtime. Using infrastructure-as-code, we build secure, reproducible environments across AWS, Azure, GCP, and OCI, with security-by-design at the core to protect your data assets.
+                {cmsServices?.cloudSecurityDescription || "We migrate workloads without the downtime. Using infrastructure-as-code, we build secure, reproducible environments across AWS, Azure, GCP, and OCI, with security-by-design at the core to protect your data assets."}
               </p>
             </div>
             <Link
-              href="/services/cloud-migration-cyber-security-databricks-snowflake"
+              href={cmsServices?.cloudSecurityCtaHref || "/services/cloud-migration-cyber-security-databricks-snowflake"}
               className="inline-flex items-center gap-2 bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-xs px-5 py-3 rounded-full hover:bg-[#723600] transition-colors shadow-sm shrink-0"
             >
-              <span>Dedicated Service Page</span>
+              <span>{cmsServices?.cloudSecurityCtaText || "Dedicated Service Page"}</span>
               <ArrowDownRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-8">
-            {cloudSecurityPillars.map((pillar) => {
-              const IconComp = pillar.icon;
+            {cloudSecurityFeatures.map((pillar, idx) => {
+              const IconComp = getIcon(pillar.iconName, Cloud);
               return (
                 <div
-                  key={pillar.title}
+                  key={pillar.title + idx}
                   className="bg-[#F3F3F3] border border-[#ddc1b0] hover:border-[#964900] rounded-xl p-8 transition-all duration-300 shadow-sm hover-lift"
                 >
                   <div className="flex items-center gap-3 mb-4">
@@ -356,30 +383,30 @@ export default function ServicesPage() {
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-14">
             <div className="max-w-3xl">
               <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-2">
-                High-Fidelity AI Training Data
+                {cmsServices?.rlhfSubtitle || "High-Fidelity AI Training Data"}
               </div>
               <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-                Data Annotation & RLHF
+                {cmsServices?.rlhfTitle || "Data Annotation & RLHF"}
               </h2>
               <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-                High-quality models require high-quality data. We provide expert-level data annotation and RLHF services, ensuring your AI models receive the precision training necessary to perform reliably in real-world scenarios.
+                {cmsServices?.rlhfDescription || "High-quality models require high-quality data. We provide expert-level data annotation and RLHF services, ensuring your AI models receive the precision training necessary to perform reliably in real-world scenarios."}
               </p>
             </div>
             <Link
-              href="/services/data-annotation-and-rlhf"
+              href={cmsServices?.rlhfCtaHref || "/services/data-annotation-and-rlhf"}
               className="inline-flex items-center gap-2 bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-xs px-5 py-3 rounded-full hover:bg-[#723600] transition-colors shadow-sm shrink-0"
             >
-              <span>Dedicated Service Page</span>
+              <span>{cmsServices?.rlhfCtaText || "Dedicated Service Page"}</span>
               <ArrowDownRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-8">
-            {rlhfPillars.map((sec) => {
-              const IconComp = sec.icon;
+            {rlhfFeatures.map((sec, idx) => {
+              const IconComp = getIcon(sec.iconName, FileCheck);
               return (
                 <div
-                  key={sec.title}
+                  key={sec.title + idx}
                   className="bg-[#ffffff] border border-[#ddc1b0] hover:border-[#964900] rounded-xl p-8 transition-all duration-300 shadow-sm hover-lift"
                 >
                   <div className="flex items-center gap-3 mb-4">
