@@ -498,7 +498,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
   },
 };
 
-const STORAGE_KEY = "alphaesai_cms_data_v8";
+const STORAGE_KEY = "alphaesai_cms_data_v9";
 
 export function sanitizeCMSData(raw: unknown): FullCMSData {
   if (!raw || typeof raw !== "object") return DEFAULT_CMS_DATA;
@@ -545,8 +545,23 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
       sanitizedCols.push(defaultEcosystemCol);
     }
 
+    const sanitizedHeader = { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) };
+    if (!sanitizedHeader.primaryCtaText || /get started|start building/i.test(sanitizedHeader.primaryCtaText)) {
+      sanitizedHeader.primaryCtaText = "Contact Us";
+    }
+
+    const sanitizedHero = { ...DEFAULT_CMS_DATA.homepage?.hero, ...(parsed.homepage?.hero || {}) };
+    if (!sanitizedHero.primaryCtaText || /get started|start building/i.test(sanitizedHero.primaryCtaText)) {
+      sanitizedHero.primaryCtaText = "Contact Us";
+    }
+
+    const sanitizedCtaBanner = { ...DEFAULT_CMS_DATA.homepage?.ctaBanner, ...(parsed.homepage?.ctaBanner || {}) };
+    if (!sanitizedCtaBanner.primaryCtaText || /get started|start building/i.test(sanitizedCtaBanner.primaryCtaText)) {
+      sanitizedCtaBanner.primaryCtaText = "Contact Us";
+    }
+
     return {
-      header: { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) },
+      header: sanitizedHeader,
       footer: {
         ...DEFAULT_CMS_DATA.footer,
         ...(parsed.footer || {}),
@@ -555,7 +570,7 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
       homepage: {
         ...DEFAULT_CMS_DATA.homepage,
         ...(parsed.homepage || {}),
-        hero: { ...DEFAULT_CMS_DATA.homepage.hero, ...(parsed.homepage?.hero || {}) },
+        hero: sanitizedHero,
         showcase3d: { ...DEFAULT_CMS_DATA.homepage.showcase3d, ...(parsed.homepage?.showcase3d || {}) },
         metrics: Array.isArray(parsed.homepage?.metrics)
           ? parsed.homepage.metrics
@@ -568,7 +583,7 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
             : DEFAULT_CMS_DATA.homepage.architecture.cards,
         },
         testimonial: { ...DEFAULT_CMS_DATA.homepage.testimonial, ...(parsed.homepage?.testimonial || {}) },
-        ctaBanner: { ...DEFAULT_CMS_DATA.homepage.ctaBanner, ...(parsed.homepage?.ctaBanner || {}) },
+        ctaBanner: sanitizedCtaBanner,
       },
       pages: {
         services: {
