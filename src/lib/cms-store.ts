@@ -238,7 +238,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       { id: "nav-5", label: "About", href: "/about" },
       { id: "nav-6", label: "Contact", href: "/contact" },
     ],
-    primaryCtaText: "Get Started Free",
+    primaryCtaText: "Contact Us",
     primaryCtaHref: "/contact",
   },
   footer: {
@@ -287,7 +287,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       announcementLinkHref: "/services/forward-deployed-ai-engineering",
       headline: "Build AI Capabilities That Create Measurable Business Value",
       subtitle: "AlphaesAI helps organizations move from AI pilots to production systems — combining AI engineering, cloud infrastructure, and automation into technology that actually runs your business.",
-      primaryCtaText: "Start building for free",
+      primaryCtaText: "Contact Us",
       primaryCtaHref: "/contact",
       secondaryCtaText: "Explore Services & Products",
       secondaryCtaHref: "/services",
@@ -348,8 +348,8 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
     },
     ctaBanner: {
       title: "Build without boundaries",
-      description: "Join thousands of developers who've eliminated infrastructure complexity and deployed globally with AlphaesAI. Start building for free — no credit card required.",
-      primaryCtaText: "Start building for free",
+      description: "Join enterprise engineering teams who have eliminated infrastructure complexity and deployed production AI with AlphaesAI.",
+      primaryCtaText: "Contact Us",
       primaryCtaHref: "/contact",
       secondaryCtaText: "View docs",
       secondaryCtaHref: "/services",
