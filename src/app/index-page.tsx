@@ -34,7 +34,7 @@ const Index = () => {
   };
 
   return (
-    <div className="w-full bg-[#F8FAFC] text-[#020617]">
+    <div className="w-full bg-[#FAFAF9] text-[#09090B]">
       {/* ========================================================================= */}
       {/* 1. HERO SECTION                                                           */}
       {/* ========================================================================= */}
@@ -59,8 +59,8 @@ const Index = () => {
           }}
         />
 
-        {/* Soft Bottom Fade Transition into Slate Footer */}
-        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#F8FAFC] via-[#F8FAFC]/60 to-transparent pointer-events-none" />
+        {/* Soft Bottom Fade Transition into Porcelain Footer */}
+        <div className="absolute bottom-0 left-0 right-0 h-28 bg-gradient-to-t from-[#FAFAF9] via-[#FAFAF9]/60 to-transparent pointer-events-none" />
 
         <div className="max-w-[1280px] mx-auto relative z-10 flex flex-col items-center text-center">
           {/* Announcement Chip */}
@@ -68,14 +68,14 @@ const Index = () => {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: SMOOTH_EASE, delay: 0.1 }}
-            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#E2E8F0] bg-[#ffffff]/80 backdrop-blur-md mb-8 shadow-sm"
+            className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#E4E4E7] bg-[#ffffff]/80 backdrop-blur-md mb-8 shadow-sm"
           >
-            <span className="font-['JetBrains_Mono'] text-xs font-medium text-[#020617]">
+            <span className="font-['JetBrains_Mono'] text-xs font-medium text-[#09090B]">
               {hero.announcementText}
             </span>
             <Link
               href={hero.announcementLinkHref}
-              className="font-['JetBrains_Mono'] text-xs text-[#2563EB] underline font-bold ml-1"
+              className="font-['JetBrains_Mono'] text-xs text-[#EA580C] underline font-bold ml-1"
             >
               {hero.announcementLinkText}
             </Link>
@@ -86,7 +86,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: SMOOTH_EASE, delay: 0.25 }}
-            className="font-['Hanken_Grotesk'] text-4xl sm:text-6xl lg:text-[64px] leading-[1.1] font-extrabold text-[#020617] mb-6 max-w-4xl tracking-tight"
+            className="font-['Hanken_Grotesk'] text-4xl sm:text-6xl lg:text-[64px] leading-[1.1] font-extrabold text-[#09090B] mb-6 max-w-4xl tracking-tight"
           >
             {hero.headline}
           </motion.h1>
@@ -96,7 +96,7 @@ const Index = () => {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: SMOOTH_EASE, delay: 0.4 }}
-            className="font-['Inter'] text-lg sm:text-xl text-[#475569] mb-10 max-w-2xl mx-auto leading-relaxed"
+            className="font-['Inter'] text-lg sm:text-xl text-[#52525B] mb-10 max-w-2xl mx-auto leading-relaxed"
           >
             {hero.subtitle}
           </motion.p>
@@ -110,13 +110,13 @@ const Index = () => {
           >
             <Link
               href={hero.primaryCtaHref}
-              className="bg-[#FF5722] text-white font-['JetBrains_Mono'] font-bold py-4 px-8 rounded-full text-base shadow-lg hover:bg-[#EA580C] transition-all hover:scale-105"
+              className="bg-[#EA580C] text-white font-['JetBrains_Mono'] font-bold py-4 px-8 rounded-full text-base shadow-lg hover:bg-[#C2410C] transition-all hover:scale-105"
             >
               {hero.primaryCtaText}
             </Link>
             <Link
               href={hero.secondaryCtaHref}
-              className="bg-[#ffffff] border border-[#E2E8F0] text-[#020617] font-['JetBrains_Mono'] font-bold py-4 px-8 rounded-full text-base hover:bg-[#F1F5F9] transition-colors shadow-sm"
+              className="bg-[#ffffff] border border-[#E4E4E7] text-[#09090B] font-['JetBrains_Mono'] font-bold py-4 px-8 rounded-full text-base hover:bg-[#F4F4F5] transition-colors shadow-sm"
             >
               {hero.secondaryCtaText}
             </Link>
@@ -132,7 +132,7 @@ const Index = () => {
       {/* ========================================================================= */}
       {/* 2. INTERACTIVE 3D ROBOT & AI INFRASTRUCTURE SHOWCASE                      */}
       {/* ========================================================================= */}
-      <section className="py-20 px-4 border-b border-[#E2E8F0] bg-[#F8FAFC]">
+      <section className="py-20 px-4 border-b border-[#E4E4E7] bg-[#FAFAF9]">
         <div className="max-w-[1280px] mx-auto flex flex-col items-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -141,10 +141,10 @@ const Index = () => {
             transition={{ duration: 0.7, ease: SMOOTH_EASE }}
             className="text-center mb-10"
           >
-            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#020617] mb-3">
+            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-[#09090B] mb-3">
               {showcase3d.title}
             </h2>
-            <p className="font-['Inter'] text-base sm:text-lg text-[#475569] max-w-2xl mx-auto">
+            <p className="font-['Inter'] text-base sm:text-lg text-[#52525B] max-w-2xl mx-auto">
               {showcase3d.subtitle}
             </p>
           </motion.div>
@@ -157,7 +157,7 @@ const Index = () => {
             transition={{ duration: 0.8, ease: SMOOTH_EASE, delay: 0.15 }}
             className="w-full max-w-[1100px] mb-12"
           >
-            <Card className="w-full h-[550px] bg-[#0F172A] border-2 border-[#1E293B] relative overflow-hidden rounded-2xl shadow-2xl">
+            <Card className="w-full h-[550px] bg-[#18181B] border-2 border-[#27272A] relative overflow-hidden rounded-2xl shadow-2xl">
               <Spotlight
                 className="-top-40 left-0 md:left-60 md:-top-20"
                 size={300}
@@ -177,7 +177,7 @@ const Index = () => {
                   <div className="flex flex-wrap gap-4 pt-2">
                     <Link
                       href={showcase3d.cardBtn1Href}
-                      className="bg-[#FF5722] text-white font-['JetBrains_Mono'] font-bold text-xs px-5 py-3 rounded-full hover:bg-[#EA580C] transition-colors shadow-sm inline-flex items-center gap-2"
+                      className="bg-[#EA580C] text-white font-['JetBrains_Mono'] font-bold text-xs px-5 py-3 rounded-full hover:bg-[#C2410C] transition-colors shadow-sm inline-flex items-center gap-2"
                     >
                       <span>{showcase3d.cardBtn1Text}</span>
                       <ArrowRight className="w-4 h-4" />
@@ -249,12 +249,12 @@ const Index = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{ duration: 0.6, ease: SMOOTH_EASE, delay: idx * 0.15 }}
-                className="flex flex-col gap-2 p-6 border border-[#E2E8F0] rounded-xl bg-[#ffffff] hover:border-[#FF5722] transition-colors shadow-sm"
+                className="flex flex-col gap-2 p-6 border border-[#E4E4E7] rounded-xl bg-[#ffffff] hover:border-[#EA580C] transition-colors shadow-sm"
               >
-                <h4 className="font-['Hanken_Grotesk'] text-2xl font-bold text-[#FF5722]">
+                <h4 className="font-['Hanken_Grotesk'] text-2xl font-bold text-[#EA580C]">
                   {metric.value}
                 </h4>
-                <p className="font-['Inter'] text-sm text-[#475569]">
+                <p className="font-['Inter'] text-sm text-[#52525B]">
                   {metric.description}
                 </p>
               </motion.div>
@@ -274,7 +274,7 @@ const Index = () => {
       {/* ========================================================================= */}
       {/* 3. BENTO GRID FEATURES SECTION                                            */}
       {/* ========================================================================= */}
-      <section className="py-20 px-4 bg-[#F1F5F9] border-b border-[#E2E8F0]">
+      <section className="py-20 px-4 bg-[#F4F4F5] border-b border-[#E4E4E7]">
         <div className="max-w-[1280px] mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -283,10 +283,10 @@ const Index = () => {
             transition={{ duration: 0.7, ease: SMOOTH_EASE }}
             className="text-center mb-12"
           >
-            <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#FF5722] uppercase tracking-widest">
+            <span className="font-['JetBrains_Mono'] text-xs font-bold text-[#EA580C] uppercase tracking-widest">
               {architecture.badgeText}
             </span>
-            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#020617] mt-2">
+            <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#09090B] mt-2">
               {architecture.title}
             </h2>
           </motion.div>
@@ -306,13 +306,13 @@ const Index = () => {
                     delay: idx * 0.15,
                     ease: SMOOTH_EASE,
                   }}
-                  className="p-8 border border-[#E2E8F0] rounded-xl bg-[#ffffff] flex flex-col gap-4 shadow-sm hover:shadow-md hover:border-[#FF5722]/50 transition-all"
+                  className="p-8 border border-[#E4E4E7] rounded-xl bg-[#ffffff] flex flex-col gap-4 shadow-sm hover:shadow-md hover:border-[#EA580C]/50 transition-all"
                 >
-                  <Icon className="w-8 h-8 text-[#FF5722]" />
-                  <h3 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#020617]">
+                  <Icon className="w-8 h-8 text-[#EA580C]" />
+                  <h3 className="font-['Hanken_Grotesk'] text-xl font-bold text-[#09090B]">
                     {item.title}
                   </h3>
-                  <p className="font-['Inter'] text-sm text-[#475569] leading-relaxed">
+                  <p className="font-['Inter'] text-sm text-[#52525B] leading-relaxed">
                     {item.desc}
                   </p>
                 </motion.div>
@@ -335,25 +335,25 @@ const Index = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: SMOOTH_EASE }}
-        className="py-24 px-4 bg-[#0F172A] text-white text-center border-t border-[#1E293B]"
+        className="py-24 px-4 bg-[#18181B] text-white text-center border-t border-[#27272A]"
       >
         <div className="max-w-2xl mx-auto flex flex-col items-center">
           <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-5xl font-extrabold text-white mb-6">
             {ctaBanner.title}
           </h2>
-          <p className="font-['Inter'] text-base sm:text-lg text-[#94A3B8] mb-10 leading-relaxed font-light">
+          <p className="font-['Inter'] text-base sm:text-lg text-[#A1A1AA] mb-10 leading-relaxed font-light">
             {ctaBanner.description}
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link
               href={ctaBanner.primaryCtaHref}
-              className="bg-[#FF5722] text-white font-['JetBrains_Mono'] font-bold py-3.5 px-8 rounded-full text-sm hover:bg-[#EA580C] transition-colors shadow-lg hover:scale-105 transition-transform"
+              className="bg-[#EA580C] text-white font-['JetBrains_Mono'] font-bold py-3.5 px-8 rounded-full text-sm hover:bg-[#C2410C] transition-colors shadow-lg hover:scale-105 transition-transform"
             >
               {ctaBanner.primaryCtaText}
             </Link>
             <Link
               href={ctaBanner.secondaryCtaHref}
-              className="bg-transparent border-2 border-[#334155] text-white font-['JetBrains_Mono'] font-bold py-3.5 px-8 rounded-full text-sm hover:bg-[#1E293B] transition-colors"
+              className="bg-transparent border-2 border-[#3F3F46] text-white font-['JetBrains_Mono'] font-bold py-3.5 px-8 rounded-full text-sm hover:bg-[#27272A] transition-colors"
             >
               {ctaBanner.secondaryCtaText}
             </Link>
