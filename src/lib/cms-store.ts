@@ -330,6 +330,7 @@ export interface ServiceCapabilityCMS {
   desc: string;
   highlights: string[];
   iconName: string;
+  bullets?: string[];
 }
 
 export interface ServiceEngagementTierCMS {
@@ -340,6 +341,10 @@ export interface ServiceEngagementTierCMS {
   href: string;
   featured: boolean;
   deliverables: string[];
+  name?: string;
+  badge?: string;
+  target?: string;
+  highlight?: boolean;
 }
 
 export interface RealityGapCMS {
@@ -370,6 +375,7 @@ export interface DifferentiatorCMS {
 
 export interface ServiceSubpageDetailCMS {
   heroBadge: string;
+  heroTagline?: string;
   title: string;
   subtitle: string;
   description: string;
@@ -402,6 +408,19 @@ export interface ServiceSubpageDetailCMS {
   realityDescription?: string;
   realityGaps?: RealityGapCMS[];
 
+  // Challenge Section
+  challengeSubtitle?: string;
+  challengeTitle?: string;
+  challengeDescription?: string;
+  signsTitle?: string;
+  signs?: { title: string; desc: string; iconName?: string }[];
+
+  // What We Do / Capabilities Section
+  whatWeDoSubtitle?: string;
+  whatWeDoTitle?: string;
+  whatWeDoDescription?: string;
+
+  // Methodology / Execution Framework
   methodologySubtitle?: string;
   methodologyTitle?: string;
   methodologyDescription?: string;
@@ -409,18 +428,27 @@ export interface ServiceSubpageDetailCMS {
   phaseCtaText?: string;
   phaseCtaHref?: string;
 
+  // Competencies / Expertise
   competenciesSubtitle?: string;
   competenciesTitle?: string;
   competenciesDescription?: string;
   competencies?: CompetencyCMS[];
 
+  // Engagement Tiers Section
+  engagementSubtitle?: string;
+  engagementTitle?: string;
+  engagementDescription?: string;
+
+  // Differentiators Section
   differentiatorSubtitle?: string;
   differentiatorTitle?: string;
   differentiators?: DifferentiatorCMS[];
 
+  // FAQs
   faqSubtitle?: string;
   faqTitle?: string;
 
+  // Final CTA
   finalCtaTitle?: string;
   finalCtaDescription?: string;
   finalCtaText?: string;
@@ -1596,6 +1624,7 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
       },
       databaseTuning: {
         heroBadge: "DATABASE & CLOUD PERFORMANCE OPTIMIZATION",
+        heroTagline: "FASTER · MORE RELIABLE · LOWER COST",
         title: "Slashing Lakehouse Costs & Accelerating Query Latency.",
         subtitle: "Databricks Delta & Snowflake FinOps Mastery.",
         description: "We optimize complex Databricks Delta Lake and Snowflake data warehouses to cut DBU compute spend by up to 60% while accelerating pipeline latency by 5x.",
@@ -1605,10 +1634,82 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
         secondaryCtaText: "View Case Studies",
         secondaryCtaHref: "#case-studies",
         frictionPoints: [],
-        capabilities: [],
+
+        challengeSubtitle: "The Challenge",
+        challengeTitle: "Your Database Is Likely Costing You More Than It Should",
+        challengeDescription: "Performance issues rarely appear as catastrophic failures. They show up as gradual drift—increasing latency, creeping cloud bills, and unpredictable CPU spikes. Most teams react by throwing more compute at the problem, which masks the issue while inflating monthly costs. We stop the cycle of over-provisioning and start optimizing the architecture.",
+        signsTitle: "Signs It’s Time to Optimize:",
+        signs: [
+          { title: "Performance Drift", desc: "Application response times climb continuously as your data volume grows.", iconName: "Clock" },
+          { title: "Hidden Costs", desc: "Cloud infrastructure bills rising steeply without a clear correlation to active user growth.", iconName: "DollarSign" },
+          { title: "Resource Contention", desc: "Unpredictable CPU, I/O, or RAM memory spikes that cause intermittent query timeouts.", iconName: "Flame" },
+          { title: "Infrastructure Debt", desc: "Engineers spending valuable hours firefighting database issues instead of shipping features.", iconName: "AlertTriangle" },
+          { title: "Connection Exhaustion", desc: "Application services struggling to maintain stable database connection pools under load.", iconName: "Activity" },
+        ],
+
+        whatWeDoSubtitle: "What We Do",
+        whatWeDoTitle: "Performance Engineering Across the Full Data Stack",
+        whatWeDoDescription: "We don’t look at databases in isolation. We trace the path from your application code to the storage layer to identify where you are leaking performance and budget.",
+        capabilities: [
+          { id: "cap-1", badge: "Diagnostic Audit", title: "Database Health Assessment", desc: "A diagnostic audit of your schema, execution plans, index efficiency, and configuration. You get a prioritized roadmap of high-impact fixes.", iconName: "Gauge", highlights: ["Execution plan review", "Index bloat analysis", "Schema health checks"], bullets: ["Execution plan review", "Index bloat analysis", "Schema health checks"] },
+          { id: "cap-2", badge: "Optimization", title: "Query & Index Tuning", desc: "We rewrite slow queries, optimize execution plans, and clean up index bloat to drastically reduce latency and resource consumption.", iconName: "Zap", highlights: ["Slow query rewrites", "Composite indexing", "P99 latency reduction"], bullets: ["Slow query rewrites", "Composite indexing", "P99 latency reduction"] },
+          { id: "cap-3", badge: "FinOps", title: "FinOps & Cost Engineering", desc: "We right-size your infrastructure, optimize IOPS, and manage reserved capacity to cut your database spend by 30–50% without performance loss.", iconName: "TrendingDown", highlights: ["30-50% cloud cost cuts", "IOPS right-sizing", "Auto-scaling rules"], bullets: ["30-50% cloud cost cuts", "IOPS right-sizing", "Auto-scaling rules"] },
+          { id: "cap-4", badge: "Application Bridge", title: "Application-Database Bridge", desc: "We fix N+1 query patterns, connection pooling issues, and inefficient ORM behaviors that look like database problems but are actually application-level inefficiencies.", iconName: "Layers", highlights: ["N+1 query eradication", "PgBouncer / Proxy setup", "ORM query audits"], bullets: ["N+1 query eradication", "PgBouncer / Proxy setup", "ORM query audits"] },
+          { id: "cap-5", badge: "Architecture", title: "Scaling & Architecture", desc: "Moving you from 'struggling to keep up' to a robust architecture with read replicas, table partitioning, and caching strategies.", iconName: "Server", highlights: ["Read replicas & sharding", "Redis caching layer", "Partitioning strategies"], bullets: ["Read replicas & sharding", "Redis caching layer", "Partitioning strategies"] },
+        ],
         aiDifferencePoints: [],
-        engagementTiers: [],
-        faqs: [],
+
+        methodologySubtitle: "Execution Framework",
+        methodologyTitle: "How We Work: Assess → Optimize → Stabilize → Scale",
+        methodologyDescription: "A battle-tested 4-step framework engineered for zero-downtime database optimization.",
+        phases: [
+          { step: "01", name: "Assess", summary: "We map your workload to identify high-impact bottlenecks and query inefficiencies.", detail: "Deep-dive telemetry analysis using pg_stat_statements, slow query logs, cloud metrics, and schema inspection." },
+          { step: "02", name: "Optimize", summary: "We implement structural fixes—query rewriting, indexing, and configuration tuning.", detail: "Directly apply index creation, query refactoring, connection pool sizing, and parameter tuning in your environment." },
+          { step: "03", name: "Stabilize", summary: "We establish monitoring and operational hygiene to prevent performance regression.", detail: "Configure alerts, latency thresholds, automated query profiling, and regression checks in your CI/CD pipeline." },
+          { step: "04", name: "Scale", summary: "We architect your database systems for the next order of magnitude in user and data growth.", detail: "Implement read replicas, connection proxying, archival policies, and horizontal scaling strategies." },
+        ],
+        phaseCtaText: "Request Assessment",
+        phaseCtaHref: "/contact",
+
+        engagementSubtitle: "Flexible Delivery Models",
+        engagementTitle: "Engagement Options",
+        engagementDescription: "Choose the model that fits your immediate performance bottlenecks and long-term database strategy.",
+        engagementTiers: [
+          { title: "Database Health Check", name: "Database Health Check", subtitle: "Diagnostic Audit", badge: "Diagnostic Audit", desc: "For teams needing a clear diagnostic path and immediate visibility.", target: "For teams needing a clear diagnostic path and immediate visibility.", cta: "Select Engagement", href: "/contact", featured: false, highlight: false, deliverables: ["Full Database & Query Audit", "Findings & Bottleneck Report", "Prioritized Fix Roadmap"] },
+          { title: "Performance Optimization", name: "Performance Optimization", subtitle: "Most Popular", badge: "Most Popular", desc: "For teams with active performance or escalating cloud cost bottlenecks.", target: "For teams with active performance or escalating cloud cost bottlenecks.", cta: "Select Engagement", href: "/contact", featured: true, highlight: true, deliverables: ["Full Diagnostic Audit", "Query & Index Implementation", "Configuration & Pool Tuning", "Before/After Latency Benchmarking"] },
+          { title: "Continuous Database Optimization", name: "Continuous Database Optimization", subtitle: "Ongoing Partnership", badge: "Ongoing Partnership", desc: "For teams needing ongoing DB expertise without a full-time DBA hire.", target: "For teams needing ongoing DB expertise without a full-time DBA hire.", cta: "Select Engagement", href: "/contact", featured: false, highlight: false, deliverables: ["Real-Time Telemetry Monitoring", "Ongoing Query Optimization", "Capacity Planning & Scaling", "Monthly Reviews & Cost Audits"] },
+        ],
+
+        differentiatorSubtitle: "Our Differentiator",
+        differentiatorTitle: "Why AlphaesAI: Engineering-First, Not Theory-Driven",
+        differentiators: [
+          { title: "Root Cause Focus", desc: "We don't just recommend bigger cloud instances; we fix the inefficient code and configurations driving the bill.", iconName: "Zap" },
+          { title: "Outcome-Driven", desc: "We target measurable KPIs: query latency reduction, cloud spend savings (30-50%), and zero-downtime stability.", iconName: "LineChart" },
+          { title: "Cloud-Native Expertise", desc: "We work across AWS, Azure, and GCP with deep production experience in RDS, Aurora, Neon, Supabase, PostgreSQL, and MySQL.", iconName: "Database" },
+          { title: "Production-Ready", desc: "Every fix we propose is designed and benchmarked for real-world production traffic, not staging environments.", iconName: "ShieldCheck" },
+        ],
+
+        faqSubtitle: "Frequently Asked Questions",
+        faqTitle: "Got Questions?",
+        faqs: [
+          {
+            q: "Do we need to rewrite our application?",
+            a: "Usually, no. We isolate bottlenecks in queries, indexing, and database configuration. We only suggest application-level code changes if an inefficient ORM or N+1 query pattern is the definitive source of the performance drop.",
+          },
+          {
+            q: "How is this different from just adding more compute?",
+            a: "Adding compute is a temporary band-aid that permanently increases your monthly cloud burn. We fix the underlying execution efficiency issues—a one-time investment that reduces long-term operational costs while making the system run faster.",
+          },
+          {
+            q: "What database technologies do you support?",
+            a: "We are platform-agnostic, working across AWS, Azure, and Google Cloud, with deep, specialized expertise in managed databases like Amazon RDS, Aurora, Neon, Supabase, self-hosted PostgreSQL, MySQL, and MongoDB.",
+          },
+        ],
+
+        finalCtaTitle: "Is Your Database Slowing Your Business Down?",
+        finalCtaDescription: "Stop throwing budget at a performance problem that can be fixed with architecture. Let’s identify exactly what’s happening in your environment.",
+        finalCtaText: "Book a Database Performance & Cost Assessment",
+        finalCtaHref: "/contact",
       },
     },
     academySubpages: {

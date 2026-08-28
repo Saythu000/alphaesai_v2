@@ -204,6 +204,20 @@ export default function DataAnnotationAndRlhfPage() {
   const secondaryCtaText = cmsDataAnnot?.secondaryCtaText || "Explore Approach";
   const secondaryCtaHref = cmsDataAnnot?.secondaryCtaHref || "#approach";
 
+  const challengeSub = cmsDataAnnot?.challengeSubtitle || "THE REALITY OF ANNOTATION";
+  const challengeTitle = cmsDataAnnot?.challengeTitle || "If Your Annotators Don’t Understand Engineering Goals, They Can’t Label for Them";
+  const challengeDesc = cmsDataAnnot?.challengeDescription || "Standard crowd-sourced labeling fails when applied to complex, domain-specific AI models. We eliminate the systemic breakdown points in traditional annotation pipelines.";
+
+  const displayFaqs = cmsDataAnnot?.faqs && cmsDataAnnot.faqs.length > 0 ? cmsDataAnnot.faqs : faqs;
+  const faqSub = cmsDataAnnot?.faqSubtitle || "FREQUENTLY ASKED QUESTIONS";
+  const faqTitleText = cmsDataAnnot?.faqTitle || "Data Curation & RLHF Inquiries";
+
+  const engineBadge = cmsDataAnnot?.engineBadge || "ALIGN YOUR MODEL TODAY";
+  const finalCtaTitle = cmsDataAnnot?.finalCtaTitle || "Ready to give your models the high-fidelity data they deserve?";
+  const finalCtaDesc = cmsDataAnnot?.finalCtaDescription || "Let’s discuss your dataset requirements, domain expert alignment, and RLHF pipeline needs.";
+  const finalCtaButtonText = cmsDataAnnot?.finalCtaText || "Schedule an Executive Briefing";
+  const finalCtaButtonHref = cmsDataAnnot?.finalCtaHref || "/contact";
+
   return (
     <div className="w-full bg-[#fff8f5] text-[#241913]">
       {/* 1. HERO SECTION */}
@@ -264,13 +278,13 @@ export default function DataAnnotationAndRlhfPage() {
           <div className="max-w-3xl mb-14">
             <div className="inline-flex items-center gap-2 text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
               <AlertTriangle className="w-4 h-4" />
-              <span>THE REALITY OF ANNOTATION</span>
+              <span>{challengeSub}</span>
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              If Your Annotators Don’t Understand Engineering Goals, They Can’t Label for Them
+              {challengeTitle}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              Standard crowd-sourced labeling fails when applied to complex, domain-specific AI models. We eliminate the systemic breakdown points in traditional annotation pipelines.
+              {challengeDesc}
             </p>
           </div>
 
@@ -474,15 +488,15 @@ export default function DataAnnotationAndRlhfPage() {
         <div className="max-w-[1000px] mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
-              FREQUENTLY ASKED QUESTIONS
+              {faqSub}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913]">
-              Data Curation & RLHF Inquiries
+              {faqTitleText}
             </h2>
           </div>
 
           <div className="space-y-4">
-            {faqs.map((faq, idx) => {
+            {displayFaqs.map((faq, idx) => {
               const isOpen = openFaq === idx;
               return (
                 <div
@@ -517,22 +531,22 @@ export default function DataAnnotationAndRlhfPage() {
         <div className="bg-[#241913] text-white rounded-3xl p-10 sm:p-16 border border-[#ddc1b0] shadow-2xl relative overflow-hidden text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 border border-[#964900]/50 bg-[#964900]/20 px-4 py-1.5 rounded-full font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] mb-6 tracking-widest uppercase">
             <Sparkles className="w-3.5 h-3.5 text-[#ffb786]" />
-            <span>ALIGN YOUR MODEL TODAY</span>
+            <span>{engineBadge}</span>
           </div>
 
           <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
-            Ready to give your models the high-fidelity data they deserve?
+            {finalCtaTitle}
           </h2>
 
           <p className="font-['Inter'] text-base sm:text-lg text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Let’s discuss your dataset requirements, domain expert alignment, and RLHF pipeline needs.
+            {finalCtaDesc}
           </p>
 
           <Link
-            href="/contact"
+            href={finalCtaButtonHref}
             className="inline-flex items-center gap-2 bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-base px-9 py-4 rounded-full hover:bg-[#b05600] transition-colors shadow-lg group"
           >
-            <span>Schedule an Executive Briefing</span>
+            <span>{finalCtaButtonText}</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>

@@ -20,40 +20,39 @@ import {
   Server,
   DollarSign,
   Globe2,
-  Terminal,
 } from "lucide-react";
 
-const frictionPoints = [
+const defaultFrictionPoints = [
   {
-    icon: DollarSign,
+    iconName: "DollarSign",
     title: "Escalating Cloud Spend",
     tag: "FINOPS FRICTION",
     desc: "GPU and compute costs spiraling without clear attribution to ROI, leading to runaway monthly cloud invoices.",
   },
   {
-    icon: Lock,
+    iconName: "Lock",
     title: "Security Gaps",
     tag: "SECOPS RISKS",
     desc: "Traditional network perimeters fail to account for the specific data access, PII sanitization, and LLM security needs of AI.",
   },
   {
-    icon: Database,
+    iconName: "Database",
     title: "Data Bottlenecks",
     tag: "PIPELINE STALLS",
     desc: "Disconnected data silos in Databricks or Snowflake that slow down model training, batch processing, and real-time inference.",
   },
   {
-    icon: Server,
+    iconName: "Server",
     title: "Operational Debt",
     tag: "DEVOPS BOTTLENECK",
     desc: "Manual, undocumented infrastructure that prevents your engineering team from shipping models and features to production.",
   },
 ];
 
-const capabilities = [
+const defaultCapabilities = [
   {
     id: "migration",
-    icon: Cloud,
+    iconName: "Cloud",
     badge: "Multi-Cloud Migration",
     title: "Cloud Architecture & Migration",
     desc: "We design, modernize, and migrate environments across AWS, Azure, GCP, and OCI. Our focus is zero-downtime, infrastructure-as-code (IaC) execution with Terraform and OpenTofu that eliminates vendor lock-in.",
@@ -65,7 +64,7 @@ const capabilities = [
   },
   {
     id: "security",
-    icon: ShieldCheck,
+    iconName: "ShieldCheck",
     badge: "Cyber Security & Guardrails",
     title: "Secure Infrastructure (Cyber Security)",
     desc: "Security isn't an afterthought. We implement policy-as-code, identity and access management (IAM), and automated compliance guardrails that prevent non-compliant infrastructure before it deploys.",
@@ -77,7 +76,7 @@ const capabilities = [
   },
   {
     id: "lakehouse",
-    icon: Database,
+    iconName: "Database",
     badge: "Data Lakehouse & Warehouse",
     title: "AI-Ready Data Foundations (Databricks & Snowflake)",
     desc: "We bridge the gap between your cloud and your data. From architecting high-performance Delta lakehouses in Databricks to optimizing Snowflake data warehousing, we ensure your data stack is clean, secure, and ready for model training.",
@@ -89,7 +88,7 @@ const capabilities = [
   },
   {
     id: "k8s",
-    icon: Cpu,
+    iconName: "Cpu",
     badge: "Container & GPU Compute",
     title: "Production Kubernetes & GPU Orchestration",
     desc: "Enterprise-grade EKS, AKS, GKE, and self-managed clusters with GPU-aware scheduling, robust RBAC, and namespace isolation strategies designed specifically for high-throughput AI compute.",
@@ -101,7 +100,7 @@ const capabilities = [
   },
   {
     id: "observability",
-    icon: Activity,
+    iconName: "Activity",
     badge: "Telemetry & SRE",
     title: "Observability & High Availability",
     desc: "Actionable telemetry, standardized structured logging, and strict Service Level Objectives (SLOs). We build resilient self-healing systems that tell you what’s wrong before your users notice.",
@@ -113,25 +112,25 @@ const capabilities = [
   },
 ];
 
-const aiDifferencePoints = [
+const defaultAiDifferencePoints = [
   {
     title: "Cost-Aware Design",
     desc: "We bake cost attribution and GPU scheduling into your infrastructure architecture from Day 1—not as an unexpected line item on the invoice.",
-    icon: DollarSign,
+    iconName: "DollarSign",
   },
   {
     title: "Unified Expertise",
     desc: "The same senior engineers who architect your cloud infrastructure also understand the data pipelines, vector DBs, and LLM models running on top of it.",
-    icon: Layers,
+    iconName: "Layers",
   },
   {
     title: "No Vendor Lock-in",
     desc: "We build for multi-cloud flexibility, choosing the platform and tools that fit your specific performance and budget needs without proprietary hooks.",
-    icon: Globe2,
+    iconName: "Globe2",
   },
 ];
 
-const engagementTiers = [
+const defaultEngagementTiers = [
   {
     title: "Cloud & Security Audit",
     subtitle: "DIAGNOSTIC & READINESS",
@@ -176,7 +175,7 @@ const engagementTiers = [
   },
 ];
 
-const faqs = [
+const defaultFaqs = [
   {
     q: "How do you handle Databricks/Snowflake integration?",
     a: "We don't just manage the data tools; we optimize the entire pipeline—from how data flows into your lakehouse to how your cloud infrastructure supports high-concurrency model inference and feature retrieval.",
@@ -195,6 +194,26 @@ const faqs = [
   },
 ];
 
+const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
+  Cloud,
+  ShieldCheck,
+  Database,
+  Cpu,
+  Activity,
+  DollarSign,
+  Lock,
+  Server,
+  Globe2,
+  Layers,
+  Zap,
+  Sparkles,
+};
+
+function getIcon(name?: string, fallback: React.ComponentType<{ className?: string }> = Cloud) {
+  if (!name) return fallback;
+  return iconMap[name] || fallback;
+}
+
 export default function CloudSecurityDatabricksPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const { data } = useCMS();
@@ -211,6 +230,48 @@ export default function CloudSecurityDatabricksPage() {
   const primaryCtaHref = cmsCloud?.primaryCtaHref || "/contact";
   const secondaryCtaText = cmsCloud?.secondaryCtaText || "Explore Capabilities";
   const secondaryCtaHref = cmsCloud?.secondaryCtaHref || "#capabilities";
+
+  // Section 2: Challenge
+  const challengeSubtitle = cmsCloud?.challengeSubtitle || "THE CLOUD FRICTION FACTOR";
+  const challengeTitle = cmsCloud?.challengeTitle || "Why Standard Cloud Infrastructure Fails Modern AI Workloads";
+  const challengeDescription = cmsCloud?.challengeDescription || "Most cloud environments are optimized for predictable web traffic, not the erratic, resource-heavy nature of AI. When you attempt to run high-throughput inference or complex data processing on legacy setups, you inevitably hit ceilings in performance, security, and cost.";
+  const frictionPoints = cmsCloud?.frictionPoints?.length ? cmsCloud.frictionPoints : defaultFrictionPoints;
+
+  // Section 3: Capabilities
+  const whatWeDoSubtitle = cmsCloud?.whatWeDoSubtitle || "WHAT WE BUILD";
+  const whatWeDoTitle = cmsCloud?.whatWeDoTitle || "Architecting Production-Grade Cloud & Data Systems";
+  const whatWeDoDescription = cmsCloud?.whatWeDoDescription || "We design, deploy, and operationalize resilient cloud foundations engineered specifically for AI workloads, data lakehouses, and high-availability enterprise applications.";
+  const capabilities = cmsCloud?.capabilities?.length ? cmsCloud.capabilities : defaultCapabilities;
+
+  // Section 4: AI Difference
+  const diffSubtitle = cmsCloud?.differentiatorSubtitle || "THE AI DIFFERENCE";
+  const diffTitle = cmsCloud?.differentiatorTitle || "Engineering for AI, Not Just for Uptime";
+  const diffDescription = cmsCloud?.competenciesDescription || "We understand the technical reality of AI better than standard consultancies. We bridge the gap between infrastructure engineering, data architecture, and AI model performance.";
+  const aiDifferencePoints = cmsCloud?.aiDifferencePoints?.length
+    ? cmsCloud.aiDifferencePoints
+    : (cmsCloud?.differentiators?.length
+        ? cmsCloud.differentiators.map((d: { title: string; desc: string; iconName?: string }) => ({ title: d.title, desc: d.desc, iconName: d.iconName || "DollarSign" }))
+        : defaultAiDifferencePoints);
+
+  // Section 5: Engagement Options
+  const engagementSubtitle = cmsCloud?.engagementSubtitle || "ENGAGEMENT OPTIONS";
+  const engagementTitle = cmsCloud?.engagementTitle || "Tailored Delivery Models for Your Cloud Journey";
+  const engagementDescription = cmsCloud?.engagementDescription || "Whether you need a targeted security audit, a zero-downtime cloud migration, or continuous FinOps & SecOps optimization, we offer structured engagement options.";
+  const engagementTiers = cmsCloud?.engagementTiers?.length ? cmsCloud.engagementTiers : defaultEngagementTiers;
+
+  // Section 6: FAQ
+  const faqSubtitle = cmsCloud?.faqSubtitle || "FREQUENTLY ASKED QUESTIONS";
+  const faqTitle = cmsCloud?.faqTitle || "Cloud & Data Architecture Queries";
+  const faqs = cmsCloud?.faqs?.length
+    ? cmsCloud.faqs.map((f: { q?: string; question?: string; a?: string; answer?: string }) => ({ q: f.q || f.question || "", a: f.a || f.answer || "" }))
+    : defaultFaqs;
+
+  // Section 7: Final CTA Banner
+  const finalCtaBadge = cmsCloud?.engineBadge || "START ENGINEERING TODAY";
+  const finalCtaTitle = cmsCloud?.finalCtaTitle || "Ready to build infrastructure that can actually run AI at scale?";
+  const finalCtaDescription = cmsCloud?.finalCtaDescription || "Let’s discuss your current cloud roadblocks and how we can engineer a path forward across AWS, Azure, GCP, OCI, Databricks, and Snowflake.";
+  const finalCtaText = cmsCloud?.finalCtaText || "Schedule an Executive Briefing";
+  const finalCtaHref = cmsCloud?.finalCtaHref || "/contact";
 
   return (
     <div className="w-full bg-[#fff8f5] text-[#241913]">
@@ -272,23 +333,23 @@ export default function CloudSecurityDatabricksPage() {
           <div className="max-w-3xl mb-14">
             <div className="inline-flex items-center gap-2 text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
               <AlertTriangle className="w-4 h-4" />
-              <span>THE CLOUD FRICTION FACTOR</span>
+              <span>{challengeSubtitle}</span>
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Why Standard Cloud Infrastructure Fails Modern AI Workloads
+              {challengeTitle}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              Most cloud environments are optimized for predictable web traffic, not the erratic, resource-heavy nature of AI. When you attempt to run high-throughput inference or complex data processing on legacy setups, you inevitably hit ceilings in performance, security, and cost.
+              {challengeDescription}
             </p>
           </div>
 
           {/* 4 Friction Cards */}
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {frictionPoints.map((pt) => {
-              const IconComp = pt.icon;
+            {frictionPoints.map((pt, idx) => {
+              const IconComp = getIcon(pt.iconName, DollarSign);
               return (
                 <div
-                  key={pt.title}
+                  key={pt.title || idx}
                   className="bg-[#fff8f5] border border-[#ddc1b0] hover:border-[#964900] rounded-xl p-6 transition-all duration-300 shadow-sm hover-lift flex flex-col justify-between"
                 >
                   <div>
@@ -319,22 +380,23 @@ export default function CloudSecurityDatabricksPage() {
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
-              WHAT WE BUILD
+              {whatWeDoSubtitle}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Architecting Production-Grade Cloud & Data Systems
+              {whatWeDoTitle}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              We design, deploy, and operationalize resilient cloud foundations engineered specifically for AI workloads, data lakehouses, and high-availability enterprise applications.
+              {whatWeDoDescription}
             </p>
           </div>
 
           <div className="space-y-8">
             {capabilities.map((cap, idx) => {
-              const IconComp = cap.icon;
+              const IconComp = getIcon(cap.iconName, Cloud);
+              const highlightsList = cap.highlights || (cap as { bullets?: string[] }).bullets || [];
               return (
                 <div
-                  key={cap.id}
+                  key={cap.id || idx}
                   id={cap.id}
                   className="bg-[#ffffff] border border-[#ddc1b0] hover:border-[#964900] rounded-2xl p-8 transition-all duration-300 shadow-sm hover-lift grid lg:grid-cols-12 gap-8 items-center"
                 >
@@ -357,7 +419,7 @@ export default function CloudSecurityDatabricksPage() {
                     </p>
 
                     <div className="space-y-2">
-                      {cap.highlights.map((item) => (
+                      {highlightsList.map((item) => (
                         <div key={item} className="flex items-start gap-2.5 text-xs font-['Inter'] text-[#241913]">
                           <CheckCircle2 className="w-4 h-4 text-[#964900] shrink-0 mt-0.5" />
                           <span>{item}</span>
@@ -399,22 +461,22 @@ export default function CloudSecurityDatabricksPage() {
           <div className="max-w-3xl mb-14">
             <div className="inline-flex items-center gap-2 text-xs font-['JetBrains_Mono'] text-[#ffb786] font-bold uppercase tracking-widest mb-3">
               <Sparkles className="w-4 h-4 text-[#ffb786]" />
-              <span>THE AI DIFFERENCE</span>
+              <span>{diffSubtitle}</span>
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
-              Engineering for AI, Not Just for Uptime
+              {diffTitle}
             </h2>
             <p className="font-['Inter'] text-base text-white/80 leading-relaxed">
-              We understand the technical reality of AI better than standard consultancies. We bridge the gap between infrastructure engineering, data architecture, and AI model performance.
+              {diffDescription}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {aiDifferencePoints.map((item) => {
-              const IconComp = item.icon;
+            {aiDifferencePoints.map((item, idx) => {
+              const IconComp = getIcon(item.iconName, DollarSign);
               return (
                 <div
-                  key={item.title}
+                  key={item.title || idx}
                   className="bg-[#1c130d] border border-white/10 hover:border-[#964900] rounded-xl p-8 transition-all duration-300"
                 >
                   <div className="w-12 h-12 rounded-lg bg-[#964900]/20 border border-[#964900]/40 flex items-center justify-center text-[#ffb786] mb-6">
@@ -438,85 +500,97 @@ export default function CloudSecurityDatabricksPage() {
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
-              ENGAGEMENT OPTIONS
+              {engagementSubtitle}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Tailored Delivery Models for Your Cloud Journey
+              {engagementTitle}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              Whether you need a targeted security audit, a zero-downtime cloud migration, or continuous FinOps & SecOps optimization, we offer structured engagement options.
+              {engagementDescription}
             </p>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
-            {engagementTiers.map((tier) => (
-              <div
-                key={tier.title}
-                className={`rounded-2xl p-8 transition-all duration-300 flex flex-col justify-between ${
-                  tier.featured
-                    ? "bg-[#241913] text-white border-2 border-[#964900] shadow-xl relative"
-                    : "bg-[#fff8f5] text-[#241913] border border-[#ddc1b0] hover:border-[#964900] shadow-sm hover-lift"
-                }`}
-              >
-                {tier.featured && (
-                  <div className="absolute -top-3.5 right-6 bg-[#964900] text-white text-[10px] font-['JetBrains_Mono'] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
-                    MOST POPULAR
-                  </div>
-                )}
-
-                <div>
-                  <div
-                    className={`text-[10px] font-['JetBrains_Mono'] font-bold uppercase tracking-widest mb-2 ${
-                      tier.featured ? "text-[#ffb786]" : "text-[#964900]"
-                    }`}
-                  >
-                    {tier.subtitle}
-                  </div>
-
-                  <h3
-                    className={`font-['Hanken_Grotesk'] text-2xl font-extrabold mb-3 ${
-                      tier.featured ? "text-white" : "text-[#241913]"
-                    }`}
-                  >
-                    {tier.title}
-                  </h3>
-
-                  <p
-                    className={`font-['Inter'] text-xs leading-relaxed mb-6 ${
-                      tier.featured ? "text-white/80" : "text-[#564336]"
-                    }`}
-                  >
-                    {tier.desc}
-                  </p>
-
-                  <div className="space-y-2.5 mb-8">
-                    {tier.deliverables.map((d) => (
-                      <div key={d} className="flex items-start gap-2.5 text-xs font-['Inter']">
-                        <CheckCircle2
-                          className={`w-4 h-4 shrink-0 mt-0.5 ${
-                            tier.featured ? "text-[#ffb786]" : "text-[#964900]"
-                          }`}
-                        />
-                        <span className={tier.featured ? "text-white/90" : "text-[#241913]"}>
-                          {d}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <Link
-                  href={tier.href}
-                  className={`w-full font-['JetBrains_Mono'] font-bold text-sm py-3.5 rounded-full text-center transition-all duration-200 shadow-sm ${
-                    tier.featured
-                      ? "bg-[#964900] text-white hover:bg-[#b05600]"
-                      : "bg-[#ffffff] text-[#241913] border border-[#ddc1b0] hover:bg-[#fff1ea] hover:border-[#964900]"
+            {engagementTiers.map((tier, idx) => {
+              const t = tier as { featured?: boolean; highlight?: boolean; subtitle?: string; badge?: string; title?: string; name?: string; desc?: string; target?: string; deliverables?: string[]; cta?: string; href?: string };
+              const isFeatured = t.featured || t.highlight || false;
+              const subTitle = t.subtitle || t.badge || "";
+              const tierName = t.title || t.name || "";
+              const tierDesc = t.desc || t.target || "";
+              const deliverables = t.deliverables || [];
+              const ctaText = t.cta || "Get Started";
+              const ctaHref = t.href || "/contact";
+              return (
+                <div
+                  key={tierName || idx}
+                  className={`rounded-2xl p-8 transition-all duration-300 flex flex-col justify-between ${
+                    isFeatured
+                      ? "bg-[#241913] text-white border-2 border-[#964900] shadow-xl relative"
+                      : "bg-[#fff8f5] text-[#241913] border border-[#ddc1b0] hover:border-[#964900] shadow-sm hover-lift"
                   }`}
                 >
-                  {tier.cta}
-                </Link>
-              </div>
-            ))}
+                  {isFeatured && (
+                    <div className="absolute -top-3.5 right-6 bg-[#964900] text-white text-[10px] font-['JetBrains_Mono'] font-bold uppercase tracking-widest px-3 py-1 rounded-full shadow-sm">
+                      MOST POPULAR
+                    </div>
+                  )}
+
+                  <div>
+                    {subTitle && (
+                      <div
+                        className={`text-[10px] font-['JetBrains_Mono'] font-bold uppercase tracking-widest mb-2 ${
+                          isFeatured ? "text-[#ffb786]" : "text-[#964900]"
+                        }`}
+                      >
+                        {subTitle}
+                      </div>
+                    )}
+
+                    <h3
+                      className={`font-['Hanken_Grotesk'] text-2xl font-extrabold mb-3 ${
+                        isFeatured ? "text-white" : "text-[#241913]"
+                      }`}
+                    >
+                      {tierName}
+                    </h3>
+
+                    <p
+                      className={`font-['Inter'] text-xs leading-relaxed mb-6 ${
+                        isFeatured ? "text-white/80" : "text-[#564336]"
+                      }`}
+                    >
+                      {tierDesc}
+                    </p>
+
+                    <div className="space-y-2.5 mb-8">
+                      {deliverables.map((d) => (
+                        <div key={d} className="flex items-start gap-2.5 text-xs font-['Inter']">
+                          <CheckCircle2
+                            className={`w-4 h-4 shrink-0 mt-0.5 ${
+                              isFeatured ? "text-[#ffb786]" : "text-[#964900]"
+                            }`}
+                          />
+                          <span className={isFeatured ? "text-white/90" : "text-[#241913]"}>
+                            {d}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <Link
+                    href={ctaHref}
+                    className={`w-full font-['JetBrains_Mono'] font-bold text-sm py-3.5 rounded-full text-center transition-all duration-200 shadow-sm ${
+                      isFeatured
+                        ? "bg-[#964900] text-white hover:bg-[#b05600]"
+                        : "bg-[#ffffff] text-[#241913] border border-[#ddc1b0] hover:bg-[#fff1ea] hover:border-[#964900]"
+                    }`}
+                  >
+                    {ctaText}
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -526,10 +600,10 @@ export default function CloudSecurityDatabricksPage() {
         <div className="max-w-[1000px] mx-auto px-4">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
-              FREQUENTLY ASKED QUESTIONS
+              {faqSubtitle}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913]">
-              Cloud & Data Architecture Queries
+              {faqTitle}
             </h2>
           </div>
 
@@ -538,7 +612,7 @@ export default function CloudSecurityDatabricksPage() {
               const isOpen = openFaq === idx;
               return (
                 <div
-                  key={faq.q}
+                  key={faq.q || idx}
                   className="bg-[#ffffff] border border-[#ddc1b0] rounded-xl transition-all duration-200 overflow-hidden shadow-sm"
                 >
                   <button
@@ -569,22 +643,22 @@ export default function CloudSecurityDatabricksPage() {
         <div className="bg-[#241913] text-white rounded-3xl p-10 sm:p-16 border border-[#ddc1b0] shadow-2xl relative overflow-hidden text-center max-w-4xl mx-auto">
           <div className="inline-flex items-center gap-2 border border-[#964900]/50 bg-[#964900]/20 px-4 py-1.5 rounded-full font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] mb-6 tracking-widest uppercase">
             <Zap className="w-3.5 h-3.5 text-[#ffb786]" />
-            <span>START ENGINEERING TODAY</span>
+            <span>{finalCtaBadge}</span>
           </div>
 
           <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-6 leading-tight">
-            Ready to build infrastructure that can actually run AI at scale?
+            {finalCtaTitle}
           </h2>
 
           <p className="font-['Inter'] text-base sm:text-lg text-white/80 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-            Let’s discuss your current cloud roadblocks and how we can engineer a path forward across AWS, Azure, GCP, OCI, Databricks, and Snowflake.
+            {finalCtaDescription}
           </p>
 
           <Link
-            href="/contact"
+            href={finalCtaHref}
             className="inline-flex items-center gap-2 bg-[#964900] text-white font-['JetBrains_Mono'] font-bold text-base px-9 py-4 rounded-full hover:bg-[#b05600] transition-colors shadow-lg group"
           >
-            <span>Schedule an Executive Briefing</span>
+            <span>{finalCtaText}</span>
             <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
