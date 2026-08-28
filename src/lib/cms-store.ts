@@ -1589,9 +1589,19 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     if (!sanitizedHeader.primaryCtaText || /get started|start building/i.test(sanitizedHeader.primaryCtaText)) {
       sanitizedHeader.primaryCtaText = "Contact Us";
     }
-    if (!sanitizedHeader.megamenu || !Array.isArray(sanitizedHeader.megamenu?.servicesCategories)) {
-      sanitizedHeader.megamenu = DEFAULT_CMS_DATA.header.megamenu;
-    }
+    sanitizedHeader.megamenu = {
+      ...DEFAULT_CMS_DATA.header.megamenu,
+      ...(parsed.header?.megamenu || {}),
+      servicesCategories: Array.isArray(parsed.header?.megamenu?.servicesCategories)
+        ? parsed.header.megamenu.servicesCategories
+        : DEFAULT_CMS_DATA.header.megamenu.servicesCategories,
+      productsDropdown: Array.isArray(parsed.header?.megamenu?.productsDropdown)
+        ? parsed.header.megamenu.productsDropdown
+        : DEFAULT_CMS_DATA.header.megamenu.productsDropdown,
+      academyDropdown: Array.isArray(parsed.header?.megamenu?.academyDropdown)
+        ? parsed.header.megamenu.academyDropdown
+        : DEFAULT_CMS_DATA.header.megamenu.academyDropdown,
+    };
 
     const sanitizedHero = { ...DEFAULT_CMS_DATA.homepage?.hero, ...(parsed.homepage?.hero || {}) };
     if (!sanitizedHero.primaryCtaText || /get started|start building/i.test(sanitizedHero.primaryCtaText)) {
@@ -1627,11 +1637,43 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
         },
         testimonial: { ...DEFAULT_CMS_DATA.homepage.testimonial, ...(parsed.homepage?.testimonial || {}) },
         ctaBanner: sanitizedCtaBanner,
-        techStackBar: parsed.homepage?.techStackBar || DEFAULT_CMS_DATA.homepage.techStackBar,
-        hubSpokeArch: parsed.homepage?.hubSpokeArch || DEFAULT_CMS_DATA.homepage.hubSpokeArch,
-        enhancedTestimonials: parsed.homepage?.enhancedTestimonials || DEFAULT_CMS_DATA.homepage.enhancedTestimonials,
-        roiMetricsGrid: Array.isArray(parsed.homepage?.roiMetricsGrid) ? parsed.homepage.roiMetricsGrid : DEFAULT_CMS_DATA.homepage.roiMetricsGrid,
-        fdeInteractiveHub: parsed.homepage?.fdeInteractiveHub || DEFAULT_CMS_DATA.homepage.fdeInteractiveHub,
+        techStackBar: {
+          ...DEFAULT_CMS_DATA.homepage.techStackBar,
+          ...(parsed.homepage?.techStackBar || {}),
+          techStack: Array.isArray(parsed.homepage?.techStackBar?.techStack)
+            ? parsed.homepage.techStackBar.techStack
+            : DEFAULT_CMS_DATA.homepage.techStackBar.techStack,
+          complianceShields: Array.isArray(parsed.homepage?.techStackBar?.complianceShields)
+            ? parsed.homepage.techStackBar.complianceShields
+            : DEFAULT_CMS_DATA.homepage.techStackBar.complianceShields,
+        },
+        hubSpokeArch: {
+          ...DEFAULT_CMS_DATA.homepage.hubSpokeArch,
+          ...(parsed.homepage?.hubSpokeArch || {}),
+          nodes: Array.isArray(parsed.homepage?.hubSpokeArch?.nodes)
+            ? parsed.homepage.hubSpokeArch.nodes
+            : DEFAULT_CMS_DATA.homepage.hubSpokeArch.nodes,
+        },
+        enhancedTestimonials: {
+          ...DEFAULT_CMS_DATA.homepage.enhancedTestimonials,
+          ...(parsed.homepage?.enhancedTestimonials || {}),
+          items: Array.isArray(parsed.homepage?.enhancedTestimonials?.items)
+            ? parsed.homepage.enhancedTestimonials.items
+            : DEFAULT_CMS_DATA.homepage.enhancedTestimonials.items,
+        },
+        roiMetricsGrid: Array.isArray(parsed.homepage?.roiMetricsGrid)
+          ? parsed.homepage.roiMetricsGrid
+          : DEFAULT_CMS_DATA.homepage.roiMetricsGrid,
+        fdeInteractiveHub: {
+          ...DEFAULT_CMS_DATA.homepage.fdeInteractiveHub,
+          ...(parsed.homepage?.fdeInteractiveHub || {}),
+          nodes: Array.isArray(parsed.homepage?.fdeInteractiveHub?.nodes)
+            ? parsed.homepage.fdeInteractiveHub.nodes
+            : DEFAULT_CMS_DATA.homepage.fdeInteractiveHub.nodes,
+          steps: Array.isArray(parsed.homepage?.fdeInteractiveHub?.steps)
+            ? parsed.homepage.fdeInteractiveHub.steps
+            : DEFAULT_CMS_DATA.homepage.fdeInteractiveHub.steps,
+        },
       },
       pages: {
         services: {
@@ -1689,15 +1731,49 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
             ? parsed.pages.careers.jobs
             : DEFAULT_CMS_DATA.pages.careers.jobs,
         },
-        serviceSubpages: parsed.pages?.serviceSubpages || DEFAULT_CMS_DATA.pages.serviceSubpages,
-        academySubpages: parsed.pages?.academySubpages || DEFAULT_CMS_DATA.pages.academySubpages,
+        serviceSubpages: {
+          cloudMigration: {
+            ...DEFAULT_CMS_DATA.pages.serviceSubpages.cloudMigration,
+            ...(parsed.pages?.serviceSubpages?.cloudMigration || {}),
+          },
+          fde: {
+            ...DEFAULT_CMS_DATA.pages.serviceSubpages.fde,
+            ...(parsed.pages?.serviceSubpages?.fde || {}),
+          },
+          dataAnnotation: {
+            ...DEFAULT_CMS_DATA.pages.serviceSubpages.dataAnnotation,
+            ...(parsed.pages?.serviceSubpages?.dataAnnotation || {}),
+          },
+          databaseTuning: {
+            ...DEFAULT_CMS_DATA.pages.serviceSubpages.databaseTuning,
+            ...(parsed.pages?.serviceSubpages?.databaseTuning || {}),
+          },
+        },
+        academySubpages: {
+          agenticAi: {
+            ...DEFAULT_CMS_DATA.pages.academySubpages.agenticAi,
+            ...(parsed.pages?.academySubpages?.agenticAi || {}),
+          },
+          databricks: {
+            ...DEFAULT_CMS_DATA.pages.academySubpages.databricks,
+            ...(parsed.pages?.academySubpages?.databricks || {}),
+          },
+          fullstackAi: {
+            ...DEFAULT_CMS_DATA.pages.academySubpages.fullstackAi,
+            ...(parsed.pages?.academySubpages?.fullstackAi || {}),
+          },
+        },
       },
       blog: {
         heroBadge: parsed.blog?.heroBadge || DEFAULT_CMS_DATA.blog.heroBadge,
         title: parsed.blog?.title || DEFAULT_CMS_DATA.blog.title,
         subtitle: parsed.blog?.subtitle || DEFAULT_CMS_DATA.blog.subtitle,
-        categories: Array.isArray(parsed.blog?.categories) ? parsed.blog.categories : DEFAULT_CMS_DATA.blog.categories,
-        articles: Array.isArray(parsed.blog?.articles) ? parsed.blog.articles : DEFAULT_CMS_DATA.blog.articles,
+        categories: Array.isArray(parsed.blog?.categories)
+          ? parsed.blog.categories
+          : DEFAULT_CMS_DATA.blog.categories,
+        articles: Array.isArray(parsed.blog?.articles)
+          ? parsed.blog.articles
+          : DEFAULT_CMS_DATA.blog.articles,
       },
     };
   } catch (err) {

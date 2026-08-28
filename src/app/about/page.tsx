@@ -84,8 +84,8 @@ export default function About() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-6">
-              {values.map((v) => {
-                const IconComp = v.icon;
+              {(cmsData?.values && cmsData.values.length > 0 ? cmsData.values : values).map((v) => {
+                const IconComp = (v as { icon?: React.ElementType }).icon || Target;
                 return (
                   <div
                     key={v.title}
@@ -121,21 +121,24 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {[
-              { v: "50+", l: "AI systems in production" },
-              { v: "100+", l: "Cloud workloads managed" },
-              { v: "30–50%", l: "Avg. cloud database savings" },
-              { v: "99.9%", l: "Platform uptime SLA" },
-            ].map((s) => (
+            {(cmsData?.stats && cmsData.stats.length > 0
+              ? cmsData.stats
+              : [
+                  { id: "1", value: "50+", description: "AI systems in production" },
+                  { id: "2", value: "100+", description: "Cloud workloads managed" },
+                  { id: "3", value: "30–50%", description: "Avg. cloud database savings" },
+                  { id: "4", value: "99.9%", description: "Platform uptime SLA" },
+                ]
+            ).map((s) => (
               <div
-                key={s.l}
+                key={s.id || s.description}
                 className="bg-[#F3F3F3] border border-[#241913]/10 rounded-xl p-8 text-center shadow-sm hover:shadow-md transition-all duration-300"
               >
                 <div className="text-3xl sm:text-4xl font-extrabold text-[#964900] font-mono-tech">
-                  {s.v}
+                  {s.value}
                 </div>
                 <div className="text-xs text-[#564336] mt-2 font-medium font-inter">
-                  {s.l}
+                  {s.description}
                 </div>
               </div>
             ))}

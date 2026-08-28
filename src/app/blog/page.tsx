@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useCMS } from "@/context/CMSContext";
 import {
   Search,
   BookOpen,
@@ -21,7 +22,7 @@ import {
 interface Article {
   id: string;
   title: string;
-  category: "Agentic AI" | "Databricks & Lakehouse" | "Full-Stack AI" | "Security & Compliance" | "FDE Case Studies";
+  category: string;
   readTime: string;
   date: string;
   author: string;
@@ -36,159 +37,6 @@ interface Article {
   featured?: boolean;
 }
 
-const ARTICLES: Article[] = [
-  {
-    id: "art-1",
-    title: "Architecting Production Agentic AI with Zero-Hallucination Guardrails",
-    category: "Agentic AI",
-    readTime: "7 min read",
-    date: "Aug 24, 2026",
-    author: "Forward Deployed AI Team",
-    authorRole: "Principal AI Architect",
-    snippet: "How we design multi-agent swarms using the Antigravity SDK to execute complex enterprise workflows with sub-100ms tool-calling latency and deterministic safety bounds.",
-    featured: true,
-    content: {
-      introduction: "Autonomous agentic systems represent the biggest shift in enterprise software since cloud migration. However, deploying agents into live production environments requires far more than wrapping an LLM API in a loop.",
-      keyTakeaways: [
-        "Use explicit tool schema allowlisting with identity-bound credentials.",
-        "Implement short-circuiting input/output guardrails using LlamaGuard models.",
-        "Separate planning subagents from execution subagents to avoid runaway loops.",
-      ],
-      sections: [
-        {
-          heading: "1. The Anatomy of an Enterprise Agent Loop",
-          body: "An enterprise agent loop must be deterministic in its control flow while remaining flexible in reasoning. By leveraging the Antigravity SDK, we establish explicit state graph boundaries that prevent agents from executing destructive commands without explicit human approval.",
-          codeSnippet: `// Example Antigravity Agent Tool Invocation Guardrail
-import { createAgent, withGuardrails } from "@alphaesai/antigravity-sdk";
-
-const agent = createAgent({
-  name: "DBOperationsAgent",
-  tools: [sqlQueryTool, clusterScalingTool],
-  guardrails: withGuardrails({
-    maxToolRetries: 3,
-    disallowedCommands: ["DROP TABLE", "DELETE FROM *"],
-    requireHumanApprovalFor: ["scale_cluster_down"],
-  }),
-});`,
-        },
-        {
-          heading: "2. Mitigating Indirect Prompt Injection in RAG Pipelines",
-          body: "When agents ingest external documents, web pages, or email threads, malicious prompts embedded in context can hijack execution. We enforce context defanging and pre-tokenization sanitization before documents reach the agent's context window.",
-        },
-      ],
-      conclusion: "By combining hierarchical subagent swarms with strict tool allowlisting, enterprises can safely deploy autonomous AI agents that deliver high speed without risk of data loss.",
-    },
-  },
-  {
-    id: "art-2",
-    title: "Cutting Databricks Delta Lake Compute Costs by 60% in 30 Days",
-    category: "Databricks & Lakehouse",
-    readTime: "6 min read",
-    date: "Aug 20, 2026",
-    author: "Data Architecture Lead",
-    authorRole: "Senior Lakehouse Engineer",
-    snippet: "A practical step-by-step guide to Liquid Clustering, PySpark shuffle elimination, and automated DBU cluster auto-scaling for enterprise lakehouses.",
-    content: {
-      introduction: "Databricks compute costs (DBUs) can quickly escalate if queries rely on legacy Z-Ordering or suffer from data skew. In this deep dive, we outline the exact optimization playbook our Forward-Deployed Engineers applied for a Fortune 500 client.",
-      keyTakeaways: [
-        "Replace legacy OPTIMIZE ZORDER WITH Liquid Clustering for up to 4x faster query speeds.",
-        "Eliminate PySpark shuffle spills by tuning spark.sql.shuffle.partitions dynamically.",
-        "Use Graviton3-backed compute instances to cut raw instance costs by 20%.",
-      ],
-      sections: [
-        {
-          heading: "1. Migrating from Z-Ordering to Liquid Clustering",
-          body: "Liquid Clustering provides incremental, low-overhead data layout optimization without requiring full table rewrites. This dramatically reduces DBU consumption during batch ingestion.",
-          codeSnippet: `-- Enabling Liquid Clustering on Databricks Delta Table
-CREATE TABLE telemetry_logs (
-  timestamp TIMESTAMP,
-  device_id STRING,
-  payload STRING
-)
-USING DELTA
-CLUSTER BY (device_id, timestamp);`,
-        },
-      ],
-      conclusion: "Systematic Lakehouse optimization delivers immediate ROI by slashing monthly DBU expenditure while simultaneously accelerating ETL pipeline throughput.",
-    },
-  },
-  {
-    id: "art-3",
-    title: "Building Full-Stack AI Apps with Next.js App Router & Streaming Copilots",
-    category: "Full-Stack AI",
-    readTime: "5 min read",
-    date: "Aug 16, 2026",
-    author: "Fullstack Engineering Lead",
-    authorRole: "Staff Web Architect",
-    snippet: "Learn how to build real-time conversational UIs with Server-Sent Events, Optimistic State updates, and Pinecone vector retrieval in Next.js 15.",
-    content: {
-      introduction: "Users expect AI web applications to respond instantaneously with streaming tokens, interactive markdown code blocks, and zero page reload lag.",
-      keyTakeaways: [
-        "Use Server-Sent Events (SSE) for low-overhead token streaming.",
-        "Implement optimistic state updates in React 19 to render user messages instantly.",
-        "Pre-fetch vector search embeddings in parallel with user input parsing.",
-      ],
-      sections: [
-        {
-          heading: "1. Streaming Text with Next.js App Router API Routes",
-          body: "By leveraging ReadableStream in Next.js Edge Runtime, you can stream LLM tokens to the browser with microsecond latency.",
-        },
-      ],
-      conclusion: "Combining modern Next.js App Router architecture with vector search delivers a fluid, responsive AI copilot experience.",
-    },
-  },
-  {
-    id: "art-4",
-    title: "HIPAA & SOC-2 Type II Compliance for Enterprise LLM Pipelines",
-    category: "Security & Compliance",
-    readTime: "8 min read",
-    date: "Aug 10, 2026",
-    author: "Cybersecurity Task Force",
-    authorRole: "Head of AI Security",
-    snippet: "Complete blueprint for zero-trust cloud boundaries, automated PII redaction, and audit logging when deploying medical and financial AI models.",
-    content: {
-      introduction: "Security and compliance are non-negotiable when deploying generative AI in healthcare and financial services. Here is how we enforce HIPAA compliance for models like DrGodly AI.",
-      keyTakeaways: [
-        "Encrypt all embeddings and prompt payloads at rest and in transit.",
-        "Implement automatic regex & NER PII redaction prior to LLM submission.",
-        "Maintain immutable append-only audit logs for all model inferences.",
-      ],
-      sections: [
-        {
-          heading: "1. Automated PII Sanitization",
-          body: "Before sending prompts to external or fine-tuned model endpoints, sensitive fields (SSN, medical record numbers, names) must be redacted and tokenized.",
-        },
-      ],
-      conclusion: "Zero-trust AI pipelines enable enterprises to innovate with confidence while meeting rigid regulatory benchmarks.",
-    },
-  },
-  {
-    id: "art-5",
-    title: "Why Forward-Deployed AI Engineering (FDE) Outperforms Traditional Consulting",
-    category: "FDE Case Studies",
-    readTime: "6 min read",
-    date: "Aug 04, 2026",
-    author: "AlphaesAI Leadership",
-    authorRole: "Co-Founder & CTO",
-    snippet: "Why embedding senior AI engineers directly into client codebases ships production systems in weeks, eliminating presentation decks and scope creep.",
-    content: {
-      introduction: "Traditional tech consulting relies on lengthy discovery phases, static slide decks, and handoff friction. Our Forward-Deployed Engineering model embeds senior AI builders directly inside your team.",
-      keyTakeaways: [
-        "FDE engineers write production code directly inside your Git repositories and cloud accounts.",
-        "Deploy working AI prototypes in 14 days rather than 6-month consulting roadmaps.",
-        "Zero knowledge transfer overhead since client engineers co-build the codebase.",
-      ],
-      sections: [
-        {
-          heading: "1. Embedded Production Velocity",
-          body: "Our FDE teams bring pre-tested architecture templates, Antigravity SDK tooling, and Databricks optimization scripts, allowing them to ship production code on Day 1.",
-        },
-      ],
-      conclusion: "Forward-Deployed Engineering ensures that strategic AI initiatives translate directly into shipping software and measurable business value.",
-    },
-  },
-];
-
 const CATEGORIES = [
   "All Articles",
   "Agentic AI",
@@ -199,13 +47,20 @@ const CATEGORIES = [
 ];
 
 export default function BlogPage() {
+  const { data } = useCMS();
+  const cmsBlog = data.blog;
+
   const [selectedCategory, setSelectedCategory] = useState("All Articles");
   const [searchQuery, setSearchQuery] = useState("");
   const [activeArticle, setActiveArticle] = useState<Article | null>(null);
   const [subscribed, setSubscribed] = useState(false);
   const [emailInput, setEmailInput] = useState("");
 
-  const filteredArticles = ARTICLES.filter((art) => {
+  const articlesList: Article[] = (cmsBlog?.articles && cmsBlog.articles.length > 0)
+    ? (cmsBlog.articles as Article[])
+    : [];
+
+  const filteredArticles = articlesList.filter((art) => {
     const matchesCategory =
       selectedCategory === "All Articles" || art.category === selectedCategory;
     const matchesSearch =
@@ -215,7 +70,7 @@ export default function BlogPage() {
     return matchesCategory && matchesSearch;
   });
 
-  const featuredArticle = ARTICLES.find((a) => a.featured) || ARTICLES[0];
+  const featuredArticle = articlesList.find((a) => a.featured) || articlesList[0];
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -231,15 +86,15 @@ export default function BlogPage() {
       <section className="py-20 px-8 max-w-[1440px] mx-auto text-center relative">
         <div className="inline-flex items-center gap-2 border border-[#241913]/15 bg-[#fff1ea] px-4 py-1.5 rounded-full font-mono-tech text-xs font-semibold text-[#964900] mb-6 tracking-widest uppercase shadow-sm">
           <BookOpen className="w-4 h-4 text-[#964900]" />
-          <span>AlphaesAI Engineering Insights</span>
+          <span>{cmsBlog?.heroBadge || "AlphaesAI Engineering Insights"}</span>
         </div>
 
         <h1 className="font-hanken text-4xl sm:text-6xl font-extrabold text-[#241913] mb-6 tracking-tight leading-tight">
-          Technical Deep Dives & Industrial AI Blueprints
+          {cmsBlog?.title || "Technical Deep Dives & Industrial AI Blueprints"}
         </h1>
 
         <p className="font-inter text-lg text-[#564336] max-w-3xl mx-auto mb-10 font-normal leading-relaxed">
-          Production-proven architectures for Agentic AI, Databricks Lakehouse optimization, full-stack AI applications, and zero-trust cloud security.
+          {cmsBlog?.subtitle || "Production-proven architectures for Agentic AI, Databricks Lakehouse optimization, full-stack AI applications, and zero-trust cloud security."}
         </p>
 
         {/* Search & Category Filter */}
@@ -256,7 +111,7 @@ export default function BlogPage() {
           </div>
 
           <div className="flex flex-wrap items-center justify-center gap-2">
-            {CATEGORIES.map((cat) => (
+            {(cmsBlog?.categories && cmsBlog.categories.length > 0 ? cmsBlog.categories : CATEGORIES).map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
@@ -332,7 +187,7 @@ export default function BlogPage() {
             {selectedCategory === "All Articles" ? "Latest Articles" : selectedCategory} ({filteredArticles.length})
           </h2>
           <span className="font-mono-tech text-xs text-[#564336] uppercase tracking-wider font-bold">
-            Showing {filteredArticles.length} of {ARTICLES.length} posts
+            Showing {filteredArticles.length} of {articlesList.length} posts
           </span>
         </div>
 

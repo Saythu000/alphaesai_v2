@@ -39,18 +39,37 @@ import {
   Key,
   Loader2,
   LogOut,
+  Newspaper,
+  GraduationCap,
+  Cpu,
+  Edit3,
+  Check,
+  X,
+  Sparkles,
 } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
-import { FullCMSData, DEFAULT_CMS_DATA, FAQItemCMS } from "@/lib/cms-store";
+import {
+  FullCMSData,
+  DEFAULT_CMS_DATA,
+  FAQItemCMS,
+  BlogPostCMSData,
+  ServiceSubpagesCMSData,
+  AcademySubpagesCMSData,
+} from "@/lib/cms-store";
 import { toast } from "sonner";
 
 type TabType =
   | "hero"
   | "showcase"
   | "architecture"
+  | "techStack"
+  | "fdeHub"
   | "testimonial"
   | "cta"
+  | "blog"
   | "services"
+  | "serviceSubpages"
+  | "academySubpages"
   | "drgodly"
   | "oneai"
   | "about"
@@ -58,13 +77,14 @@ type TabType =
   | "contact"
   | "careers"
   | "navigation"
+  | "megamenu"
   | "footer"
   | "settings";
 
 interface TabItem {
   id: TabType;
   label: string;
-  category: "homepage" | "subpages" | "global";
+  category: "homepage" | "blog" | "subpages" | "global";
   icon: React.ElementType;
   previewHref?: string;
 }
@@ -74,11 +94,18 @@ const TABS: TabItem[] = [
   { id: "hero", label: "Hero Banner", category: "homepage", icon: Layout, previewHref: "/" },
   { id: "showcase", label: "3D Showcase & Metrics", category: "homepage", icon: Box, previewHref: "/#showcase" },
   { id: "architecture", label: "Global Architecture", category: "homepage", icon: Grid, previewHref: "/#architecture" },
+  { id: "techStack", label: "Tech Stack & Badges", category: "homepage", icon: ShieldCheck, previewHref: "/#tech-stack" },
+  { id: "fdeHub", label: "FDE Process Hub & ROI", category: "homepage", icon: Cpu, previewHref: "/#fde-hub" },
   { id: "testimonial", label: "Testimonials & Proof", category: "homepage", icon: Quote, previewHref: "/#testimonials" },
   { id: "cta", label: "CTA Banner", category: "homepage", icon: Zap, previewHref: "/#cta" },
 
+  // Blog
+  { id: "blog", label: "Blog Posts & Articles", category: "blog", icon: Newspaper, previewHref: "/blog" },
+
   // Subpages
   { id: "services", label: "Services Hub", category: "subpages", icon: Briefcase, previewHref: "/services" },
+  { id: "serviceSubpages", label: "Service Subpages (4)", category: "subpages", icon: Layers, previewHref: "/services" },
+  { id: "academySubpages", label: "Academy Tracks (3)", category: "subpages", icon: GraduationCap, previewHref: "/academy" },
   { id: "drgodly", label: "Dr. Godly Health", category: "subpages", icon: Stethoscope, previewHref: "/drgodly" },
   { id: "oneai", label: "OneAI Assist", category: "subpages", icon: Bot, previewHref: "/oneai-assist" },
   { id: "about", label: "About Firm", category: "subpages", icon: Info, previewHref: "/about" },
@@ -87,14 +114,16 @@ const TABS: TabItem[] = [
   { id: "careers", label: "Careers & Open Roles", category: "subpages", icon: Briefcase, previewHref: "/careers" },
 
   // Global
-  { id: "navigation", label: "Header & Announcement", category: "global", icon: Navigation, previewHref: "/" },
+  { id: "navigation", label: "Header Announcement", category: "global", icon: Navigation, previewHref: "/" },
+  { id: "megamenu", label: "Header Megamenu & Nav", category: "global", icon: Layers, previewHref: "/" },
   { id: "footer", label: "Footer Links & Branding", category: "global", icon: Layers, previewHref: "/" },
-  { id: "settings", label: "Backups & System Reset", category: "global", icon: Settings },
+  { id: "settings", label: "Backups, Sync & Reset", category: "global", icon: Settings },
 ];
 
 export default function AdminPage() {
-  const { data, updateData, resetData } = useCMS();
+  const { data, updateData, resetData, isLoaded } = useCMS();
   const [formData, setFormData] = useState<FullCMSData>(data);
+  const hasInitializedForm = React.useRef(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const [passwordInput, setPasswordInput] = useState("");
@@ -104,14 +133,30 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState<TabType>("hero");
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Settings tab credential update state
+  // Subpage active tabs
+  const [activeServiceSubpage, setActiveServiceSubpage] = useState<
+    "cloudMigration" | "fde" | "dataAnnotation" | "databaseTuning"
+  >("cloudMigration");
+  const [activeAcademySubpage, setActiveAcademySubpage] = useState<
+    "agenticAi" | "databricks" | "fullstackAi"
+  >("agenticAi");
+
+  // Blog Article Form modal/editor state
+  const [editingArticle, setEditingArticle] = useState<BlogPostCMSData | null>(null);
+  const [isBlogModalOpen, setIsBlogModalOpen] = useState(false);
+
+  // Settings tab credential update & DB sync state
   const [credUsername, setCredUsername] = useState("admin");
   const [credPassword, setCredPassword] = useState("");
   const [isUpdatingCreds, setIsUpdatingCreds] = useState(false);
+  const [isSyncingDB, setIsSyncingDB] = useState(false);
 
   React.useEffect(() => {
-    setFormData(data);
-  }, [data]);
+    if (isLoaded && !hasInitializedForm.current) {
+      setFormData(data);
+      hasInitializedForm.current = true;
+    }
+  }, [data, isLoaded]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -187,6 +232,29 @@ export default function AdminPage() {
     }
   };
 
+  const handleSyncDefaultsToDB = async () => {
+    setIsSyncingDB(true);
+    try {
+      const response = await fetch("/api/cms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      const result = await response.json();
+      if (response.ok && result.success) {
+        toast.success("Successfully pushed & synced complete CMS data to Neon DB!");
+      } else {
+        toast.error(result.error || "Failed to sync data to Neon DB.");
+      }
+    } catch (err) {
+      console.error("Error syncing to Neon DB:", err);
+      toast.error("Error connecting to server to sync database.");
+    } finally {
+      setIsSyncingDB(false);
+    }
+  };
+
   const handleLogout = () => {
     setIsAuthenticated(false);
     setAdminUser(null);
@@ -196,29 +264,32 @@ export default function AdminPage() {
 
   const handleSave = () => {
     updateData(formData);
-    toast.success("All changes saved live to website!");
+    toast.success("All changes saved live to website & Neon DB!");
   };
 
   const handleReset = () => {
-    if (confirm("Are you sure you want to reset all website content to default values?")) {
+    if (
+      confirm(
+        "Are you sure you want to reset all content to factory defaults? All custom text will be replaced."
+      )
+    ) {
       resetData();
       setFormData(DEFAULT_CMS_DATA);
-      toast.info("Content reset to defaults");
+      toast.info("CMS restored to factory default settings.");
     }
   };
 
   const exportJSON = () => {
     const dataStr =
-      "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(formData, null, 2));
+      "data:text/json;charset=utf-8," +
+      encodeURIComponent(JSON.stringify(formData, null, 2));
     const downloadAnchor = document.createElement("a");
     downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute(
-      "download",
-      `alphaesai-cms-backup-${new Date().toISOString().slice(0, 10)}.json`
-    );
+    downloadAnchor.setAttribute("download", `alphaesai_cms_backup_${Date.now()}.json`);
     document.body.appendChild(downloadAnchor);
     downloadAnchor.click();
     downloadAnchor.remove();
+    toast.success("CMS backup downloaded successfully!");
   };
 
   const importJSON = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -230,65 +301,131 @@ export default function AdminPage() {
           const parsed = JSON.parse(event.target?.result as string);
           setFormData(parsed);
           updateData(parsed);
-          toast.success("CMS Data successfully imported from backup file!");
-        } catch (err) {
-          toast.error("Failed to parse JSON backup file");
+          toast.success("CMS backup imported and applied live!");
+        } catch {
+          toast.error("Invalid JSON file format.");
         }
       };
     }
   };
 
-  // Filter tabs based on search query
-  const filteredTabs = TABS.filter(
-    (tab) =>
-      tab.label.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tab.id.toLowerCase().includes(searchQuery.toLowerCase())
+  // Blog Article Form Handlers
+  const handleOpenNewArticle = () => {
+    setEditingArticle({
+      id: `post-${Date.now()}`,
+      title: "New AI Engineering Blueprint",
+      category: "Agentic AI",
+      readTime: "6 min read",
+      date: new Date().toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }),
+      author: "Alphaes AI Engineering",
+      authorRole: "Core Architecture Team",
+      snippet: "Brief preview description of the article...",
+      featured: false,
+      content: {
+        introduction: "Detailed introduction paragraph for this article...",
+        keyTakeaways: [
+          "First key architectural takeaway",
+          "Second key performance outcome"
+        ],
+        sections: [
+          {
+            heading: "1. Core Architectural Pattern",
+            body: "Detailed technical section body content...",
+            codeSnippet: "// Code example\nconst agent = new AlphaesAgent();"
+          }
+        ],
+        conclusion: "Final concluding thoughts and takeaway summary."
+      }
+    });
+    setIsBlogModalOpen(true);
+  };
+
+  const handleSaveArticle = () => {
+    if (!editingArticle) return;
+    const existing = formData.blog.articles || [];
+    const index = existing.findIndex((a) => a.id === editingArticle.id);
+    let updated: BlogPostCMSData[];
+
+    if (index >= 0) {
+      updated = [...existing];
+      updated[index] = editingArticle;
+    } else {
+      updated = [editingArticle, ...existing];
+    }
+
+    const nextData: FullCMSData = {
+      ...formData,
+      blog: {
+        ...formData.blog,
+        articles: updated,
+      },
+    };
+
+    setFormData(nextData);
+    updateData(nextData);
+    setIsBlogModalOpen(false);
+    setEditingArticle(null);
+    toast.success("Blog article saved live to website & DB!");
+  };
+
+  const handleDeleteArticle = (id: string) => {
+    if (confirm("Are you sure you want to delete this blog article?")) {
+      const updated = (formData.blog.articles || []).filter((a) => a.id !== id);
+      const nextData: FullCMSData = {
+        ...formData,
+        blog: {
+          ...formData.blog,
+          articles: updated,
+        },
+      };
+      setFormData(nextData);
+      updateData(nextData);
+      toast.info("Article deleted live from website & DB.");
+    }
+  };
+
+  // FILTERED TABS
+  const filteredTabs = TABS.filter((t) =>
+    t.label.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const activeTabInfo = TABS.find((t) => t.id === activeTab) || TABS[0];
-
+  // AUTHENTICATION LOGIN SCREEN
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#1c130d] text-[#fff8f5] flex items-center justify-center p-4">
-        <div className="max-w-md w-full bg-[#241913] border-2 border-[#964900] p-8 rounded-2xl shadow-2xl space-y-6">
-          <div className="flex flex-col items-center text-center space-y-2">
-            <div className="w-12 h-12 rounded-full bg-[#964900] flex items-center justify-center text-white mb-2 shadow-lg relative">
-              <Lock className="w-6 h-6" />
-              <div className="absolute -bottom-1 -right-1 bg-emerald-500 rounded-full p-1 border-2 border-[#241913]" title="Neon DB Connected">
-                <Database className="w-3 h-3 text-white" />
-              </div>
+      <div className="min-h-screen bg-[#fff8f5] flex items-center justify-center p-4">
+        <div className="w-full max-w-md bg-white border border-[#ddc1b0] rounded-3xl p-8 shadow-xl space-y-6">
+          <div className="text-center space-y-3">
+            <div className="inline-block p-3 rounded-2xl bg-[#fff8f5] border border-[#ddc1b0]">
+              <Logo />
             </div>
-            <h1 className="font-['Hanken_Grotesk'] text-2xl font-black text-[#ffb786]">
-              AlphaesAI Control Panel
+            <h1 className="font-['Hanken_Grotesk'] text-2xl font-extrabold text-[#964900]">
+              Admin Portal
             </h1>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#392218] border border-[#ffb786]/30 text-[#ffb786] font-mono text-[10px] uppercase font-bold tracking-wider">
-              <Database className="w-3 h-3 text-emerald-400" />
-              Neon DB Authentication
-            </div>
-            <p className="font-['Inter'] text-xs text-[#f3ded3]/70 pt-1">
-              Enter your admin credentials to access live CMS controls, page headers, open roles, and website settings.
+            <p className="text-xs text-[#564336]">
+              Authenticated against Neon PostgreSQL Database
             </p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
             <div>
-              <label className="block font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] uppercase mb-1.5 flex items-center gap-1.5">
-                <User className="w-3.5 h-3.5 text-[#ff7700]" />
+              <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
                 Username / Email
               </label>
-              <input
-                type="text"
-                value={usernameInput}
-                onChange={(e) => setUsernameInput(e.target.value)}
-                placeholder="Enter your username or email"
-                className="w-full bg-[#1c130d] border border-[#ddc1b0]/30 rounded-lg px-4 py-3 text-sm text-white focus:outline-none focus:border-[#964900] font-['JetBrains_Mono']"
-                required
-              />
+              <div className="relative">
+                <input
+                  type="text"
+                  value={usernameInput}
+                  onChange={(e) => setUsernameInput(e.target.value)}
+                  placeholder="admin"
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 pl-10 text-sm focus:outline-none focus:border-[#964900]"
+                  required
+                />
+                <User className="w-4 h-4 text-[#964900] absolute left-3.5 top-3.5" />
+              </div>
             </div>
 
             <div>
-              <label className="block font-['JetBrains_Mono'] text-xs font-bold text-[#ffb786] uppercase mb-1.5 flex items-center gap-1.5">
-                <Key className="w-3.5 h-3.5 text-[#ff7700]" />
+              <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
                 Password
               </label>
               <div className="relative">
@@ -296,242 +433,236 @@ export default function AdminPage() {
                   type={showPassword ? "text" : "password"}
                   value={passwordInput}
                   onChange={(e) => setPasswordInput(e.target.value)}
-                  placeholder="Enter your password"
-                  className="w-full bg-[#1c130d] border border-[#ddc1b0]/30 rounded-lg pl-4 pr-11 py-3 text-sm text-white focus:outline-none focus:border-[#964900] font-['JetBrains_Mono']"
+                  placeholder="••••••••"
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 pl-10 pr-10 text-sm focus:outline-none focus:border-[#964900]"
                   required
                 />
+                <Key className="w-4 h-4 text-[#964900] absolute left-3.5 top-3.5" />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#f3ded3]/60 hover:text-white"
+                  className="absolute right-3.5 top-3.5 text-[#564336] hover:text-[#964900]"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
             </div>
 
-            <div className="pt-2">
-              <button
-                type="submit"
-                disabled={isAuthenticating}
-                className="w-full bg-[#964900] text-white font-['JetBrains_Mono'] font-bold py-3 rounded-lg hover:bg-[#b05600] transition-colors shadow-md flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {isAuthenticating ? (
-                  <>
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                    <span>Verifying Neon DB...</span>
-                  </>
-                ) : (
-                  <>
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>Login to Admin Panel</span>
-                  </>
-                )}
-              </button>
-            </div>
+            <button
+              type="submit"
+              disabled={isAuthenticating}
+              className="w-full bg-[#964900] text-white font-bold py-3.5 rounded-xl hover:bg-[#b05600] transition-colors flex items-center justify-center gap-2 text-sm shadow-md disabled:opacity-50"
+            >
+              {isAuthenticating ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Verifying Neon DB...</span>
+                </>
+              ) : (
+                <>
+                  <Lock className="w-4 h-4" />
+                  <span>Authenticate & Access CMS</span>
+                </>
+              )}
+            </button>
           </form>
+
+          <div className="p-3 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl text-center">
+            <p className="text-[11px] text-[#564336]">
+              Neon DB Account: <span className="font-mono font-bold text-[#964900]">admin</span> / <span className="font-mono font-bold text-[#964900]">alphaes2026</span>
+            </p>
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#fff8f5] text-[#241913]">
-      {/* Top Header Bar */}
-      <header className="bg-[#1c130d] text-white border-b border-[#964900] sticky top-0 z-50 shadow-lg">
-        <div className="max-w-[1440px] mx-auto px-6 py-3.5 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <Link href="/" className="hover:opacity-90 transition-opacity">
-              <Logo variant="dark" size="sm" showSubtitle={true} />
-            </Link>
-            <span className="bg-[#964900]/40 text-[#ffb786] border border-[#964900] text-[10px] font-['JetBrains_Mono'] px-2.5 py-0.5 rounded-full uppercase font-bold tracking-wider">
-              Central CMS
+    <div className="min-h-screen bg-[#fff8f5] text-[#1c1917] flex flex-col font-['Hanken_Grotesk']">
+      {/* TOP ADMIN HEADER BAR */}
+      <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-[#ddc1b0] px-6 py-3 flex items-center justify-between shadow-sm">
+        <div className="flex items-center gap-4">
+          <Logo />
+          <div className="h-6 w-px bg-[#ddc1b0]" />
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-mono font-bold bg-[#964900] text-white px-2.5 py-1 rounded-full flex items-center gap-1.5">
+              <Database className="w-3 h-3 text-emerald-400" />
+              <span>Neon DB Active</span>
+            </span>
+            <span className="text-xs text-[#564336] font-medium hidden md:inline">
+              Enterprise Live CMS Editor
             </span>
           </div>
+        </div>
 
-          <div className="flex items-center gap-3">
-            {activeTabInfo.previewHref && (
-              <Link
-                href={activeTabInfo.previewHref}
-                target="_blank"
-                className="border border-white/20 bg-white/10 text-white font-['JetBrains_Mono'] text-xs font-bold px-3.5 py-2 rounded-full hover:bg-white/20 transition-colors inline-flex items-center gap-1.5"
-              >
-                <span>View {activeTabInfo.label}</span>
-                <ExternalLink className="w-3.5 h-3.5" />
-              </Link>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={handleSave}
+            className="bg-[#964900] text-white font-bold text-xs px-4 py-2 rounded-xl hover:bg-[#b05600] transition-colors flex items-center gap-1.5 shadow"
+          >
+            <Save className="w-4 h-4" />
+            <span>Save All Live Changes</span>
+          </button>
+
+          <button
+            onClick={handleSyncDefaultsToDB}
+            disabled={isSyncingDB}
+            className="bg-emerald-700 text-white font-bold text-xs px-3.5 py-2 rounded-xl hover:bg-emerald-800 transition-colors flex items-center gap-1.5 shadow disabled:opacity-50"
+            title="Push complete default structure and edits to Neon DB"
+          >
+            {isSyncingDB ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <RefreshCw className="w-4 h-4" />
             )}
+            <span className="hidden sm:inline">Sync Neon DB</span>
+          </button>
 
-            <button
-              onClick={handleSave}
-              className="bg-[#964900] text-white font-['JetBrains_Mono'] text-xs font-bold px-5 py-2 rounded-full hover:bg-[#b05600] transition-colors shadow-md flex items-center gap-1.5"
-            >
-              <Save className="w-4 h-4" />
-              <span>Save Live Changes</span>
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="border border-red-500/40 bg-red-950/40 text-red-300 font-['JetBrains_Mono'] text-xs font-bold px-4 py-2 rounded-full hover:bg-red-900/60 transition-colors shadow-md flex items-center gap-1.5"
-              title="Log out of Admin session"
-            >
-              <LogOut className="w-3.5 h-3.5 text-red-400" />
-              <span>Log Out ({adminUser?.username || "admin"})</span>
-            </button>
-          </div>
+          <button
+            onClick={handleLogout}
+            className="p-2 text-[#564336] hover:text-red-600 rounded-xl hover:bg-red-50 transition-colors"
+            title="Logout"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
         </div>
       </header>
 
-      {/* Main Grid: Sidebar + Editor Content */}
-      <div className="max-w-[1440px] mx-auto px-6 py-6 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* LEFT SIDEBAR NAVIGATION */}
-        <aside className="lg:col-span-3 space-y-6">
-          {/* Quick Search */}
+      <div className="flex-1 flex overflow-hidden">
+        {/* SIDEBAR NAVIGATION */}
+        <aside className="w-64 bg-white border-r border-[#ddc1b0] flex flex-col p-4 space-y-4">
           <div className="relative">
-            <Search className="w-4 h-4 text-[#964900] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search sections or pages..."
+              placeholder="Search editor tabs..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white border border-[#ddc1b0] rounded-xl pl-9 pr-4 py-2.5 text-xs text-[#241913] placeholder-[#564336]/50 focus:outline-none focus:border-[#964900] shadow-sm font-['JetBrains_Mono']"
+              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 pl-8 text-xs focus:outline-none focus:border-[#964900]"
             />
+            <Search className="w-3.5 h-3.5 text-[#564336] absolute left-2.5 top-3" />
           </div>
 
-          {/* Nav Categories */}
-          <div className="bg-white border border-[#ddc1b0] rounded-2xl p-4 shadow-sm space-y-6">
-            {/* Category: Homepage */}
-            <div>
-              <div className="text-[10px] font-['JetBrains_Mono'] font-bold text-[#964900] uppercase tracking-widest mb-2 px-2 flex items-center justify-between">
-                <span>1. Homepage Sections</span>
-                <span className="text-white bg-[#964900] rounded-full text-[9px] px-1.5 py-0.2">5</span>
-              </div>
-              <div className="space-y-1">
-                {filteredTabs
-                  .filter((t) => t.category === "homepage")
-                  .map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['JetBrains_Mono'] font-bold transition-all ${
-                          isActive
-                            ? "bg-[#964900] text-white shadow-sm"
-                            : "text-[#564336] hover:bg-[#fff1ea] hover:text-[#964900]"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Icon className="w-4 h-4 shrink-0" />
-                          <span>{tab.label}</span>
-                        </div>
-                        {isActive && <ChevronRight className="w-3.5 h-3.5 text-white" />}
-                      </button>
-                    );
-                  })}
-              </div>
+          <div className="flex-1 overflow-y-auto space-y-4 pr-1">
+            {/* HOMEPAGE SECTION */}
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
+                Homepage Sections
+              </span>
+              {filteredTabs
+                .filter((t) => t.category === "homepage")
+                .map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all ${
+                        activeTab === tab.id
+                          ? "bg-[#964900] text-white shadow-sm"
+                          : "text-[#564336] hover:bg-[#fff8f5] hover:text-[#964900]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        <span>{tab.label}</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 opacity-60" />
+                    </button>
+                  );
+                })}
             </div>
 
-            {/* Category: Subpages */}
-            <div>
-              <div className="text-[10px] font-['JetBrains_Mono'] font-bold text-[#964900] uppercase tracking-widest mb-2 px-2 flex items-center justify-between">
-                <span>2. Subpages Manager</span>
-                <span className="text-white bg-[#964900] rounded-full text-[9px] px-1.5 py-0.2">6</span>
-              </div>
-              <div className="space-y-1">
-                {filteredTabs
-                  .filter((t) => t.category === "subpages")
-                  .map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['JetBrains_Mono'] font-bold transition-all ${
-                          isActive
-                            ? "bg-[#964900] text-white shadow-sm"
-                            : "text-[#564336] hover:bg-[#fff1ea] hover:text-[#964900]"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Icon className="w-4 h-4 shrink-0" />
-                          <span>{tab.label}</span>
-                        </div>
-                        {isActive && <ChevronRight className="w-3.5 h-3.5 text-white" />}
-                      </button>
-                    );
-                  })}
-              </div>
+            {/* BLOG SECTION */}
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
+                Blog & Content
+              </span>
+              {filteredTabs
+                .filter((t) => t.category === "blog")
+                .map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all ${
+                        activeTab === tab.id
+                          ? "bg-[#964900] text-white shadow-sm"
+                          : "text-[#564336] hover:bg-[#fff8f5] hover:text-[#964900]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        <span>{tab.label}</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 opacity-60" />
+                    </button>
+                  );
+                })}
             </div>
 
-            {/* Category: Global */}
-            <div>
-              <div className="text-[10px] font-['JetBrains_Mono'] font-bold text-[#964900] uppercase tracking-widest mb-2 px-2 flex items-center justify-between">
-                <span>3. Global & System</span>
-                <span className="text-white bg-[#964900] rounded-full text-[9px] px-1.5 py-0.2">3</span>
-              </div>
-              <div className="space-y-1">
-                {filteredTabs
-                  .filter((t) => t.category === "global")
-                  .map((tab) => {
-                    const Icon = tab.icon;
-                    const isActive = activeTab === tab.id;
-                    return (
-                      <button
-                        key={tab.id}
-                        onClick={() => setActiveTab(tab.id)}
-                        className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['JetBrains_Mono'] font-bold transition-all ${
-                          isActive
-                            ? "bg-[#964900] text-white shadow-sm"
-                            : "text-[#564336] hover:bg-[#fff1ea] hover:text-[#964900]"
-                        }`}
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Icon className="w-4 h-4 shrink-0" />
-                          <span>{tab.label}</span>
-                        </div>
-                        {isActive && <ChevronRight className="w-3.5 h-3.5 text-white" />}
-                      </button>
-                    );
-                  })}
-              </div>
+            {/* SUBPAGES SECTION */}
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
+                Subpages & Solutions
+              </span>
+              {filteredTabs
+                .filter((t) => t.category === "subpages")
+                .map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all ${
+                        activeTab === tab.id
+                          ? "bg-[#964900] text-white shadow-sm"
+                          : "text-[#564336] hover:bg-[#fff8f5] hover:text-[#964900]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        <span>{tab.label}</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 opacity-60" />
+                    </button>
+                  );
+                })}
             </div>
-          </div>
 
-          {/* Quick Action Box */}
-          <div className="bg-[#fff1ea] border border-[#ddc1b0] p-4 rounded-2xl space-y-3">
-            <h4 className="font-['Hanken_Grotesk'] text-xs font-bold text-[#964900] uppercase">
-              Quick Controls
-            </h4>
-            <div className="space-y-2">
-              <button
-                onClick={handleSave}
-                className="w-full bg-[#964900] text-white text-xs font-bold py-2 rounded-xl hover:bg-[#b05600] transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-              >
-                <Save className="w-3.5 h-3.5" />
-                <span>Save All Changes</span>
-              </button>
-              <button
-                onClick={exportJSON}
-                className="w-full bg-white border border-[#ddc1b0] text-[#241913] text-xs font-bold py-2 rounded-xl hover:bg-[#fff8f5] transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-              >
-                <Download className="w-3.5 h-3.5 text-[#964900]" />
-                <span>Export JSON Backup</span>
-              </button>
-              <button
-                onClick={handleLogout}
-                className="w-full bg-red-50 border border-red-200 text-red-700 text-xs font-bold py-2 rounded-xl hover:bg-red-100 transition-colors flex items-center justify-center gap-1.5 shadow-sm"
-              >
-                <LogOut className="w-3.5 h-3.5 text-red-600" />
-                <span>Log Out Session</span>
-              </button>
+            {/* GLOBAL SECTION */}
+            <div className="space-y-1">
+              <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
+                Global Header, Footer & Settings
+              </span>
+              {filteredTabs
+                .filter((t) => t.category === "global")
+                .map((tab) => {
+                  const Icon = tab.icon;
+                  return (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveTab(tab.id)}
+                      className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all ${
+                        activeTab === tab.id
+                          ? "bg-[#964900] text-white shadow-sm"
+                          : "text-[#564336] hover:bg-[#fff8f5] hover:text-[#964900]"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Icon className="w-4 h-4" />
+                        <span>{tab.label}</span>
+                      </div>
+                      <ChevronRight className="w-3 h-3 opacity-60" />
+                    </button>
+                  );
+                })}
             </div>
           </div>
         </aside>
 
-        {/* RIGHT EDITOR PANEL CONTENT */}
-        <main className="lg:col-span-9 space-y-6">
+        {/* MAIN EDITOR CONTENT */}
+        <main className="flex-1 overflow-y-auto p-8 space-y-6">
           {/* TAB 1: HERO */}
           {activeTab === "hero" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
@@ -539,10 +670,10 @@ export default function AdminPage() {
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
                     <Layout className="w-5 h-5" />
-                    Homepage Hero Section Editor
+                    Homepage Hero Banner Editor
                   </h2>
                   <p className="text-xs text-[#564336] mt-0.5">
-                    Edit the main headline, subtitle, announcement chip, and call-to-action buttons on the homepage.
+                    Edit top headline, subtext, announcement bar, and main call-to-action buttons.
                   </p>
                 </div>
                 <Link
@@ -556,9 +687,9 @@ export default function AdminPage() {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
+                <div className="md:col-span-2">
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Announcement Chip Text
+                    Announcement Banner Text
                   </label>
                   <input
                     type="text"
@@ -572,52 +703,54 @@ export default function AdminPage() {
                         },
                       })
                     }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm focus:outline-none focus:border-[#964900]"
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
                   />
                 </div>
 
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Announcement Link & Href
+                    Announcement Link Label
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Label"
-                      value={formData.homepage.hero.announcementLinkText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            hero: { ...formData.homepage.hero, announcementLinkText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm focus:outline-none focus:border-[#964900]"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Href"
-                      value={formData.homepage.hero.announcementLinkHref}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            hero: { ...formData.homepage.hero, announcementLinkHref: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono focus:outline-none focus:border-[#964900]"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={formData.homepage.hero.announcementLinkText}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          hero: { ...formData.homepage.hero, announcementLinkText: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Announcement Href
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.hero.announcementLinkHref}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          hero: { ...formData.homepage.hero, announcementLinkHref: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                  />
                 </div>
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Main Headline
+                  Main Hero Headline
                 </label>
                 <textarea
                   rows={2}
@@ -631,13 +764,13 @@ export default function AdminPage() {
                       },
                     })
                   }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm focus:outline-none focus:border-[#964900]"
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Subtitle Paragraph
+                  Hero Subtitle Paragraph
                 </label>
                 <textarea
                   rows={3}
@@ -651,160 +784,90 @@ export default function AdminPage() {
                       },
                     })
                   }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm focus:outline-none focus:border-[#964900]"
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
                 />
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#ddc1b0]">
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Primary CTA (Text & Href)
+                    Primary CTA Button Text
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Label"
-                      value={formData.homepage.hero.primaryCtaText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            hero: { ...formData.homepage.hero, primaryCtaText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm focus:outline-none focus:border-[#964900]"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Href"
-                      value={formData.homepage.hero.primaryCtaHref}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            hero: { ...formData.homepage.hero, primaryCtaHref: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono focus:outline-none focus:border-[#964900]"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Secondary CTA (Text & Href)
-                  </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      placeholder="Label"
-                      value={formData.homepage.hero.secondaryCtaText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            hero: { ...formData.homepage.hero, secondaryCtaText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm focus:outline-none focus:border-[#964900]"
-                    />
-                    <input
-                      type="text"
-                      placeholder="Href"
-                      value={formData.homepage.hero.secondaryCtaHref}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            hero: { ...formData.homepage.hero, secondaryCtaHref: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono focus:outline-none focus:border-[#964900]"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 2: SHOWCASE & METRICS */}
-          {activeTab === "showcase" && (
-            <div className="space-y-6">
-              <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-                <div className="border-b border-[#ddc1b0] pb-3">
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Box className="w-5 h-5" />
-                    3D Interactive Robot & AI Infrastructure Showcase
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Edit the interactive 3D robot section titles, headlines, call-to-action buttons, and chest logo text on the homepage.
-                  </p>
-                </div>
-
-                {/* Section Top Header & Subtitle */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <div>
-                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                      Section Badge Text (e.g. &quot;Interactive 3D Engine&quot;)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.homepage.showcase3d.badgeText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            showcase3d: { ...formData.homepage.showcase3d, badgeText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold text-[#964900]"
-                    />
-                  </div>
-
-                  <div className="md:col-span-2">
-                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                      Section Main Title
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.homepage.showcase3d.title}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            showcase3d: { ...formData.homepage.showcase3d, title: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Section Subtitle Paragraph
-                  </label>
-                  <textarea
-                    rows={2}
-                    value={formData.homepage.showcase3d.subtitle || ""}
+                  <input
+                    type="text"
+                    value={formData.homepage.hero.primaryCtaText}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
                         homepage: {
                           ...formData.homepage,
-                          showcase3d: { ...formData.homepage.showcase3d, subtitle: e.target.value },
+                          hero: { ...formData.homepage.hero, primaryCtaText: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Primary CTA Link Href
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.hero.primaryCtaHref}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          hero: { ...formData.homepage.hero, primaryCtaHref: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: SHOWCASE */}
+          {activeTab === "showcase" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Box className="w-5 h-5" />
+                    3D Interactive Chest & Metrics Section
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Customize 3D chest badge text, interactive overlay titles, and enterprise statistics grid.
+                  </p>
+                </div>
+                <Link
+                  href="/#showcase"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /#showcase</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Badge Text
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.showcase3d.badgeText}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          showcase3d: { ...formData.homepage.showcase3d, badgeText: e.target.value },
                         },
                       })
                     }
@@ -812,205 +875,41 @@ export default function AdminPage() {
                   />
                 </div>
 
-                {/* 3D Card Content */}
-                <div className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl space-y-4">
-                  <h3 className="font-['Hanken_Grotesk'] text-sm font-bold text-[#964900] uppercase">
-                    3D Robot Card Content Controls
-                  </h3>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                      3D Card Main Headline (e.g. &quot;AI-Native Autonomous Infrastructure&quot;)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.homepage.showcase3d.cardHeadline}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            showcase3d: { ...formData.homepage.showcase3d, cardHeadline: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-extrabold text-[#241913] bg-white"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                      3D Card Description Paragraph
-                    </label>
-                    <textarea
-                      rows={3}
-                      value={formData.homepage.showcase3d.cardDescription}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            showcase3d: { ...formData.homepage.showcase3d, cardDescription: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm bg-white"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                        Primary CTA Button (Label & Href)
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder="Label"
-                          value={formData.homepage.showcase3d.cardBtn1Text || "Explore Agent Capabilities"}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              homepage: {
-                                ...formData.homepage,
-                                showcase3d: { ...formData.homepage.showcase3d, cardBtn1Text: e.target.value },
-                              },
-                            })
-                          }
-                          className="w-1/2 border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-bold"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Href"
-                          value={formData.homepage.showcase3d.cardBtn1Href || "/services"}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              homepage: {
-                                ...formData.homepage,
-                                showcase3d: { ...formData.homepage.showcase3d, cardBtn1Href: e.target.value },
-                              },
-                            })
-                          }
-                          className="w-1/2 border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-mono"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                        Secondary CTA Button (Label & Href)
-                      </label>
-                      <div className="flex gap-2">
-                        <input
-                          type="text"
-                          placeholder="Label"
-                          value={formData.homepage.showcase3d.cardBtn2Text || "View Architecture"}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              homepage: {
-                                ...formData.homepage,
-                                showcase3d: { ...formData.homepage.showcase3d, cardBtn2Text: e.target.value },
-                              },
-                            })
-                          }
-                          className="w-1/2 border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                        />
-                        <input
-                          type="text"
-                          placeholder="Href"
-                          value={formData.homepage.showcase3d.cardBtn2Href || "#architecture"}
-                          onChange={(e) =>
-                            setFormData({
-                              ...formData,
-                              homepage: {
-                                ...formData.homepage,
-                                showcase3d: { ...formData.homepage.showcase3d, cardBtn2Href: e.target.value },
-                              },
-                            })
-                          }
-                          className="w-1/2 border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-mono"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                      3D Robot Chest Text (Overlay Branding)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.homepage.showcase3d.chestBrandText || "ALPHAES AI"}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            showcase3d: { ...formData.homepage.showcase3d, chestBrandText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono uppercase bg-white"
-                    />
-                  </div>
-                </div>
-              </div>
-
-              {/* Performance Metrics List (CRUD) */}
-              <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-4">
-                <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-3">
-                  <h3 className="font-['Hanken_Grotesk'] text-lg font-bold text-[#964900]">
-                    Performance Metrics List
-                  </h3>
-                  <button
-                    onClick={() => {
-                      const newM = {
-                        id: `m-${Date.now()}`,
-                        value: "99.9%",
-                        description: "Guaranteed enterprise uptime SLA.",
-                      };
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Section Headline
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.showcase3d.title}
+                    onChange={(e) =>
                       setFormData({
                         ...formData,
                         homepage: {
                           ...formData.homepage,
-                          metrics: [...formData.homepage.metrics, newM],
+                          showcase3d: { ...formData.homepage.showcase3d, title: e.target.value },
                         },
-                      });
-                    }}
-                    className="bg-[#964900] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#b05600]"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add Metric</span>
-                  </button>
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                  />
                 </div>
+              </div>
 
+              {/* Metrics Grid */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                <h3 className="text-sm font-bold text-[#964900] uppercase">
+                  Enterprise ROI Statistics (4 Cards)
+                </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formData.homepage.metrics.map((metric, idx) => (
-                    <div key={metric.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                          Metric #{idx + 1}
-                        </span>
-                        <button
-                          onClick={() => {
-                            const updated = formData.homepage.metrics.filter((_, i) => i !== idx);
-                            setFormData({
-                              ...formData,
-                              homepage: { ...formData.homepage, metrics: updated },
-                            });
-                          }}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-
+                  {formData.homepage.metrics.map((m, idx) => (
+                    <div key={m.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                        Stat Card #{idx + 1}
+                      </span>
                       <input
                         type="text"
-                        placeholder="Value (e.g. 4.5x faster)"
-                        value={metric.value}
+                        value={m.value}
                         onChange={(e) => {
                           const updated = [...formData.homepage.metrics];
                           updated[idx].value = e.target.value;
@@ -1019,13 +918,11 @@ export default function AdminPage() {
                             homepage: { ...formData.homepage, metrics: updated },
                           });
                         }}
-                        className="w-full font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 text-[#964900]"
+                        className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full text-[#964900]"
                       />
-
-                      <textarea
-                        rows={2}
-                        placeholder="Description"
-                        value={metric.description}
+                      <input
+                        type="text"
+                        value={m.description}
                         onChange={(e) => {
                           const updated = [...formData.homepage.metrics];
                           updated[idx].description = e.target.value;
@@ -1034,7 +931,7 @@ export default function AdminPage() {
                             homepage: { ...formData.homepage, metrics: updated },
                           });
                         }}
-                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                        className="text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
                       />
                     </div>
                   ))}
@@ -1046,15 +943,30 @@ export default function AdminPage() {
           {/* TAB 3: ARCHITECTURE */}
           {activeTab === "architecture" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                <Grid className="w-5 h-5" />
-                Global Architecture Bento Grid
-              </h2>
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Grid className="w-5 h-5" />
+                    Global Architecture Bento Grid
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Manage core agentic architecture pillars displayed in the homepage bento grid.
+                  </p>
+                </div>
+                <Link
+                  href="/#architecture"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /#architecture</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Section Badge
+                    Badge Text
                   </label>
                   <input
                     type="text"
@@ -1074,7 +986,7 @@ export default function AdminPage() {
 
                 <div className="md:col-span-2">
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Section Title
+                    Section Headline
                   </label>
                   <input
                     type="text"
@@ -1088,66 +1000,22 @@ export default function AdminPage() {
                         },
                       })
                     }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
                   />
                 </div>
               </div>
 
-              {/* Bento Cards CRUD */}
-              <div className="space-y-3 pt-2">
-                <div className="flex items-center justify-between">
-                  <label className="block text-xs font-bold text-[#564336] uppercase">
-                    Architecture Cards
-                  </label>
-                  <button
-                    onClick={() => {
-                      const newC = {
-                        id: `c-${Date.now()}`,
-                        title: "New Cloud Region",
-                        desc: "High throughput data pipeline optimization.",
-                      };
-                      setFormData({
-                        ...formData,
-                        homepage: {
-                          ...formData.homepage,
-                          architecture: {
-                            ...formData.homepage.architecture,
-                            cards: [...formData.homepage.architecture.cards, newC],
-                          },
-                        },
-                      });
-                    }}
-                    className="bg-[#964900] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add Card</span>
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Bento Cards */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                <h3 className="text-sm font-bold text-[#964900] uppercase">
+                  Architecture Pillar Cards
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {formData.homepage.architecture.cards.map((card, idx) => (
                     <div key={card.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                          Card #{idx + 1}
-                        </span>
-                        <button
-                          onClick={() => {
-                            const updated = formData.homepage.architecture.cards.filter((_, i) => i !== idx);
-                            setFormData({
-                              ...formData,
-                              homepage: {
-                                ...formData.homepage,
-                                architecture: { ...formData.homepage.architecture, cards: updated },
-                              },
-                            });
-                          }}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-
+                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                        Card #{idx + 1}
+                      </span>
                       <input
                         type="text"
                         value={card.title}
@@ -1164,7 +1032,6 @@ export default function AdminPage() {
                         }}
                         className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
                       />
-
                       <textarea
                         rows={3}
                         value={card.desc}
@@ -1188,54 +1055,226 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 4: TESTIMONIALS */}
+          {/* TAB 4: TECH STACK */}
+          {activeTab === "techStack" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <ShieldCheck className="w-5 h-5 text-emerald-600" />
+                    Tech Stack Bar & Security Compliance Badges
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Edit enterprise tech stack icons and compliance shields (SOC2, HIPAA, ISO27001, FedRAMP).
+                  </p>
+                </div>
+                <Link
+                  href="/#tech-stack"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /#tech-stack</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Badge Text
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.techStackBar.badge}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          techStackBar: { ...formData.homepage.techStackBar, badge: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Main Headline
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.techStackBar.title}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          techStackBar: { ...formData.homepage.techStackBar, title: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                  />
+                </div>
+              </div>
+
+              {/* Compliance Shields Editor */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                <h3 className="text-sm font-bold text-[#964900] uppercase">
+                  Enterprise Compliance Shields (SOC2, HIPAA, ISO27001)
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {formData.homepage.techStackBar.complianceShields.map((shield, idx) => (
+                    <div key={shield.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                          Shield #{idx + 1}
+                        </span>
+                        <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
+                          {shield.badge}
+                        </span>
+                      </div>
+                      <input
+                        type="text"
+                        value={shield.title}
+                        onChange={(e) => {
+                          const updated = [...formData.homepage.techStackBar.complianceShields];
+                          updated[idx].title = e.target.value;
+                          setFormData({
+                            ...formData,
+                            homepage: {
+                              ...formData.homepage,
+                              techStackBar: { ...formData.homepage.techStackBar, complianceShields: updated },
+                            },
+                          });
+                        }}
+                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                      />
+                      <textarea
+                        rows={2}
+                        value={shield.description}
+                        onChange={(e) => {
+                          const updated = [...formData.homepage.techStackBar.complianceShields];
+                          updated[idx].description = e.target.value;
+                          setFormData({
+                            ...formData,
+                            homepage: {
+                              ...formData.homepage,
+                              techStackBar: { ...formData.homepage.techStackBar, complianceShields: updated },
+                            },
+                          });
+                        }}
+                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: FDE HUB & ROI */}
+          {activeTab === "fdeHub" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Cpu className="w-5 h-5 text-[#964900]" />
+                    FDE Interactive Process Hub & ROI Metrics Grid
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Configure the 4-step forward deployed deployment cycle and enterprise ROI metrics.
+                  </p>
+                </div>
+                <Link
+                  href="/#fde-hub"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /#fde-hub</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
+
+              {/* FDE Steps List */}
+              <div className="space-y-4">
+                <h3 className="text-sm font-bold text-[#964900] uppercase">
+                  4-Step FDE Deployment Process Cycle
+                </h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {formData.homepage.fdeInteractiveHub.steps.map((step, idx) => (
+                    <div key={step.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                        Step #{step.number} Title
+                      </span>
+                      <input
+                        type="text"
+                        value={step.title}
+                        onChange={(e) => {
+                          const updated = [...formData.homepage.fdeInteractiveHub.steps];
+                          updated[idx].title = e.target.value;
+                          setFormData({
+                            ...formData,
+                            homepage: {
+                              ...formData.homepage,
+                              fdeInteractiveHub: {
+                                ...formData.homepage.fdeInteractiveHub,
+                                steps: updated,
+                              },
+                            },
+                          });
+                        }}
+                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                      />
+                      <textarea
+                        rows={2}
+                        value={step.description}
+                        onChange={(e) => {
+                          const updated = [...formData.homepage.fdeInteractiveHub.steps];
+                          updated[idx].description = e.target.value;
+                          setFormData({
+                            ...formData,
+                            homepage: {
+                              ...formData.homepage,
+                              fdeInteractiveHub: {
+                                ...formData.homepage.fdeInteractiveHub,
+                                steps: updated,
+                              },
+                            },
+                          });
+                        }}
+                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 6: TESTIMONIAL */}
           {activeTab === "testimonial" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                <Quote className="w-5 h-5" />
-                Executive Testimonials & Social Proof
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Heading
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.homepage.testimonial.heading}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        homepage: {
-                          ...formData.homepage,
-                          testimonial: { ...formData.homepage.testimonial, heading: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Quote className="w-5 h-5" />
+                    Customer Testimonials & Case Proof
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Edit executive quote, author credentials, and client proof badges.
+                  </p>
                 </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Subhead Caption
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.homepage.testimonial.subhead}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        homepage: {
-                          ...formData.homepage,
-                          testimonial: { ...formData.homepage.testimonial, subhead: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
+                <Link
+                  href="/#testimonials"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /#testimonials</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
               </div>
 
               <div>
@@ -1254,14 +1293,14 @@ export default function AdminPage() {
                       },
                     })
                   }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm italic font-serif"
                 />
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Author Name
+                    Author Full Name
                   </label>
                   <input
                     type="text"
@@ -1281,7 +1320,7 @@ export default function AdminPage() {
 
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Author Title & Company
+                    Author Title & Organization
                   </label>
                   <input
                     type="text"
@@ -1302,17 +1341,32 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 5: CTA BANNER */}
+          {/* TAB 7: CTA BANNER */}
           {activeTab === "cta" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                <Zap className="w-5 h-5" />
-                Bottom Call-To-Action Banner
-              </h2>
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Zap className="w-5 h-5" />
+                    Bottom Call-To-Action Banner
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Customize final conversion headline, copy, and scoping buttons.
+                  </p>
+                </div>
+                <Link
+                  href="/#cta"
+                  target="_blank"
+                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                >
+                  <span>Preview /#cta</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              </div>
 
               <div>
                 <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  CTA Headline Title
+                  CTA Headline
                 </label>
                 <input
                   type="text"
@@ -1326,13 +1380,13 @@ export default function AdminPage() {
                       },
                     })
                   }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Description Paragraph
+                  CTA Description Paragraph
                 </label>
                 <textarea
                   rows={2}
@@ -1353,90 +1407,189 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Primary Button Label & Href
+                    Primary CTA Text
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={formData.homepage.ctaBanner.primaryCtaText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            ctaBanner: { ...formData.homepage.ctaBanner, primaryCtaText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                    />
-                    <input
-                      type="text"
-                      value={formData.homepage.ctaBanner.primaryCtaHref}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            ctaBanner: { ...formData.homepage.ctaBanner, primaryCtaHref: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={formData.homepage.ctaBanner.primaryCtaText}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          ctaBanner: { ...formData.homepage.ctaBanner, primaryCtaText: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
                 </div>
-
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Secondary Button Label & Href
+                    Primary CTA Href
                   </label>
-                  <div className="flex gap-2">
-                    <input
-                      type="text"
-                      value={formData.homepage.ctaBanner.secondaryCtaText}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            ctaBanner: { ...formData.homepage.ctaBanner, secondaryCtaText: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                    />
-                    <input
-                      type="text"
-                      value={formData.homepage.ctaBanner.secondaryCtaHref}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          homepage: {
-                            ...formData.homepage,
-                            ctaBanner: { ...formData.homepage.ctaBanner, secondaryCtaHref: e.target.value },
-                          },
-                        })
-                      }
-                      className="w-1/2 border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={formData.homepage.ctaBanner.primaryCtaHref}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          ctaBanner: { ...formData.homepage.ctaBanner, primaryCtaHref: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                  />
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 6: SERVICES HUB */}
+          {/* TAB 8: BLOG POSTS MANAGER */}
+          {activeTab === "blog" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Newspaper className="w-5 h-5 text-[#964900]" />
+                    Blog Articles & Research Library Manager (/blog)
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Create, edit, publish, or remove technical articles displayed live on the Blog.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/blog"
+                    target="_blank"
+                    className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1 mr-2"
+                  >
+                    <span>Preview /blog</span>
+                    <ExternalLink className="w-3 h-3" />
+                  </Link>
+                  <button
+                    onClick={handleOpenNewArticle}
+                    className="bg-[#964900] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>Create New Article</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Hero Banner Editor */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Hero Badge Text
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.blog?.heroBadge || "Research & Architecture Insights"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        blog: { ...formData.blog, heroBadge: e.target.value },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Blog Page Title
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.blog?.title || "Engineering Blueprints & Case Studies"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        blog: { ...formData.blog, title: e.target.value },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                  />
+                </div>
+              </div>
+
+              {/* Published Articles List */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    Published Articles ({(formData.blog?.articles || []).length})
+                  </h3>
+                </div>
+
+                <div className="space-y-3">
+                  {(formData.blog?.articles || []).map((art, idx) => (
+                    <div
+                      key={art.id}
+                      className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl flex items-center justify-between gap-4 shadow-sm"
+                    >
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-mono font-bold bg-[#964900] text-white px-2 py-0.5 rounded">
+                            {art.category}
+                          </span>
+                          <span className="text-xs text-[#564336] font-mono">{art.date}</span>
+                          {art.featured && (
+                            <span className="text-[10px] font-mono font-bold bg-amber-200 text-amber-900 px-2 py-0.5 rounded flex items-center gap-1">
+                              <Sparkles className="w-2.5 h-2.5" />
+                              <span>Featured</span>
+                            </span>
+                          )}
+                        </div>
+                        <h4 className="font-bold text-sm text-[#1c1917]">{art.title}</h4>
+                        <p className="text-xs text-[#564336] line-clamp-1">{art.snippet}</p>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <Link
+                          href={`/blog/${art.id}`}
+                          target="_blank"
+                          className="p-2 text-[#564336] hover:text-[#964900] bg-white border border-[#ddc1b0] rounded-lg text-xs font-bold flex items-center gap-1"
+                        >
+                          <Eye className="w-3.5 h-3.5" />
+                        </Link>
+                        <button
+                          onClick={() => {
+                            setEditingArticle({ ...art });
+                            setIsBlogModalOpen(true);
+                          }}
+                          className="p-2 text-[#964900] bg-white border border-[#ddc1b0] rounded-lg text-xs font-bold flex items-center gap-1 hover:bg-[#fff1ea]"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>Edit</span>
+                        </button>
+                        <button
+                          onClick={() => handleDeleteArticle(art.id)}
+                          className="p-2 text-red-600 bg-white border border-[#ddc1b0] rounded-lg hover:bg-red-50"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 9: SERVICES HUB */}
           {activeTab === "services" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
                     <Briefcase className="w-5 h-5" />
-                    Services Hub Page Controls (/services)
+                    Services Hub Main Overview Controls (/services)
                   </h2>
                   <p className="text-xs text-[#564336] mt-0.5">
-                    Manage service offerings, FDE model banner, and service details.
+                    Edit Services hub badge, main headline, and core service offerings cards grid.
                   </p>
                 </div>
                 <Link
@@ -1452,7 +1605,7 @@ export default function AdminPage() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Hero Badge Text
+                    Badge Text
                   </label>
                   <input
                     type="text"
@@ -1472,7 +1625,7 @@ export default function AdminPage() {
 
                 <div className="md:col-span-2">
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Main Services Title
+                    Services Title
                   </label>
                   <input
                     type="text"
@@ -1486,63 +1639,24 @@ export default function AdminPage() {
                         },
                       })
                     }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
                   />
                 </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Subtitle Paragraph
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.pages.services.subtitle}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      pages: {
-                        ...formData.pages,
-                        services: { ...formData.pages.services, subtitle: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
               </div>
 
               {/* Service Cards */}
               <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
                 <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Service Capability Cards (4 Main Cards)
+                  Service Cards Grid ({formData.pages.services.cards.length})
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {formData.pages.services.cards.map((card, idx) => (
                     <div key={card.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#964900]">Card #{idx + 1}</span>
-                        <input
-                          type="text"
-                          placeholder="Badge"
-                          value={card.badge}
-                          onChange={(e) => {
-                            const updated = [...formData.pages.services.cards];
-                            updated[idx].badge = e.target.value;
-                            setFormData({
-                              ...formData,
-                              pages: {
-                                ...formData.pages,
-                                services: { ...formData.pages.services, cards: updated },
-                              },
-                            });
-                          }}
-                          className="text-[10px] font-mono border border-[#ddc1b0] rounded px-2 py-0.5"
-                        />
-                      </div>
-
+                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                        Service #{idx + 1}
+                      </span>
                       <input
                         type="text"
-                        placeholder="Title"
                         value={card.title}
                         onChange={(e) => {
                           const updated = [...formData.pages.services.cards];
@@ -1555,12 +1669,10 @@ export default function AdminPage() {
                             },
                           });
                         }}
-                        className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
                       />
-
                       <textarea
                         rows={2}
-                        placeholder="Description"
                         value={card.desc}
                         onChange={(e) => {
                           const updated = [...formData.pages.services.cards];
@@ -1582,17 +1694,389 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 7: DR GODLY */}
+          {/* TAB 10: SERVICE SUBPAGES (4) */}
+          {activeTab === "serviceSubpages" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <Layers className="w-5 h-5 text-[#964900]" />
+                    Detailed Service Subpages Editor (4 Subpages)
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Select a service subpage below to edit its hero, capabilities, friction points, and FAQs.
+                  </p>
+                </div>
+              </div>
+
+              {/* Subpage Tabs */}
+              <div className="flex flex-wrap gap-2 border-b border-[#ddc1b0] pb-3">
+                {([
+                  { id: "cloudMigration", label: "Cloud Migration", href: "/services/cloud-migration-and-modernization" },
+                  { id: "fde", label: "Forward Deployed AI", href: "/services/forward-deployed-ai-engineering" },
+                  { id: "dataAnnotation", label: "Data Annotation & RLHF", href: "/services/data-annotation-and-rlhf" },
+                  { id: "databaseTuning", label: "Database Performance & FinOps", href: "/services/database-performance-and-cloud-optimization" },
+                ] as const).map((st) => (
+                  <button
+                    key={st.id}
+                    onClick={() => setActiveServiceSubpage(st.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                      activeServiceSubpage === st.id
+                        ? "bg-[#964900] text-white shadow"
+                        : "bg-[#fff8f5] text-[#564336] border border-[#ddc1b0] hover:bg-[#fff1ea]"
+                    }`}
+                  >
+                    {st.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Subpage Form Editor */}
+              {(() => {
+                const subpageKey = activeServiceSubpage;
+                const subpage = formData.pages.serviceSubpages?.[subpageKey];
+                if (!subpage) return null;
+
+                return (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                          Hero Badge
+                        </label>
+                        <input
+                          type="text"
+                          value={subpage.heroBadge}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              pages: {
+                                ...formData.pages,
+                                serviceSubpages: {
+                                  ...formData.pages.serviceSubpages,
+                                  [subpageKey]: { ...subpage, heroBadge: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                        />
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                          Main Subpage Title
+                        </label>
+                        <input
+                          type="text"
+                          value={subpage.title}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              pages: {
+                                ...formData.pages,
+                                serviceSubpages: {
+                                  ...formData.pages.serviceSubpages,
+                                  [subpageKey]: { ...subpage, title: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Subtitle Paragraph
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={subpage.subtitle}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              serviceSubpages: {
+                                ...formData.pages.serviceSubpages,
+                                [subpageKey]: { ...subpage, subtitle: e.target.value },
+                              },
+                            },
+                          });
+                        }}
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Detailed Description Body
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={subpage.description}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              serviceSubpages: {
+                                ...formData.pages.serviceSubpages,
+                                [subpageKey]: { ...subpage, description: e.target.value },
+                              },
+                            },
+                          });
+                        }}
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-xs"
+                      />
+                    </div>
+
+                    {/* Capabilities List */}
+                    <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                      <h4 className="text-xs font-bold text-[#964900] uppercase">
+                        Key Engineering Capabilities ({(subpage.capabilities || []).length})
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {(subpage.capabilities || []).map((cap, idx) => (
+                          <div key={cap.id || idx} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                            <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                              Capability #{idx + 1}
+                            </span>
+                            <input
+                              type="text"
+                              value={cap.title}
+                              onChange={(e) => {
+                                const updatedCaps = [...subpage.capabilities];
+                                updatedCaps[idx].title = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    serviceSubpages: {
+                                      ...formData.pages.serviceSubpages,
+                                      [subpageKey]: { ...subpage, capabilities: updatedCaps },
+                                    },
+                                  },
+                                });
+                              }}
+                              className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                            />
+                            <textarea
+                              rows={2}
+                              value={cap.desc}
+                              onChange={(e) => {
+                                const updatedCaps = [...subpage.capabilities];
+                                updatedCaps[idx].desc = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    serviceSubpages: {
+                                      ...formData.pages.serviceSubpages,
+                                      [subpageKey]: { ...subpage, capabilities: updatedCaps },
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* TAB 11: ACADEMY SUBPAGES (3) */}
+          {activeTab === "academySubpages" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                <div>
+                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                    <GraduationCap className="w-5 h-5 text-[#964900]" />
+                    Academy Training Tracks Editor (3 Tracks)
+                  </h2>
+                  <p className="text-xs text-[#564336] mt-0.5">
+                    Select an academy training track below to edit curriculum modules and hero text.
+                  </p>
+                </div>
+              </div>
+
+              {/* Academy Sub-tabs */}
+              <div className="flex flex-wrap gap-2 border-b border-[#ddc1b0] pb-3">
+                {([
+                  { id: "agenticAi", label: "Agentic AI Architecture", href: "/academy/agentic-ai-architecture" },
+                  { id: "databricks", label: "Databricks Lakehouse Mastery", href: "/academy/databricks-lakehouse-mastery" },
+                  { id: "fullstackAi", label: "Fullstack AI Engineer", href: "/academy/fullstack-ai-developer" },
+                ] as const).map((at) => (
+                  <button
+                    key={at.id}
+                    onClick={() => setActiveAcademySubpage(at.id)}
+                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                      activeAcademySubpage === at.id
+                        ? "bg-[#964900] text-white shadow"
+                        : "bg-[#fff8f5] text-[#564336] border border-[#ddc1b0] hover:bg-[#fff1ea]"
+                    }`}
+                  >
+                    {at.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Academy Track Form Editor */}
+              {(() => {
+                const trackKey = activeAcademySubpage;
+                const track = formData.pages.academySubpages?.[trackKey];
+                if (!track) return null;
+
+                return (
+                  <div className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                          Track Badge
+                        </label>
+                        <input
+                          type="text"
+                          value={track.heroBadge}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              pages: {
+                                ...formData.pages,
+                                academySubpages: {
+                                  ...formData.pages.academySubpages,
+                                  [trackKey]: { ...track, heroBadge: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                        />
+                      </div>
+
+                      <div className="md:col-span-2">
+                        <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                          Track Main Title
+                        </label>
+                        <input
+                          type="text"
+                          value={track.title}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              pages: {
+                                ...formData.pages,
+                                academySubpages: {
+                                  ...formData.pages.academySubpages,
+                                  [trackKey]: { ...track, title: e.target.value },
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Subtitle Paragraph
+                      </label>
+                      <textarea
+                        rows={2}
+                        value={track.subtitle}
+                        onChange={(e) => {
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              academySubpages: {
+                                ...formData.pages.academySubpages,
+                                [trackKey]: { ...track, subtitle: e.target.value },
+                              },
+                            },
+                          });
+                        }}
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    {/* Modules List */}
+                    <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                      <h4 className="text-xs font-bold text-[#964900] uppercase">
+                        Curriculum Step Modules ({(track.modules || []).length})
+                      </h4>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {(track.modules || []).map((mod, idx) => (
+                          <div key={idx} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                            <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                              Module Step #{mod.step}
+                            </span>
+                            <input
+                              type="text"
+                              value={mod.title}
+                              onChange={(e) => {
+                                const updatedMods = [...track.modules];
+                                updatedMods[idx].title = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    academySubpages: {
+                                      ...formData.pages.academySubpages,
+                                      [trackKey]: { ...track, modules: updatedMods },
+                                    },
+                                  },
+                                });
+                              }}
+                              className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                            />
+                            <textarea
+                              rows={2}
+                              value={mod.desc}
+                              onChange={(e) => {
+                                const updatedMods = [...track.modules];
+                                updatedMods[idx].desc = e.target.value;
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    academySubpages: {
+                                      ...formData.pages.academySubpages,
+                                      [trackKey]: { ...track, modules: updatedMods },
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
+
+          {/* TAB 12: DR GODLY HEALTH */}
           {activeTab === "drgodly" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
                     <Stethoscope className="w-5 h-5" />
-                    Dr. Godly Medical AI Controls (/drgodly)
+                    Dr. Godly Health Product Controls (/drgodly)
                   </h2>
                   <p className="text-xs text-[#564336] mt-0.5">
-                    Edit clinical decision support details, diagnostic features, and metrics.
+                    Edit clinical AI agent suite product page badge, hero text, and feature cards.
                   </p>
                 </div>
                 <Link
@@ -1667,7 +2151,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              {/* Dr Godly Features */}
+              {/* Features List */}
               <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
                 <h3 className="text-sm font-bold text-[#964900] uppercase">
                   Clinical Features List
@@ -1717,7 +2201,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 8: ONEAI ASSIST */}
+          {/* TAB 13: ONEAI ASSIST */}
           {activeTab === "oneai" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
@@ -1852,7 +2336,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 9: ABOUT */}
+          {/* TAB 14: ABOUT FIRM */}
           {activeTab === "about" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
@@ -2010,7 +2494,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 10: PARTNERS */}
+          {/* TAB 15: PARTNERS */}
           {activeTab === "partners" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
@@ -2075,26 +2559,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Subtitle Paragraph
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.pages.partners.subtitle}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      pages: {
-                        ...formData.pages,
-                        partners: { ...formData.pages.partners, subtitle: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
-              </div>
-
               {/* Partner Cards */}
               <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
                 <h3 className="text-sm font-bold text-[#964900] uppercase">
@@ -2145,7 +2609,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 11: CONTACT */}
+          {/* TAB 16: CONTACT & FAQS */}
           {activeTab === "contact" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
@@ -2319,7 +2783,7 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB: CAREERS */}
+          {/* TAB 17: CAREERS */}
           {activeTab === "careers" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
@@ -2351,7 +2815,6 @@ export default function AdminPage() {
                   <input
                     type="text"
                     value={formData.pages.careers?.heroBadge || ""}
-                    placeholder="Optional badge text e.g. Join Core Engineering Team"
                     onChange={(e) =>
                       setFormData({
                         ...formData,
@@ -2386,26 +2849,6 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Hero Subtitle
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.pages.careers?.subtitle || ""}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      pages: {
-                        ...formData.pages,
-                        careers: { ...formData.pages.careers, subtitle: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
-              </div>
-
               {/* JOB POSTINGS LIST */}
               <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
                 <div className="flex items-center justify-between">
@@ -2413,9 +2856,6 @@ export default function AdminPage() {
                     <h3 className="text-sm font-bold text-[#964900] uppercase">
                       Open Job Positions ({formData.pages.careers?.jobs?.length || 0})
                     </h3>
-                    <p className="text-xs text-[#564336]">
-                      Add, modify, or remove job openings. Changes sync live instantly to the Careers page.
-                    </p>
                   </div>
                   <button
                     onClick={() => {
@@ -2455,24 +2895,45 @@ export default function AdminPage() {
                 </div>
 
                 <div className="space-y-4">
-                  {(formData.pages.careers?.jobs || []).length === 0 ? (
-                    <div className="p-8 border border-dashed border-[#ddc1b0] bg-[#fff8f5] rounded-2xl text-center space-y-2">
-                      <p className="text-xs text-[#564336] font-medium">No job postings currently listed.</p>
-                      <p className="text-[11px] text-[#564336]/70">Click "Post New Job Opening" above to create an active opening.</p>
-                    </div>
-                  ) : (
-                    (formData.pages.careers?.jobs || []).map((job, idx) => (
-                      <div key={job.id} className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-2xl space-y-3 shadow-sm">
-                        <div className="flex items-center justify-between border-b border-[#ddc1b0]/60 pb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-mono font-bold bg-[#964900] text-white px-2 py-0.5 rounded">
-                              Job #{idx + 1}
-                            </span>
-                            <span className="text-xs font-bold text-[#964900]">{job.title || "Untitled Role"}</span>
-                          </div>
-                          <button
-                            onClick={() => {
-                              const updatedJobs = (formData.pages.careers?.jobs || []).filter((_, i) => i !== idx);
+                  {(formData.pages.careers?.jobs || []).map((job, idx) => (
+                    <div key={job.id} className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-2xl space-y-3 shadow-sm">
+                      <div className="flex items-center justify-between border-b border-[#ddc1b0]/60 pb-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[11px] font-mono font-bold bg-[#964900] text-white px-2 py-0.5 rounded">
+                            Job #{idx + 1}
+                          </span>
+                          <span className="text-xs font-bold text-[#964900]">{job.title || "Untitled Role"}</span>
+                        </div>
+                        <button
+                          onClick={() => {
+                            const updatedJobs = (formData.pages.careers?.jobs || []).filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              pages: {
+                                ...formData.pages,
+                                careers: { ...formData.pages.careers, jobs: updatedJobs }
+                              }
+                            });
+                            toast.info("Deleted job posting.");
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1 flex items-center gap-1 text-xs font-semibold"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                          <span>Remove</span>
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <div>
+                          <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                            Job Title *
+                          </label>
+                          <input
+                            type="text"
+                            value={job.title}
+                            onChange={(e) => {
+                              const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                              updatedJobs[idx].title = e.target.value;
                               setFormData({
                                 ...formData,
                                 pages: {
@@ -2480,166 +2941,21 @@ export default function AdminPage() {
                                   careers: { ...formData.pages.careers, jobs: updatedJobs }
                                 }
                               });
-                              toast.info("Deleted job posting.");
                             }}
-                            className="text-red-500 hover:text-red-700 p-1 flex items-center gap-1 text-xs font-semibold"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                            <span>Remove</span>
-                          </button>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Job Title *
-                            </label>
-                            <input
-                              type="text"
-                              value={job.title}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].title = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs font-bold bg-white"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Department *
-                            </label>
-                            <select
-                              value={job.department}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].department = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                            >
-                              <option value="Agentic AI">Agentic AI</option>
-                              <option value="Data Platforms">Data Platforms</option>
-                              <option value="Cloud Infrastructure">Cloud Infrastructure</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Location *
-                            </label>
-                            <input
-                              type="text"
-                              value={job.location}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].location = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Employment Type
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="Full-Time / Contract"
-                              value={job.type}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].type = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Experience Required
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="4+ Years"
-                              value={job.experience}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].experience = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                            />
-                          </div>
-
-                          <div className="flex items-center gap-2 pt-5">
-                            <label className="flex items-center gap-2 text-xs font-bold text-[#964900] cursor-pointer">
-                              <input
-                                type="checkbox"
-                                checked={job.featured || false}
-                                onChange={(e) => {
-                                  const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                  updatedJobs[idx].featured = e.target.checked;
-                                  setFormData({
-                                    ...formData,
-                                    pages: {
-                                      ...formData.pages,
-                                      careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                    }
-                                  });
-                                }}
-                                className="w-4 h-4 rounded border-[#ddc1b0] text-[#964900] accent-[#964900]"
-                              />
-                              <span>High Priority / Featured Badge</span>
-                            </label>
-                          </div>
+                            className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs font-bold bg-white"
+                          />
                         </div>
 
                         <div>
                           <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                            Role Summary
+                            Department *
                           </label>
-                          <textarea
-                            rows={2}
-                            value={job.summary}
+                          <input
+                            type="text"
+                            value={job.department}
                             onChange={(e) => {
                               const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                              updatedJobs[idx].summary = e.target.value;
+                              updatedJobs[idx].department = e.target.value;
                               setFormData({
                                 ...formData,
                                 pages: {
@@ -2652,61 +2968,36 @@ export default function AdminPage() {
                           />
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Responsibilities (1 per line)
-                            </label>
-                            <textarea
-                              rows={3}
-                              value={(job.responsibilities || []).join("\n")}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].responsibilities = e.target.value.split("\n").filter(Boolean);
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-mono"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                              Tech Stack Tags (Comma-separated)
-                            </label>
-                            <input
-                              type="text"
-                              placeholder="Next.js 15, TypeScript, Python, Docker"
-                              value={(job.techStack || []).join(", ")}
-                              onChange={(e) => {
-                                const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                                updatedJobs[idx].techStack = e.target.value.split(",").map((s) => s.trim()).filter(Boolean);
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                  }
-                                });
-                              }}
-                              className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white font-mono"
-                            />
-                          </div>
+                        <div>
+                          <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                            Location *
+                          </label>
+                          <input
+                            type="text"
+                            value={job.location}
+                            onChange={(e) => {
+                              const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                              updatedJobs[idx].location = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                }
+                              });
+                            }}
+                            className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                          />
                         </div>
                       </div>
-                    ))
-                  )}
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
           )}
 
-          {/* TAB 12: NAVIGATION & HEADER */}
+          {/* TAB 18: NAVIGATION */}
           {activeTab === "navigation" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -2765,84 +3056,87 @@ export default function AdminPage() {
                   />
                 </div>
               </div>
+            </div>
+          )}
 
-              {/* Navigation Items */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-[#964900] uppercase">
-                    Navigation Menu Items
-                  </h3>
-                  <button
-                    onClick={() => {
-                      const newNav = {
-                        id: `nav-${Date.now()}`,
-                        label: "New Page",
-                        href: "/services",
-                      };
-                      setFormData({
-                        ...formData,
-                        header: {
-                          ...formData.header,
-                          navLinks: [...formData.header.navLinks, newNav],
-                        },
-                      });
-                    }}
-                    className="bg-[#964900] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add Nav Link</span>
-                  </button>
-                </div>
+          {/* TAB 19: MEGAMENU */}
+          {activeTab === "megamenu" && (
+            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                <Layers className="w-5 h-5 text-[#964900]" />
+                Header Megamenu & Dropdown Items Editor
+              </h2>
+              <p className="text-xs text-[#564336]">
+                Configure navigation megamenu categories, sub-services links, and dropdown items.
+              </p>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {formData.header.navLinks.map((link, idx) => (
-                    <div key={link.id} className="p-3 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl flex items-center gap-2">
-                      <input
-                        type="text"
-                        value={link.label}
-                        onChange={(e) => {
-                          const updated = [...formData.header.navLinks];
-                          updated[idx].label = e.target.value;
-                          setFormData({
-                            ...formData,
-                            header: { ...formData.header, navLinks: updated },
-                          });
-                        }}
-                        className="w-1/2 text-xs font-bold border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                      <input
-                        type="text"
-                        value={link.href}
-                        onChange={(e) => {
-                          const updated = [...formData.header.navLinks];
-                          updated[idx].href = e.target.value;
-                          setFormData({
-                            ...formData,
-                            header: { ...formData.header, navLinks: updated },
-                          });
-                        }}
-                        className="w-1/2 text-xs font-mono border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                      <button
-                        onClick={() => {
-                          const updated = formData.header.navLinks.filter((_, i) => i !== idx);
-                          setFormData({
-                            ...formData,
-                            header: { ...formData.header, navLinks: updated },
-                          });
-                        }}
-                        className="text-red-500 hover:text-red-700 p-1"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+              {/* Categories Grid */}
+              <div className="space-y-4">
+                {(formData.header.megamenu?.servicesCategories || []).map((cat, cIdx) => (
+                  <div key={cat.id} className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-3">
+                    <div className="flex items-center justify-between border-b border-[#ddc1b0]/60 pb-2">
+                      <span className="text-xs font-mono font-bold text-[#964900] uppercase">
+                        Category #{cIdx + 1}: {cat.title}
+                      </span>
                     </div>
-                  ))}
-                </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                          Category Title
+                        </label>
+                        <input
+                          type="text"
+                          value={cat.title}
+                          onChange={(e) => {
+                            const updatedCats = [...formData.header.megamenu.servicesCategories];
+                            updatedCats[cIdx].title = e.target.value;
+                            setFormData({
+                              ...formData,
+                              header: {
+                                ...formData.header,
+                                megamenu: {
+                                  ...formData.header.megamenu,
+                                  servicesCategories: updatedCats,
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-xl p-2 text-xs font-bold bg-white"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                          Featured Banner Title
+                        </label>
+                        <input
+                          type="text"
+                          value={cat.featuredTitle}
+                          onChange={(e) => {
+                            const updatedCats = [...formData.header.megamenu.servicesCategories];
+                            updatedCats[cIdx].featuredTitle = e.target.value;
+                            setFormData({
+                              ...formData,
+                              header: {
+                                ...formData.header,
+                                megamenu: {
+                                  ...formData.header.megamenu,
+                                  servicesCategories: updatedCats,
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-xl p-2 text-xs bg-white"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
 
-          {/* TAB 13: FOOTER */}
+          {/* TAB 20: FOOTER */}
           {activeTab === "footer" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -2902,96 +3196,44 @@ export default function AdminPage() {
                   className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
                 />
               </div>
-
-              {/* Footer Link Columns */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Footer Link Columns (Dynamic CRUD)
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                  {formData.footer.columns.map((col, cIdx) => (
-                    <div key={col.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-3">
-                      <input
-                        type="text"
-                        value={col.title}
-                        onChange={(e) => {
-                          const updated = [...formData.footer.columns];
-                          updated[cIdx].title = e.target.value;
-                          setFormData({
-                            ...formData,
-                            footer: { ...formData.footer, columns: updated },
-                          });
-                        }}
-                        className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full text-[#964900]"
-                      />
-
-                      <div className="space-y-2">
-                        {col.links.map((link, lIdx) => (
-                          <div key={link.id} className="flex gap-1.5 items-center">
-                            <input
-                              type="text"
-                              placeholder="Label"
-                              value={link.label}
-                              onChange={(e) => {
-                                const updatedCols = [...formData.footer.columns];
-                                updatedCols[cIdx].links[lIdx].label = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  footer: { ...formData.footer, columns: updatedCols },
-                                });
-                              }}
-                              className="w-1/2 text-xs border border-[#ddc1b0] rounded-md p-1.5 bg-white"
-                            />
-                            <input
-                              type="text"
-                              placeholder="Href"
-                              value={link.href}
-                              onChange={(e) => {
-                                const updatedCols = [...formData.footer.columns];
-                                updatedCols[cIdx].links[lIdx].href = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  footer: { ...formData.footer, columns: updatedCols },
-                                });
-                              }}
-                              className="w-1/2 text-xs font-mono border border-[#ddc1b0] rounded-md p-1.5 bg-white"
-                            />
-                          </div>
-                        ))}
-                      </div>
-
-                      <button
-                        onClick={() => {
-                          const newLink = {
-                            id: `l-${Date.now()}`,
-                            label: "New Link",
-                            href: "/",
-                          };
-                          const updatedCols = [...formData.footer.columns];
-                          updatedCols[cIdx].links.push(newLink);
-                          setFormData({
-                            ...formData,
-                            footer: { ...formData.footer, columns: updatedCols },
-                          });
-                        }}
-                        className="w-full text-[11px] font-bold text-[#964900] bg-white border border-[#ddc1b0] py-1 rounded-md hover:bg-[#fff1ea]"
-                      >
-                        + Add Link
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
           )}
 
-          {/* TAB 14: SETTINGS & BACKUPS */}
+          {/* TAB 21: SETTINGS, BACKUPS & SYNC */}
           {activeTab === "settings" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
                 <Settings className="w-5 h-5" />
-                CMS Backups, JSON Import/Export & Reset
+                CMS Backups, Neon DB Sync, Credentials & Reset
               </h2>
+
+              {/* PUSH & SYNC DEFAULTS TO NEON DB BUTTON */}
+              <div className="p-5 border border-emerald-300 bg-emerald-50/60 rounded-xl space-y-3">
+                <div className="flex items-center gap-2 text-emerald-800 font-bold text-sm">
+                  <RefreshCw className="w-4 h-4 text-emerald-600" />
+                  <span>Sync & Push Complete Structure to Neon DB</span>
+                </div>
+                <p className="text-xs text-emerald-700">
+                  Click this button to merge current defaults and form edits, then push the full JSON schema up to your Neon PostgreSQL database. This guarantees all new subpages, blog articles, and tech stack shields exist in Neon DB.
+                </p>
+                <button
+                  onClick={handleSyncDefaultsToDB}
+                  disabled={isSyncingDB}
+                  className="bg-emerald-700 text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-emerald-800 transition-colors flex items-center gap-2 disabled:opacity-50 shadow"
+                >
+                  {isSyncingDB ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Syncing Neon DB...</span>
+                    </>
+                  ) : (
+                    <>
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>Push & Sync All Data to Neon DB</span>
+                    </>
+                  )}
+                </button>
+              </div>
 
               {/* NEON DB ADMIN CREDENTIAL MANAGEMENT */}
               <div className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-4">
@@ -3005,7 +3247,7 @@ export default function AdminPage() {
                   </span>
                 </div>
                 <p className="text-xs text-[#564336]">
-                  Update your admin username and password saved in your Neon PostgreSQL database. Future logins will authenticate against these updated credentials.
+                  Update your admin username and password saved in your Neon PostgreSQL database.
                 </p>
 
                 <form onSubmit={handleUpdateCredentials} className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
@@ -3049,7 +3291,7 @@ export default function AdminPage() {
                       ) : (
                         <>
                           <ShieldCheck className="w-3.5 h-3.5" />
-                          <span>Update Neon DB Credentials</span>
+                          <span>Update Credentials in Neon DB</span>
                         </>
                       )}
                     </button>
@@ -3064,13 +3306,13 @@ export default function AdminPage() {
                     <span>Export Full CMS JSON Backup</span>
                   </div>
                   <p className="text-xs text-[#564336]">
-                    Download a full JSON file containing all website headlines, cards, page titles, footer links, and contact information.
+                    Download a full JSON file containing all site copy and settings.
                   </p>
                   <button
                     onClick={exportJSON}
                     className="bg-[#964900] text-white text-xs font-bold px-4 py-2.5 rounded-lg hover:bg-[#b05600] transition-colors"
                   >
-                    Download JSON File
+                    Download JSON Backup File
                   </button>
                 </div>
 
@@ -3080,7 +3322,7 @@ export default function AdminPage() {
                     <span>Import JSON Backup File</span>
                   </div>
                   <p className="text-xs text-[#564336]">
-                    Upload a previously exported JSON backup file to overwrite current site content live across all pages.
+                    Upload a previously exported JSON backup file to overwrite current site content.
                   </p>
                   <input
                     type="file"
@@ -3097,7 +3339,7 @@ export default function AdminPage() {
                   <span>Reset All Website Content to Factory Defaults</span>
                 </div>
                 <p className="text-xs text-red-600">
-                  This action will delete all local storage edits and restore default factory text across all pages.
+                  This action will restore default factory text across all pages.
                 </p>
                 <button
                   onClick={handleReset}
@@ -3111,6 +3353,333 @@ export default function AdminPage() {
           )}
         </main>
       </div>
+
+      {/* BLOG ARTICLE EDIT MODAL */}
+      {isBlogModalOpen && editingArticle && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-[#ddc1b0] rounded-3xl w-full max-w-4xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+            <div className="px-6 py-4 border-b border-[#ddc1b0] flex items-center justify-between bg-[#fff8f5]">
+              <div className="flex items-center gap-2">
+                <Newspaper className="w-5 h-5 text-[#964900]" />
+                <h3 className="font-bold text-base text-[#964900]">
+                  Edit Article: {editingArticle.title || "Untitled Post"}
+                </h3>
+              </div>
+              <button
+                onClick={() => {
+                  setIsBlogModalOpen(false);
+                  setEditingArticle(null);
+                }}
+                className="p-1 rounded-lg text-[#564336] hover:bg-white"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto p-6 space-y-5">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Article Title *
+                  </label>
+                  <input
+                    type="text"
+                    value={editingArticle.title}
+                    onChange={(e) =>
+                      setEditingArticle({ ...editingArticle, title: e.target.value })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm font-bold"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Category Tag
+                  </label>
+                  <input
+                    type="text"
+                    value={editingArticle.category}
+                    onChange={(e) =>
+                      setEditingArticle({ ...editingArticle, category: e.target.value })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Read Time
+                  </label>
+                  <input
+                    type="text"
+                    value={editingArticle.readTime}
+                    onChange={(e) =>
+                      setEditingArticle({ ...editingArticle, readTime: e.target.value })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Author Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editingArticle.author}
+                    onChange={(e) =>
+                      setEditingArticle({ ...editingArticle, author: e.target.value })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Author Role
+                  </label>
+                  <input
+                    type="text"
+                    value={editingArticle.authorRole}
+                    onChange={(e) =>
+                      setEditingArticle({ ...editingArticle, authorRole: e.target.value })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                  Card Snippet Summary
+                </label>
+                <textarea
+                  rows={2}
+                  value={editingArticle.snippet}
+                  onChange={(e) =>
+                    setEditingArticle({ ...editingArticle, snippet: e.target.value })
+                  }
+                  className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <label className="flex items-center gap-2 text-xs font-bold text-[#964900] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={editingArticle.featured || false}
+                    onChange={(e) =>
+                      setEditingArticle({ ...editingArticle, featured: e.target.checked })
+                    }
+                    className="w-4 h-4 accent-[#964900]"
+                  />
+                  <span>Mark as Featured Article</span>
+                </label>
+              </div>
+
+              {/* Content Details */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+                <h4 className="text-xs font-bold text-[#964900] uppercase">
+                  Article Body & Key Takeaways
+                </h4>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Introduction Paragraph
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={editingArticle.content?.introduction || ""}
+                    onChange={(e) =>
+                      setEditingArticle({
+                        ...editingArticle,
+                        content: {
+                          ...editingArticle.content,
+                          introduction: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Key Takeaways (1 per line)
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={(editingArticle.content?.keyTakeaways || []).join("\n")}
+                    onChange={(e) =>
+                      setEditingArticle({
+                        ...editingArticle,
+                        content: {
+                          ...editingArticle.content,
+                          keyTakeaways: e.target.value.split("\n").filter(Boolean),
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs font-mono"
+                  />
+                </div>
+
+                {/* Body Sections */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-xs font-bold text-[#964900] uppercase">
+                      Body Sections ({(editingArticle.content?.sections || []).length})
+                    </label>
+                    <button
+                      onClick={() => {
+                        const newSec = {
+                          heading: "New Section Heading",
+                          body: "Section body text...",
+                        };
+                        const updatedSecs = [...(editingArticle.content?.sections || []), newSec];
+                        setEditingArticle({
+                          ...editingArticle,
+                          content: {
+                            ...editingArticle.content,
+                            sections: updatedSecs,
+                          },
+                        });
+                      }}
+                      className="text-xs font-bold text-[#964900] bg-[#fff8f5] border border-[#ddc1b0] px-2.5 py-1 rounded-lg hover:bg-[#fff1ea]"
+                    >
+                      + Add Section
+                    </button>
+                  </div>
+
+                  {(editingArticle.content?.sections || []).map((sec, sIdx) => (
+                    <div key={sIdx} className="p-3 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                          Section #{sIdx + 1}
+                        </span>
+                        <button
+                          onClick={() => {
+                            const updatedSecs = (editingArticle.content?.sections || []).filter(
+                              (_, i) => i !== sIdx
+                            );
+                            setEditingArticle({
+                              ...editingArticle,
+                              content: {
+                                ...editingArticle.content,
+                                sections: updatedSecs,
+                              },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <input
+                        type="text"
+                        value={sec.heading}
+                        onChange={(e) => {
+                          const updatedSecs = [...editingArticle.content.sections];
+                          updatedSecs[sIdx].heading = e.target.value;
+                          setEditingArticle({
+                            ...editingArticle,
+                            content: {
+                              ...editingArticle.content,
+                              sections: updatedSecs,
+                            },
+                          });
+                        }}
+                        className="w-full text-xs font-bold border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                      />
+
+                      <textarea
+                        rows={3}
+                        value={sec.body}
+                        onChange={(e) => {
+                          const updatedSecs = [...editingArticle.content.sections];
+                          updatedSecs[sIdx].body = e.target.value;
+                          setEditingArticle({
+                            ...editingArticle,
+                            content: {
+                              ...editingArticle.content,
+                              sections: updatedSecs,
+                            },
+                          });
+                        }}
+                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                      />
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                          Code Snippet (Optional)
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={sec.codeSnippet || ""}
+                          onChange={(e) => {
+                            const updatedSecs = [...editingArticle.content.sections];
+                            updatedSecs[sIdx].codeSnippet = e.target.value;
+                            setEditingArticle({
+                              ...editingArticle,
+                              content: {
+                                ...editingArticle.content,
+                                sections: updatedSecs,
+                              },
+                            });
+                          }}
+                          placeholder="// Code snippet..."
+                          className="w-full text-[11px] font-mono border border-[#ddc1b0] rounded-lg p-2 bg-[#1c1917] text-amber-200"
+                        />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Conclusion Paragraph
+                  </label>
+                  <textarea
+                    rows={2}
+                    value={editingArticle.content?.conclusion || ""}
+                    onChange={(e) =>
+                      setEditingArticle({
+                        ...editingArticle,
+                        content: {
+                          ...editingArticle.content,
+                          conclusion: e.target.value,
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="px-6 py-4 border-t border-[#ddc1b0] flex items-center justify-end gap-3 bg-[#fff8f5]">
+              <button
+                onClick={() => {
+                  setIsBlogModalOpen(false);
+                  setEditingArticle(null);
+                }}
+                className="px-4 py-2 border border-[#ddc1b0] text-xs font-bold rounded-xl text-[#564336] bg-white hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveArticle}
+                className="px-5 py-2 bg-[#964900] text-white text-xs font-bold rounded-xl hover:bg-[#b05600] flex items-center gap-1.5 shadow"
+              >
+                <Check className="w-4 h-4" />
+                <span>Save Article</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

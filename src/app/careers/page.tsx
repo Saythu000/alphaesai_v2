@@ -74,13 +74,10 @@ export default function CareersPage() {
         {/* HERO SECTION */}
         <div className="text-center max-w-4xl mx-auto space-y-6 pt-6">
           <h1 className="font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-6xl font-black text-[#fff8f5] tracking-tight leading-[1.1]">
-            Build the Operating System for <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#ffb786] via-[#ff8833] to-[#e65c00]">
-              Industrial-Scale Agentic AI
-            </span>
+            {careersData?.title || "Build the Operating System for Industrial-Scale Agentic AI"}
           </h1>
           <p className="text-lg sm:text-xl text-[#f3ded3]/80 leading-relaxed font-light max-w-3xl mx-auto">
-            We are looking for forward-deployed engineers, Databricks optimization architects, and cloud security pioneers to build systems that run real enterprise operations.
+            {careersData?.subtitle || "We are looking for forward-deployed engineers, Databricks optimization architects, and cloud security pioneers to build systems that run real enterprise operations."}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-4 pt-4">
             <a
