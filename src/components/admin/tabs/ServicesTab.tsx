@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Briefcase, LayoutGrid, Layers, MousePointer, ShieldCheck, Database, Cloud, CheckSquare, AlertTriangle } from "lucide-react";
+import { Briefcase, LayoutGrid, Layers, MousePointer, ShieldCheck, Database, Cloud, CheckSquare, AlertTriangle, Award, Users } from "lucide-react";
 import { FullCMSData, ServiceSubpagesCMSData } from "@/lib/cms-store";
 import { SectionHeader } from "../common/SectionHeader";
 import { FormField } from "../common/FormField";
@@ -1873,9 +1873,401 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
                     value={currentSubpage.challengeDescription || "Standard crowd-sourced labeling fails when applied to complex, domain-specific AI models. We eliminate the systemic breakdown points in traditional annotation pipelines."}
                     onChange={(val) => updateSubpage("dataAnnotation", { challengeDescription: val })}
                   />
+
+                  {/* Failure Modes Items */}
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-mono font-bold text-[#964900] uppercase">Failure Mode Cards</div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(currentSubpage.failureModes || []), { title: "New Failure Mode", tag: "TAG", desc: "Description..." }];
+                          updateSubpage("dataAnnotation", { failureModes: updated });
+                        }}
+                        className="px-3 py-1 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#7a3b00] transition-colors"
+                      >
+                        + Add Card
+                      </button>
+                    </div>
+
+                    {(currentSubpage.failureModes || []).map((fm, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-[#564336]">Failure Mode #{i + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (currentSubpage.failureModes || []).filter((_, idx) => idx !== i);
+                              updateSubpage("dataAnnotation", { failureModes: updated });
+                            }}
+                            className="text-xs text-red-600 font-bold hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            label="Title"
+                            value={fm.title}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.failureModes || [])];
+                              updated[i] = { ...updated[i], title: val };
+                              updateSubpage("dataAnnotation", { failureModes: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Tag"
+                            value={fm.tag}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.failureModes || [])];
+                              updated[i] = { ...updated[i], tag: val };
+                              updateSubpage("dataAnnotation", { failureModes: updated });
+                            }}
+                          />
+                        </div>
+                        <FormField
+                          label="Description"
+                          type="textarea"
+                          rows={2}
+                          value={fm.desc}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.failureModes || [])];
+                            updated[i] = { ...updated[i], desc: val };
+                            updateSubpage("dataAnnotation", { failureModes: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
-                {/* 2. FREQUENTLY ASKED QUESTIONS (FAQ) */}
+                {/* 2. OUR APPROACH SECTION */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Layers className="w-4 h-4" />
+                    <span>Section: Our Approach & Pillars</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.approachSubtitle || "OUR APPROACH"}
+                      onChange={(val) => updateSubpage("dataAnnotation", { approachSubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.approachTitle || "High-Precision Feedback Loops for Superior Model Outputs"}
+                      onChange={(val) => updateSubpage("dataAnnotation", { approachTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Section Description"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.approachDescription || "We structure data curation and human feedback into a continuous, engineering-aligned cycle designed to maximize downstream model evaluation metrics."}
+                    onChange={(val) => updateSubpage("dataAnnotation", { approachDescription: val })}
+                  />
+
+                  {/* Approach Pillars Items */}
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-mono font-bold text-[#964900] uppercase">Approach Pillars</div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(currentSubpage.approachPillars || []), { id: `pillar-${Date.now()}`, badge: "Badge", title: "New Pillar", desc: "Description...", items: ["Highlight 1"], iconName: "Target" }];
+                          updateSubpage("dataAnnotation", { approachPillars: updated });
+                        }}
+                        className="px-3 py-1 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#7a3b00] transition-colors"
+                      >
+                        + Add Pillar
+                      </button>
+                    </div>
+
+                    {(currentSubpage.approachPillars || []).map((pillar, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-[#564336]">Pillar #{i + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (currentSubpage.approachPillars || []).filter((_, idx) => idx !== i);
+                              updateSubpage("dataAnnotation", { approachPillars: updated });
+                            }}
+                            className="text-xs text-red-600 font-bold hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <FormField
+                            label="Badge"
+                            value={pillar.badge}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.approachPillars || [])];
+                              updated[i] = { ...updated[i], badge: val };
+                              updateSubpage("dataAnnotation", { approachPillars: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Title"
+                            value={pillar.title}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.approachPillars || [])];
+                              updated[i] = { ...updated[i], title: val };
+                              updateSubpage("dataAnnotation", { approachPillars: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Icon Name"
+                            value={pillar.iconName || "Target"}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.approachPillars || [])];
+                              updated[i] = { ...updated[i], iconName: val };
+                              updateSubpage("dataAnnotation", { approachPillars: updated });
+                            }}
+                          />
+                        </div>
+                        <FormField
+                          label="Description"
+                          type="textarea"
+                          rows={2}
+                          value={pillar.desc}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.approachPillars || [])];
+                            updated[i] = { ...updated[i], desc: val };
+                            updateSubpage("dataAnnotation", { approachPillars: updated });
+                          }}
+                        />
+                        <FormField
+                          label="Key Deliverable / Bullet Items (comma separated)"
+                          value={(pillar.items || []).join(", ")}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.approachPillars || [])];
+                            updated[i] = { ...updated[i], items: val.split(",").map(s => s.trim()).filter(Boolean) };
+                            updateSubpage("dataAnnotation", { approachPillars: updated });
+                          }}
+                        />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            label="Impact Card Title"
+                            value={pillar.impactTitle || "Production Model Impact"}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.approachPillars || [])];
+                              updated[i] = { ...updated[i], impactTitle: val };
+                              updateSubpage("dataAnnotation", { approachPillars: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Impact Description"
+                            value={pillar.impactDesc || "Directly boosts evaluation metrics..."}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.approachPillars || [])];
+                              updated[i] = { ...updated[i], impactDesc: val };
+                              updateSubpage("dataAnnotation", { approachPillars: updated });
+                            }}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. THE ALPHAESAI COMMITMENT */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Award className="w-4 h-4" />
+                    <span>Section: The AlphaesAI Commitment</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.commitmentSubtitle || "THE ALPHAESAI COMMITMENT"}
+                      onChange={(val) => updateSubpage("dataAnnotation", { commitmentSubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.commitmentTitle || "We Define Quality by Model Performance, Not Label Count"}
+                      onChange={(val) => updateSubpage("dataAnnotation", { commitmentTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Section Description"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.commitmentDescription || "We don't measure progress by raw output counts. Our sole benchmark is how well your AI model performs when deployed to real-world users."}
+                    onChange={(val) => updateSubpage("dataAnnotation", { commitmentDescription: val })}
+                  />
+
+                  {/* Commitment Points List */}
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-mono font-bold text-[#964900] uppercase">Commitment Cards</div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(currentSubpage.commitmentPoints || []), { title: "New Point", desc: "Description...", iconName: "Target" }];
+                          updateSubpage("dataAnnotation", { commitmentPoints: updated });
+                        }}
+                        className="px-3 py-1 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#7a3b00] transition-colors"
+                      >
+                        + Add Card
+                      </button>
+                    </div>
+
+                    {(currentSubpage.commitmentPoints || []).map((cp, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-[#564336]">Point #{i + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (currentSubpage.commitmentPoints || []).filter((_, idx) => idx !== i);
+                              updateSubpage("dataAnnotation", { commitmentPoints: updated });
+                            }}
+                            className="text-xs text-red-600 font-bold hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <FormField
+                            label="Title"
+                            value={cp.title}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.commitmentPoints || [])];
+                              updated[i] = { ...updated[i], title: val };
+                              updateSubpage("dataAnnotation", { commitmentPoints: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Icon Name"
+                            value={cp.iconName || "Target"}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.commitmentPoints || [])];
+                              updated[i] = { ...updated[i], iconName: val };
+                              updateSubpage("dataAnnotation", { commitmentPoints: updated });
+                            }}
+                          />
+                        </div>
+                        <FormField
+                          label="Description"
+                          type="textarea"
+                          rows={2}
+                          value={cp.desc}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.commitmentPoints || [])];
+                            updated[i] = { ...updated[i], desc: val };
+                            updateSubpage("dataAnnotation", { commitmentPoints: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 4. SPECIALIZED DOMAIN NETWORKS */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Users className="w-4 h-4" />
+                    <span>Section: Specialized Domain Networks</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.domainSubtitle || "SPECIALIZED DOMAIN NETWORKS"}
+                      onChange={(val) => updateSubpage("dataAnnotation", { domainSubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.domainTitle || "Vetted Experts Matched to Your Industry Taxonomy"}
+                      onChange={(val) => updateSubpage("dataAnnotation", { domainTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Section Description"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.domainDescription || "We match specialized annotators to the exact nuances of your industry data."}
+                    onChange={(val) => updateSubpage("dataAnnotation", { domainDescription: val })}
+                  />
+
+                  {/* Domains List */}
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-mono font-bold text-[#964900] uppercase">Domain Cards</div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(currentSubpage.domains || []), { name: "New Industry Domain", tag: "TAG", focus: "Focus area...", iconName: "Building2" }];
+                          updateSubpage("dataAnnotation", { domains: updated });
+                        }}
+                        className="px-3 py-1 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#7a3b00] transition-colors"
+                      >
+                        + Add Domain
+                      </button>
+                    </div>
+
+                    {(currentSubpage.domains || []).map((d, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-[#564336]">Domain #{i + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (currentSubpage.domains || []).filter((_, idx) => idx !== i);
+                              updateSubpage("dataAnnotation", { domains: updated });
+                            }}
+                            className="text-xs text-red-600 font-bold hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <FormField
+                            label="Industry Name"
+                            value={d.name}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.domains || [])];
+                              updated[i] = { ...updated[i], name: val };
+                              updateSubpage("dataAnnotation", { domains: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Tag"
+                            value={d.tag}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.domains || [])];
+                              updated[i] = { ...updated[i], tag: val };
+                              updateSubpage("dataAnnotation", { domains: updated });
+                            }}
+                          />
+                          <FormField
+                            label="Icon Name"
+                            value={d.iconName || "Building2"}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.domains || [])];
+                              updated[i] = { ...updated[i], iconName: val };
+                              updateSubpage("dataAnnotation", { domains: updated });
+                            }}
+                          />
+                        </div>
+                        <FormField
+                          label="Focus & Key Annotations"
+                          type="textarea"
+                          rows={2}
+                          value={d.focus}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.domains || [])];
+                            updated[i] = { ...updated[i], focus: val };
+                            updateSubpage("dataAnnotation", { domains: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 5. FREQUENTLY ASKED QUESTIONS (FAQ) */}
                 <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
                   <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
                     <ShieldCheck className="w-4 h-4" />
@@ -1949,7 +2341,7 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
                   </div>
                 </div>
 
-                {/* 3. FINAL CALL TO ACTION BANNER */}
+                {/* 6. FINAL CALL TO ACTION BANNER */}
                 <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
                   <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
                     <MousePointer className="w-4 h-4" />

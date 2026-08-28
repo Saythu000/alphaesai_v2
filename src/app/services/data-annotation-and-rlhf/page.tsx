@@ -180,6 +180,29 @@ const faqs = [
   },
 ];
 
+type IconComponent = React.ElementType<{ className?: string }>;
+
+const getIcon = (name?: string, fallback: IconComponent = Target): IconComponent => {
+  if (!name) return fallback;
+  switch (name.toLowerCase()) {
+    case "target": return Target;
+    case "layers": return Layers;
+    case "award": return Award;
+    case "zap": return Zap;
+    case "users": return Users;
+    case "sliders": return Sliders;
+    case "activity": return Activity;
+    case "shieldcheck":
+    case "shield": return ShieldCheck;
+    case "stethoscope": return Stethoscope;
+    case "briefcase": return Briefcase;
+    case "scale": return Scale;
+    case "building2":
+    case "building": return Building2;
+    default: return fallback;
+  }
+};
+
 export default function DataAnnotationAndRlhfPage() {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const { data } = useCMS();
@@ -207,6 +230,22 @@ export default function DataAnnotationAndRlhfPage() {
   const challengeSub = cmsDataAnnot?.challengeSubtitle || "THE REALITY OF ANNOTATION";
   const challengeTitle = cmsDataAnnot?.challengeTitle || "If Your Annotators Don’t Understand Engineering Goals, They Can’t Label for Them";
   const challengeDesc = cmsDataAnnot?.challengeDescription || "Standard crowd-sourced labeling fails when applied to complex, domain-specific AI models. We eliminate the systemic breakdown points in traditional annotation pipelines.";
+  const displayFailureModes = cmsDataAnnot?.failureModes && cmsDataAnnot.failureModes.length > 0 ? cmsDataAnnot.failureModes : failureModes;
+
+  const approachSub = cmsDataAnnot?.approachSubtitle || "OUR APPROACH";
+  const approachTitleText = cmsDataAnnot?.approachTitle || "High-Precision Feedback Loops for Superior Model Outputs";
+  const approachDescText = cmsDataAnnot?.approachDescription || "We structure data curation and human feedback into a continuous, engineering-aligned cycle designed to maximize downstream model evaluation metrics.";
+  const displayApproachPillars = cmsDataAnnot?.approachPillars && cmsDataAnnot.approachPillars.length > 0 ? cmsDataAnnot.approachPillars : approachPillars;
+
+  const commitmentSub = cmsDataAnnot?.commitmentSubtitle || "THE ALPHAESAI COMMITMENT";
+  const commitmentTitleText = cmsDataAnnot?.commitmentTitle || "We Define Quality by Model Performance, Not Label Count";
+  const commitmentDescText = cmsDataAnnot?.commitmentDescription || "We don't measure progress by raw output counts. Our sole benchmark is how well your AI model performs when deployed to real-world users.";
+  const displayCommitmentPoints = cmsDataAnnot?.commitmentPoints && cmsDataAnnot.commitmentPoints.length > 0 ? cmsDataAnnot.commitmentPoints : commitmentPoints;
+
+  const domainSub = cmsDataAnnot?.domainSubtitle || "SPECIALIZED DOMAIN NETWORKS";
+  const domainTitleText = cmsDataAnnot?.domainTitle || "Vetted Experts Matched to Your Industry Taxonomy";
+  const domainDescText = cmsDataAnnot?.domainDescription || "We match specialized annotators to the exact nuances of your industry data.";
+  const displayDomains = cmsDataAnnot?.domains && cmsDataAnnot.domains.length > 0 ? cmsDataAnnot.domains : domains;
 
   const displayFaqs = cmsDataAnnot?.faqs && cmsDataAnnot.faqs.length > 0 ? cmsDataAnnot.faqs : faqs;
   const faqSub = cmsDataAnnot?.faqSubtitle || "FREQUENTLY ASKED QUESTIONS";
@@ -229,7 +268,7 @@ export default function DataAnnotationAndRlhfPage() {
             <span>{badgeText}</span>
           </div>
 
-          <h1 className="font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-[62px] font-extrabold text-[#241913] mb-4 tracking-tight leading-[1.1]">
+          <h1 className="font-[#241913] font-['Hanken_Grotesk'] text-4xl sm:text-5xl lg:text-[62px] font-extrabold text-[#241913] mb-4 tracking-tight leading-[1.1]">
             {titleText}
           </h1>
 
@@ -289,7 +328,7 @@ export default function DataAnnotationAndRlhfPage() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {failureModes.map((fm) => (
+            {displayFailureModes.map((fm) => (
               <div
                 key={fm.title}
                 className="bg-[#fff8f5] border border-[#ddc1b0] hover:border-[#964900] rounded-xl p-6 transition-all duration-300 shadow-sm hover-lift flex flex-col justify-between"
@@ -321,22 +360,22 @@ export default function DataAnnotationAndRlhfPage() {
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
-              OUR APPROACH
+              {approachSub}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              High-Precision Feedback Loops for Superior Model Outputs
+              {approachTitleText}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              We structure data curation and human feedback into a continuous, engineering-aligned cycle designed to maximize downstream model evaluation metrics.
+              {approachDescText}
             </p>
           </div>
 
           <div className="space-y-8">
-            {approachPillars.map((pillar, idx) => {
-              const IconComp = pillar.icon;
+            {displayApproachPillars.map((pillar: { id?: string; badge?: string; title?: string; desc?: string; items?: string[]; iconName?: string; impactTitle?: string; impactDesc?: string }, idx: number) => {
+              const IconComp = getIcon(pillar.iconName, approachPillars[idx]?.icon || Target);
               return (
                 <div
-                  key={pillar.id}
+                  key={pillar.id || idx}
                   id={pillar.id}
                   className="bg-[#ffffff] border border-[#ddc1b0] hover:border-[#964900] rounded-2xl p-8 transition-all duration-300 shadow-sm hover-lift grid lg:grid-cols-12 gap-8 items-center"
                 >
@@ -359,7 +398,7 @@ export default function DataAnnotationAndRlhfPage() {
                     </p>
 
                     <div className="space-y-2">
-                      {pillar.items.map((item) => (
+                      {(pillar.items || []).map((item: string) => (
                         <div key={item} className="flex items-start gap-2.5 text-xs font-['Inter'] text-[#241913]">
                           <CheckCircle2 className="w-4 h-4 text-[#964900] shrink-0 mt-0.5" />
                           <span>{item}</span>
@@ -374,10 +413,10 @@ export default function DataAnnotationAndRlhfPage() {
                         PILLAR 0{idx + 1}
                       </div>
                       <div className="text-sm font-['Hanken_Grotesk'] font-bold text-[#241913] mb-3">
-                        Production Model Impact
+                        {pillar.impactTitle || "Production Model Impact"}
                       </div>
                       <p className="text-xs font-['Inter'] text-[#564336] leading-relaxed mb-6">
-                        Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification.
+                        {pillar.impactDesc || "Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification."}
                       </p>
                     </div>
                     <Link
@@ -401,19 +440,19 @@ export default function DataAnnotationAndRlhfPage() {
           <div className="max-w-3xl mb-14">
             <div className="inline-flex items-center gap-2 text-xs font-['JetBrains_Mono'] text-[#ffb786] font-bold uppercase tracking-widest mb-3">
               <Award className="w-4 h-4 text-[#ffb786]" />
-              <span>THE ALPHAESAI COMMITMENT</span>
+              <span>{commitmentSub}</span>
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white mb-4">
-              We Define Quality by Model Performance, Not Label Count
+              {commitmentTitleText}
             </h2>
             <p className="font-['Inter'] text-base text-white/80 leading-relaxed">
-              We don't measure progress by raw output counts. Our sole benchmark is how well your AI model performs when deployed to real-world users.
+              {commitmentDescText}
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {commitmentPoints.map((cp) => {
-              const IconComp = cp.icon;
+            {displayCommitmentPoints.map((cp: { title?: string; desc?: string; iconName?: string }, idx: number) => {
+              const IconComp = getIcon(cp.iconName, commitmentPoints[idx]?.icon || Target);
               return (
                 <div
                   key={cp.title}
@@ -442,19 +481,19 @@ export default function DataAnnotationAndRlhfPage() {
         <div className="max-w-[1280px] mx-auto px-4">
           <div className="max-w-3xl mb-14">
             <div className="text-xs font-['JetBrains_Mono'] text-[#964900] font-bold uppercase tracking-widest mb-3">
-              SPECIALIZED DOMAIN NETWORKS
+              {domainSub}
             </div>
             <h2 className="font-['Hanken_Grotesk'] text-3xl sm:text-4xl font-extrabold text-[#241913] mb-4">
-              Vetted Experts Matched to Your Industry Taxonomy
+              {domainTitleText}
             </h2>
             <p className="font-['Inter'] text-base text-[#564336] leading-relaxed">
-              We match specialized annotators to the exact nuances of your industry data.
+              {domainDescText}
             </p>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-8">
-            {domains.map((d) => {
-              const IconComp = d.icon;
+            {displayDomains.map((d: { name?: string; tag?: string; focus?: string; iconName?: string }, idx: number) => {
+              const IconComp = getIcon(d.iconName, domains[idx]?.icon || Building2);
               return (
                 <div
                   key={d.name}

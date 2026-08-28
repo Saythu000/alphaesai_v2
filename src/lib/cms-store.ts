@@ -453,6 +453,47 @@ export interface ServiceSubpageDetailCMS {
   finalCtaDescription?: string;
   finalCtaText?: string;
   finalCtaHref?: string;
+
+  // Data Annotation Specific Sections
+  approachSubtitle?: string;
+  approachTitle?: string;
+  approachDescription?: string;
+  approachPillars?: {
+    id: string;
+    badge: string;
+    title: string;
+    desc: string;
+    items: string[];
+    iconName?: string;
+    impactTitle?: string;
+    impactDesc?: string;
+  }[];
+
+  commitmentSubtitle?: string;
+  commitmentTitle?: string;
+  commitmentDescription?: string;
+  commitmentPoints?: {
+    title: string;
+    desc: string;
+    iconName?: string;
+  }[];
+
+  domainSubtitle?: string;
+  domainTitle?: string;
+  domainDescription?: string;
+  domains?: {
+    name: string;
+    tag: string;
+    focus: string;
+    iconName?: string;
+  }[];
+
+  failureModes?: {
+    title: string;
+    tag: string;
+    desc: string;
+    iconName?: string;
+  }[];
 }
 
 export interface ServiceSubpagesCMSData {
@@ -1607,20 +1648,132 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
         finalCtaHref: "/contact",
       },
       dataAnnotation: {
-        heroBadge: "DATA ANNOTATION · RLHF · MULTI-MODAL ALIGNMENT",
-        title: "High-Precision Datasets Curated by Domain Experts.",
-        subtitle: "Human Alignment for Enterprise SOTA Models.",
-        description: "AI accuracy depends entirely on data quality. AlphaesAI provides high-precision data annotation, RLHF preference ranking, and multi-modal alignment executed by domain-expert annotators and verified by automated quality heuristics.",
-        capabilitiesBadges: ["RLHF", "DPO/PPO", "Computer Vision", "HIPAA Labeling", "Domain Experts"],
-        primaryCtaText: "Schedule Data Consultation",
+        heroBadge: "DATA ANNOTATION & RLHF · PRECISION TRAINING DATA",
+        title: "DATA ANNOTATION & RLHF",
+        subtitle: "Precision Labeling · Engineering-Aligned · Production-Grade",
+        description: "Most annotation platforms sell volume. We sell model performance. If your data isn’t mapped to your engineering goals, your model fails regardless of the architecture. We integrate domain experts directly into your training pipeline to ensure the feedback fed into your model is as precise as the code you write.",
+        capabilitiesBadges: ["RLHF & Preference Scoring", "SFT Fine-Tuning Curation", "Adversarial Red-Teaming", "Healthcare & Medical Annotators", "Legal & Financial Experts", "Human-in-the-Loop Eval"],
+        primaryCtaText: "Schedule an Executive Briefing",
         primaryCtaHref: "/contact",
-        secondaryCtaText: "Explore Annotations",
-        secondaryCtaHref: "#capabilities",
+        secondaryCtaText: "Explore Approach",
+        secondaryCtaHref: "#approach",
         frictionPoints: [],
         capabilities: [],
         aiDifferencePoints: [],
         engagementTiers: [],
-        faqs: [],
+
+        challengeSubtitle: "THE REALITY OF ANNOTATION",
+        challengeTitle: "If Your Annotators Don’t Understand Engineering Goals, They Can’t Label for Them",
+        challengeDescription: "Standard crowd-sourced labeling fails when applied to complex, domain-specific AI models. We eliminate the systemic breakdown points in traditional annotation pipelines.",
+        failureModes: [
+          { title: "Context Blindness", tag: "EXPERT GAP", desc: "Crowd-sourced workers lack the deep technical, legal, domain or medical expertise your specific AI training data demands." },
+          { title: "The Handoff Disconnect", tag: "SILOED PIPELINE", desc: "Data delivered as a static CSV/JSON file without any visibility into post-training model behavior or loss metrics." },
+          { title: "Noisy Signals", tag: "INCONSISTENCY", desc: "Vague guidelines and inconsistent annotators create contradictory data, leading to unpredictable model performance." },
+          { title: "Safety as an Afterthought", tag: "RISK EXPOSURE", desc: "Red-teaming requires systematic engineering rigor and adversarial probing, not just checking boxes off a static list." },
+        ],
+
+        approachSubtitle: "OUR APPROACH",
+        approachTitle: "High-Precision Feedback Loops for Superior Model Outputs",
+        approachDescription: "We structure data curation and human feedback into a continuous, engineering-aligned cycle designed to maximize downstream model evaluation metrics.",
+        approachPillars: [
+          {
+            id: "rlhf",
+            badge: "Preference Modeling",
+            title: "RLHF & Preference Data",
+            desc: "We structure human feedback (pairwise ranking, comparison, and multi-turn preference scoring) to explicitly align model behavior with your specific domain and business requirements.",
+            items: ["Pairwise & multi-turn response ranking", "Reward model dataset curation", "Custom rating rubrics tailored to business logic"],
+            iconName: "Target",
+            impactTitle: "Production Model Impact",
+            impactDesc: "Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification.",
+          },
+          {
+            id: "domain",
+            badge: "Subject Matter Experts",
+            title: "Domain-Specific Annotation",
+            desc: "We pair your labeling tasks directly with vetted subject-matter experts in healthcare, finance, legal, insurance, and software engineering—never unvetted crowd workers.",
+            items: ["Board-certified medical coders & radiologists", "Financial analysts & compliance auditors", "Senior software engineers & legal practitioners"],
+            iconName: "Users",
+            impactTitle: "Production Model Impact",
+            impactDesc: "Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification.",
+          },
+          {
+            id: "finetuning",
+            badge: "Clean Signal Datasets",
+            title: "Fine-Tuning Curated Datasets",
+            desc: "We version-control and curate your datasets specifically for instruction tuning and SFT (Supervised Fine-Tuning), ensuring pristine, noise-free signals for every training run.",
+            items: ["Dataset versioning & line-level lineage tracking", "De-duplication & distribution balancing", "Instruction-following dataset formatting"],
+            iconName: "Sliders",
+            impactTitle: "Production Model Impact",
+            impactDesc: "Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification.",
+          },
+          {
+            id: "benchmarking",
+            badge: "Human-in-the-Loop Audit",
+            title: "Rigorous Benchmarking & Evaluation",
+            desc: "We validate model accuracy, tone, reasoning transparency, and factuality through expert human review before you push model weights to production.",
+            items: ["Hallucination & bias measurement", "Factuality verification against golden references", "Quantitative human-eval leaderboard scoring"],
+            iconName: "Activity",
+            impactTitle: "Production Model Impact",
+            impactDesc: "Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification.",
+          },
+          {
+            id: "redteaming",
+            badge: "Adversarial Probing",
+            title: "Adversarial Red-Teaming & Safety Alignment",
+            desc: "We systematically probe for prompt injections, jailbreaks, toxicity, and edge cases before your users encounter them in real-world interactions.",
+            items: ["Custom adversarial attack vector crafting", "Guardrail breach stress testing", "Safety policy compliance audit reports"],
+            iconName: "ShieldCheck",
+            impactTitle: "Production Model Impact",
+            impactDesc: "Directly boosts evaluation metrics (BLEU, ROUGE, human win-rate, safety guardrail compliance) through rigorous ground-truth verification.",
+          },
+        ],
+
+        commitmentSubtitle: "THE ALPHAESAI COMMITMENT",
+        commitmentTitle: "We Define Quality by Model Performance, Not Label Count",
+        commitmentDescription: "We don't measure progress by raw output counts. Our sole benchmark is how well your AI model performs when deployed to real-world users.",
+        commitmentPoints: [
+          { title: "Contextual Alignment", desc: "We tune label schemas to what your specific model architecture and loss functions need to learn.", iconName: "Target" },
+          { title: "Direct Feedback Loops", desc: "We tie data annotations directly to post-training evaluation metrics and fine-tuning results.", iconName: "Layers" },
+          { title: "Expert Matching", desc: "We don't use generalist crowd pools. We match domain practitioners to your exact industry taxonomy.", iconName: "Award" },
+          { title: "Outcome Accountability", desc: "We measure success by how your model performs in production, not by how many raw labels we click.", iconName: "Zap" },
+        ],
+
+        domainSubtitle: "SPECIALIZED DOMAIN NETWORKS",
+        domainTitle: "Vetted Experts Matched to Your Industry Taxonomy",
+        domainDescription: "We match specialized annotators to the exact nuances of your industry data.",
+        domains: [
+          { name: "Healthcare & Life Sciences", tag: "HIGH COMPLEXITY", focus: "Radiology report annotation, EHR structured extraction, clinical coding (ICD-10/SNOMED), medical QA.", iconName: "Stethoscope" },
+          { name: "Finance & Fintech", tag: "STRICT ACCURACY", focus: "Transaction classification, earnings call sentiment, SEC filing parsing, fraud pattern tagging.", iconName: "Briefcase" },
+          { name: "Legal & Compliance", tag: "PRECISION REQUIRED", focus: "Contract clause classification, privilege review, entity extraction, regulatory compliance audit data.", iconName: "Scale" },
+          { name: "Insurance & Risk", tag: "DOMAIN-SPECIFIC", focus: "Claims risk extraction, policy document classification, property damage vision analysis.", iconName: "Building2" },
+        ],
+
+        faqSubtitle: "FREQUENTLY ASKED QUESTIONS",
+        faqTitle: "Data Curation & RLHF Inquiries",
+        faqs: [
+          {
+            q: "How is this different from crowd-sourced annotation platforms?",
+            a: "Crowd platforms prioritize raw volume and speed using unvetted gig workers. We prioritize expert judgment, strict quality control, and engineering alignment. Our annotators are domain specialists (MDs, attorneys, financial analysts, software engineers) who understand what your model is trying to achieve.",
+          },
+          {
+            q: "Can you handle high-volume labeling projects?",
+            a: "We specialize in high-nuance, high-fidelity work like RLHF, domain-specific SFT, and red-teaming. If your project requires simple, low-complexity bulk bounding boxes, we will be completely transparent about whether we are the optimal fit.",
+          },
+          {
+            q: "Do you support ongoing RLHF and post-launch human-in-the-loop programs?",
+            a: "Yes. We offer both one-time dataset creation/fine-tuning curation and continuous human-in-the-loop programs where expert annotators review real user edge cases to refine model performance dynamically post-launch.",
+          },
+          {
+            q: "How do you guarantee data privacy and compliance?",
+            a: "We operate under strict SOC 2, HIPAA, and GDPR compliant workflows. All domain experts execute NDAs, and data can be processed within air-gapped or dedicated secure client environments with zero data retention on external servers.",
+          },
+        ],
+
+        engineBadge: "ALIGN YOUR MODEL TODAY",
+        finalCtaTitle: "Ready to give your models the high-fidelity data they deserve?",
+        finalCtaDescription: "Let’s discuss your dataset requirements, domain expert alignment, and RLHF pipeline needs.",
+        finalCtaText: "Schedule an Executive Briefing",
+        finalCtaHref: "/contact",
       },
       databaseTuning: {
         heroBadge: "DATABASE & CLOUD PERFORMANCE OPTIMIZATION",
