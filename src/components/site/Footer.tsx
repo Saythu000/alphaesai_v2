@@ -16,16 +16,16 @@ export const Footer = () => {
   }
 
   return (
-    <footer className="bg-[#030712] text-[#F9FAFB] w-full py-16 border-t border-[#1F2937]">
+    <footer className="bg-[#0F172A] text-[#F8FAFC] w-full py-16 border-t border-[#1E293B]">
       <div className="max-w-[1280px] mx-auto px-6 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-8">
         <div className="md:col-span-1 lg:col-span-2 space-y-4">
           <Link href="/" className="inline-block">
             <Logo variant="dark" size="md" />
           </Link>
-          <p className="font-['Inter'] text-sm text-[#9CA3AF]">
+          <p className="font-['Inter'] text-sm text-[#94A3B8]">
             {footer.tagline}
           </p>
-          <p className="font-['Inter'] text-xs text-[#6B7280] max-w-sm leading-relaxed">
+          <p className="font-['Inter'] text-xs text-[#64748B] max-w-sm leading-relaxed">
             {footer.description}
           </p>
         </div>
@@ -46,14 +46,14 @@ export const Footer = () => {
                 return (
                   <Link
                     key={link.id}
-                    className="text-[#D1D5DB] hover:text-[#00F0FF] transition-colors flex items-center gap-2 group leading-relaxed font-medium"
+                    className="text-[#CBD5E1] hover:text-[#FF5722] transition-colors flex items-center gap-2 group leading-relaxed font-medium"
                     href={link.href}
                   >
                     {isAddress && <MapPin className="w-4 h-4 text-[#FF5722] shrink-0 mt-0.5" />}
                     {isPhone && <Phone className="w-4 h-4 text-[#FF5722] shrink-0 mt-0.5" />}
                     {isMail && <Mail className="w-4 h-4 text-[#FF5722] shrink-0 mt-0.5" />}
                     {isBriefing && <Calendar className="w-4 h-4 text-[#FF5722] shrink-0 mt-0.5" />}
-                    <span className="group-hover:text-[#00F0FF] transition-colors">{link.label}</span>
+                    <span className="group-hover:text-[#FF5722] transition-colors">{link.label}</span>
                   </Link>
                 );
               })}
