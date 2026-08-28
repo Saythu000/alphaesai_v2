@@ -200,11 +200,34 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
     <div className="space-y-6">
       <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
         <SectionHeader
-          title="Global Header & Footer Management"
-          description="Edit top navbar options, megamenu dropdowns, and create dynamic new pages with category selection."
+          title="Navbar Options & Megamenu Engine"
+          description="Edit main navbar options, megamenu flyout items, and create dynamic new pages with instant placement."
           icon={Navigation}
           previewHref="/"
         />
+
+        {/* Hero Callout Banner */}
+        <div className="bg-gradient-to-r from-[#241913] via-[#38261b] to-[#964900] text-white p-6 rounded-2xl shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <span className="text-[10px] font-extrabold uppercase tracking-wider bg-white/20 px-2.5 py-1 rounded-full text-white font-['JetBrains_Mono']">
+              ⚡ Dynamic Page & Nav Generator
+            </span>
+            <h3 className="text-xl font-extrabold font-['JetBrains_Mono'] mt-2">
+              Add Navbar Option & Launch Custom Page
+            </h3>
+            <p className="text-xs text-[#ffeedd] mt-1 max-w-xl">
+              Create a link under any Megamenu category (AI &amp; Engineering, Data &amp; Cloud, Enterprise AI) or Top-Level Navbar. Next.js will automatically create and publish the page!
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="px-5 py-3 bg-[#fff8f5] text-[#241913] hover:bg-white font-['JetBrains_Mono'] text-xs font-extrabold rounded-xl transition-all shadow-md flex items-center gap-2 shrink-0"
+          >
+            <Plus className="w-4.5 h-4.5 text-[#964900]" />
+            <span>➕ Create Navbar Option & Page</span>
+          </button>
+        </div>
 
         {/* Tab Navigation Controls */}
         <div className="flex border-b border-[#ddc1b0] gap-4">

@@ -51,13 +51,13 @@ interface TabItem {
 }
 
 const TABS: TabItem[] = [
+  { id: "headerFooter", label: "Navbar Options & Megamenu", category: "global", icon: Navigation, previewHref: "/", badgeText: "Edit Nav & Pages" },
+  { id: "customPages", label: "Dynamic Custom Pages", category: "pages", icon: Newspaper, previewHref: "/", badgeText: "CMS Generator" },
   { id: "homepage", label: "Homepage Manager (7 Sections)", category: "pages", icon: Layout, previewHref: "/", badgeText: "7 Sections" },
   { id: "services", label: "Services & Solutions (4)", category: "pages", icon: Briefcase, previewHref: "/services", badgeText: "4 Subpages" },
   { id: "academy", label: "Academy Tracks (3)", category: "pages", icon: GraduationCap, previewHref: "/academy", badgeText: "3 Tracks" },
   { id: "company", label: "Company Pages (6)", category: "pages", icon: Info, previewHref: "/about", badgeText: "6 Pages" },
-  { id: "customPages", label: "Dynamic Custom Pages", category: "pages", icon: Newspaper, previewHref: "/", badgeText: "CMS Generator" },
   { id: "blog", label: "Blog & Research Library", category: "blog", icon: Newspaper, previewHref: "/blog" },
-  { id: "headerFooter", label: "Global Header & Footer", category: "global", icon: Navigation, previewHref: "/" },
   { id: "settings", label: "Neon DB Sync & Credentials", category: "global", icon: Settings },
 ];
 
@@ -69,7 +69,7 @@ export default function AdminPage() {
   const [passwordInput, setPasswordInput] = useState("");
   const [authError, setAuthError] = useState("");
 
-  const [activeTab, setActiveTab] = useState<TabType>("homepage");
+  const [activeTab, setActiveTab] = useState<TabType>("headerFooter");
   const [isSaving, setIsSaving] = useState(false);
   const [saveSuccess, setSaveSuccess] = useState(false);
 

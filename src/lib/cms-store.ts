@@ -1599,6 +1599,19 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
       sanitizedCols.push(defaultEcosystemCol);
     }
 
+    const rawServicesCategories = Array.isArray(parsed.header?.megamenu?.servicesCategories)
+      ? parsed.header.megamenu.servicesCategories
+      : DEFAULT_CMS_DATA.header.megamenu.servicesCategories;
+
+    const sanitizedServicesCategories = rawServicesCategories.map((cat: any) => ({
+      ...cat,
+      items: Array.isArray(cat.items)
+        ? cat.items.filter((item: any) =>
+            !/autonomous ai agents|rag & vector db/i.test(item.name || item.title || "")
+          )
+        : [],
+    }));
+
     const sanitizedHeader = { ...DEFAULT_CMS_DATA.header, ...(parsed.header || {}) };
     if (!sanitizedHeader.primaryCtaText || /get started|start building/i.test(sanitizedHeader.primaryCtaText)) {
       sanitizedHeader.primaryCtaText = "Contact Us";
@@ -1606,9 +1619,7 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     sanitizedHeader.megamenu = {
       ...DEFAULT_CMS_DATA.header.megamenu,
       ...(parsed.header?.megamenu || {}),
-      servicesCategories: Array.isArray(parsed.header?.megamenu?.servicesCategories)
-        ? parsed.header.megamenu.servicesCategories
-        : DEFAULT_CMS_DATA.header.megamenu.servicesCategories,
+      servicesCategories: sanitizedServicesCategories,
       productsDropdown: Array.isArray(parsed.header?.megamenu?.productsDropdown)
         ? parsed.header.megamenu.productsDropdown
         : DEFAULT_CMS_DATA.header.megamenu.productsDropdown,
