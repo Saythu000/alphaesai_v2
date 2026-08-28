@@ -239,66 +239,68 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="absolute top-full left-0 mt-2 w-64 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2 z-50"
+                className="absolute top-full left-0 pt-2 w-64 z-50 before:absolute before:-top-3 before:left-0 before:right-0 before:h-4 before:content-['']"
               >
-                {/* Primary Category List */}
-                <div className="flex flex-col gap-1">
-                  {servicesCategories.map((cat, idx) => {
-                    const isActive = activeServiceTab === idx;
-                    return (
-                      <div
-                        key={cat.id}
-                        onMouseEnter={() => setActiveServiceTab(idx)}
-                        onClick={() => setActiveServiceTab(activeServiceTab === idx ? null : idx)}
-                        className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-['Inter'] font-semibold transition-all cursor-pointer select-none ${
-                          isActive
-                            ? "bg-[#241913]/10 text-[#964900] font-bold shadow-sm"
-                            : "text-[#564336] hover:bg-[#ffeade]/60 hover:text-[#241913]"
-                        }`}
-                      >
-                        <span>{cat.category}</span>
-                        {isActive ? (
-                          <X className="w-3.5 h-3.5 text-[#964900] shrink-0" />
-                        ) : (
-                          <Plus className="w-3.5 h-3.5 text-[#564336]/60 shrink-0" />
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-
-                {/* Secondary Cascading Flyout Card (Popout to Right) */}
-                {activeServiceTab !== null && (
-                  <motion.div
-                    key={servicesCategories[activeServiceTab].id}
-                    initial={{ opacity: 0, x: 8, scale: 0.97 }}
-                    animate={{ opacity: 1, x: 0, scale: 1 }}
-                    exit={{ opacity: 0, x: 8, scale: 0.97 }}
-                    transition={{ type: "spring", stiffness: 450, damping: 32 }}
-                    className="absolute top-0 left-[calc(100%+0.5rem)] w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50 flex flex-col gap-1"
-                  >
-                    <div className="px-3 py-1 text-[10px] font-['JetBrains_Mono'] font-extrabold uppercase tracking-wider text-[#964900]">
-                      {servicesCategories[activeServiceTab].category}
-                    </div>
-                    {servicesCategories[activeServiceTab].items.map((item) => (
-                      <Link
-                        key={item.label}
-                        href={item.href}
-                        className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 transition-all group"
-                      >
-                        <span className="flex items-center gap-2">
-                          {item.label}
-                          {item.badge && (
-                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#964900]/15 text-[#964900]">
-                              {item.badge}
-                            </span>
+                <div className="bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2">
+                  {/* Primary Category List */}
+                  <div className="flex flex-col gap-1">
+                    {servicesCategories.map((cat, idx) => {
+                      const isActive = activeServiceTab === idx;
+                      return (
+                        <div
+                          key={cat.id}
+                          onMouseEnter={() => setActiveServiceTab(idx)}
+                          onClick={() => setActiveServiceTab(activeServiceTab === idx ? null : idx)}
+                          className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-['Inter'] font-semibold transition-all cursor-pointer select-none ${
+                            isActive
+                              ? "bg-[#241913]/10 text-[#964900] font-bold shadow-sm"
+                              : "text-[#564336] hover:bg-[#ffeade]/60 hover:text-[#241913]"
+                          }`}
+                        >
+                          <span>{cat.category}</span>
+                          {isActive ? (
+                            <X className="w-3.5 h-3.5 text-[#964900] shrink-0" />
+                          ) : (
+                            <Plus className="w-3.5 h-3.5 text-[#564336]/60 shrink-0" />
                           )}
-                        </span>
-                        <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                      </Link>
-                    ))}
-                  </motion.div>
-                )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Secondary Cascading Flyout Card (Popout to Right) */}
+                  {activeServiceTab !== null && (
+                    <motion.div
+                      key={servicesCategories[activeServiceTab].id}
+                      initial={{ opacity: 0, x: 8, scale: 0.97 }}
+                      animate={{ opacity: 1, x: 0, scale: 1 }}
+                      exit={{ opacity: 0, x: 8, scale: 0.97 }}
+                      transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                      className="absolute top-0 left-[calc(100%+0.5rem)] w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50 flex flex-col gap-1 before:absolute before:-left-4 before:top-0 before:w-5 before:h-full before:content-['']"
+                    >
+                      <div className="px-3 py-1 text-[10px] font-['JetBrains_Mono'] font-extrabold uppercase tracking-wider text-[#964900]">
+                        {servicesCategories[activeServiceTab].category}
+                      </div>
+                      {servicesCategories[activeServiceTab].items.map((item) => (
+                        <Link
+                          key={item.label}
+                          href={item.href}
+                          className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 transition-all group"
+                        >
+                          <span className="flex items-center gap-2">
+                            {item.label}
+                            {item.badge && (
+                              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#964900]/15 text-[#964900]">
+                                {item.badge}
+                              </span>
+                            )}
+                          </span>
+                          <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                        </Link>
+                      ))}
+                    </motion.div>
+                  )}
+                </div>
               </motion.div>
             )}
           </div>
@@ -327,18 +329,20 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="absolute top-full left-0 mt-2 w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50"
+                className="absolute top-full left-0 pt-2 w-72 z-50 before:absolute before:-top-3 before:left-0 before:right-0 before:h-4 before:content-['']"
               >
-                {productsDropdown.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
-                  >
-                    <span>{item.label}</span>
-                    <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                ))}
+                <div className="bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5">
+                  {productsDropdown.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
+                    >
+                      <span>{item.label}</span>
+                      <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                    </Link>
+                  ))}
+                </div>
               </motion.div>
             )}
           </div>
@@ -367,18 +371,20 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 8, scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="absolute top-full left-0 mt-2 w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50"
+                className="absolute top-full left-0 pt-2 w-72 z-50 before:absolute before:-top-3 before:left-0 before:right-0 before:h-4 before:content-['']"
               >
-                {academyDropdown.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
-                  >
-                    <span>{item.label}</span>
-                    <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                ))}
+                <div className="bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5">
+                  {academyDropdown.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="flex items-center justify-between px-3.5 py-2.5 text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 rounded-xl transition-all group"
+                    >
+                      <span>{item.label}</span>
+                      <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                    </Link>
+                  ))}
+                </div>
               </motion.div>
             )}
           </div>
