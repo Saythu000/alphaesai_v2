@@ -293,33 +293,33 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
             <div className="space-y-4 pt-2">
               <FormField
                 label="Announcement Bar Text"
-                value={formData.header.announcementBarText}
+                value={formData.header?.announcementBarText || ""}
                 onChange={(val) =>
                   setFormData((prev) => ({
                     ...prev,
-                    header: { ...prev.header, announcementBarText: val },
+                    header: { ...(prev.header || {}), announcementBarText: val } as any,
                   }))
                 }
               />
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField
                   label="Primary CTA Text"
-                  value={formData.header.primaryCtaText}
+                  value={formData.header?.primaryCtaText || ""}
                   onChange={(val) =>
                     setFormData((prev) => ({
                       ...prev,
-                      header: { ...prev.header, primaryCtaText: val },
+                      header: { ...(prev.header || {}), primaryCtaText: val } as any,
                     }))
                   }
                 />
                 <FormField
                   label="Primary CTA Href"
                   type="mono"
-                  value={formData.header.primaryCtaHref}
+                  value={formData.header?.primaryCtaHref || ""}
                   onChange={(val) =>
                     setFormData((prev) => ({
                       ...prev,
-                      header: { ...prev.header, primaryCtaHref: val },
+                      header: { ...(prev.header || {}), primaryCtaHref: val } as any,
                     }))
                   }
                 />
@@ -332,7 +332,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 Current Top-Level Navbar Links
               </h4>
               <div className="space-y-2">
-                {formData.header.navLinks.map((link) => (
+                {(formData.header?.navLinks || []).map((link) => (
                   <div
                     key={link.id}
                     className="flex items-center justify-between p-3 bg-white border border-[#ddc1b0] rounded-xl hover:border-[#964900] transition-colors"
@@ -365,19 +365,19 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
             </p>
 
             <div className="space-y-6">
-              {formData.header.megamenu.servicesCategories.map((cat) => (
+              {(formData.header?.megamenu?.servicesCategories || []).map((cat) => (
                 <div key={cat.id} className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-3">
                   <div className="flex items-center justify-between pb-2 border-b border-[#ddc1b0]">
                     <span className="text-xs font-bold font-['JetBrains_Mono'] text-[#964900] uppercase tracking-wider">
                       📁 Category: {cat.title}
                     </span>
                     <span className="text-[11px] text-gray-500">
-                      {cat.items.length} dropdown option(s)
+                      {(cat.items || []).length} dropdown option(s)
                     </span>
                   </div>
 
                   <div className="space-y-2">
-                    {cat.items.map((item) => (
+                    {(cat.items || []).map((item) => (
                       <div
                         key={item.id}
                         className="flex items-center justify-between p-3 bg-white border border-[#ddc1b0] rounded-xl"
@@ -414,32 +414,32 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Footer Brand Name"
-                value={formData.footer.brandName}
+                value={formData.footer?.brandName || ""}
                 onChange={(val) =>
                   setFormData((prev) => ({
                     ...prev,
-                    footer: { ...prev.footer, brandName: val },
+                    footer: { ...(prev.footer || {}), brandName: val } as any,
                   }))
                 }
               />
               <FormField
                 label="Contact Email"
-                value={formData.footer.contactEmail}
+                value={formData.footer?.contactEmail || ""}
                 onChange={(val) =>
                   setFormData((prev) => ({
                     ...prev,
-                    footer: { ...prev.footer, contactEmail: val },
+                    footer: { ...(prev.footer || {}), contactEmail: val } as any,
                   }))
                 }
               />
             </div>
             <FormField
               label="Tagline"
-              value={formData.footer.tagline}
+              value={formData.footer?.tagline || ""}
               onChange={(val) =>
                 setFormData((prev) => ({
                   ...prev,
-                  footer: { ...prev.footer, tagline: val },
+                  footer: { ...(prev.footer || {}), tagline: val } as any,
                 }))
               }
             />
