@@ -22,7 +22,7 @@ export const CustomPagesTab: React.FC<Props> = ({ formData, setFormData }) => {
       ? customPages[selectedPageIndex]
       : null;
 
-  const handleUpdatePageField = (field: string, value: any) => {
+  const handleUpdatePageField = (field: string, value: unknown) => {
     if (selectedPageIndex === null) return;
     setFormData((prev) => {
       const pages = [...(prev.customPages || [])];

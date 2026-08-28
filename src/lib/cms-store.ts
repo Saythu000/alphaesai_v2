@@ -1603,10 +1603,10 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
       ? parsed.header.megamenu.servicesCategories
       : DEFAULT_CMS_DATA.header.megamenu.servicesCategories;
 
-    const sanitizedServicesCategories = rawServicesCategories.map((cat: any) => ({
+    const sanitizedServicesCategories = rawServicesCategories.map((cat: { items?: Array<{ name?: string; title?: string }> }) => ({
       ...cat,
       items: Array.isArray(cat.items)
-        ? cat.items.filter((item: any) =>
+        ? cat.items.filter((item: { name?: string; title?: string }) =>
             !/autonomous ai agents|rag & vector db/i.test(item.name || item.title || "")
           )
         : [],

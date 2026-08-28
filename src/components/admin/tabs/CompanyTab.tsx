@@ -27,7 +27,7 @@ export const CompanyTab: React.FC<Props> = ({ formData, setFormData }) => {
 
   const currentCompany = formData.pages[selectedCompanyKey];
 
-  const updateCurrentCompany = (fields: Record<string, any>) => {
+  const updateCurrentCompany = (fields: Record<string, unknown>) => {
     setFormData((prev) => ({
       ...prev,
       pages: {
@@ -71,7 +71,7 @@ export const CompanyTab: React.FC<Props> = ({ formData, setFormData }) => {
           {"heroBadge" in currentCompany && (
             <FormField
               label="Badge Pill Text"
-              value={(currentCompany as any).heroBadge || ""}
+              value={(currentCompany as unknown as Record<string, string>).heroBadge || ""}
               onChange={(val) => updateCurrentCompany({ heroBadge: val })}
             />
           )}
@@ -79,12 +79,12 @@ export const CompanyTab: React.FC<Props> = ({ formData, setFormData }) => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <FormField
               label="Hero Title"
-              value={(currentCompany as any).title || ""}
+              value={(currentCompany as unknown as Record<string, string>).title || ""}
               onChange={(val) => updateCurrentCompany({ title: val })}
             />
             <FormField
               label="Subtitle"
-              value={(currentCompany as any).subtitle || ""}
+              value={(currentCompany as unknown as Record<string, string>).subtitle || ""}
               onChange={(val) => updateCurrentCompany({ subtitle: val })}
             />
           </div>

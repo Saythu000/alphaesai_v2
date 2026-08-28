@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Navigation, Plus, Trash2, Edit3, Globe, Sparkles, Layers, Check, X } from "lucide-react";
-import { FullCMSData, CustomCMSPage } from "@/lib/cms-store";
+import { FullCMSData, CustomCMSPage, HeaderCMSData, FooterCMSData } from "@/lib/cms-store";
 import { SectionHeader } from "../common/SectionHeader";
 import { FormField } from "../common/FormField";
 
@@ -84,7 +84,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
 
     setFormData((prev) => {
       const updatedPages = [...(prev.customPages || []), newPageObj];
-      let updatedHeader = { ...prev.header };
+      const updatedHeader = { ...prev.header };
 
       if (newCategory === "top-level") {
         // Add to main navbar top-level links
@@ -297,7 +297,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 onChange={(val) =>
                   setFormData((prev) => ({
                     ...prev,
-                    header: { ...(prev.header || {}), announcementBarText: val } as any,
+                    header: { ...(prev.header || {}), announcementBarText: val } as HeaderCMSData,
                   }))
                 }
               />
@@ -308,7 +308,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                   onChange={(val) =>
                     setFormData((prev) => ({
                       ...prev,
-                      header: { ...(prev.header || {}), primaryCtaText: val } as any,
+                      header: { ...(prev.header || {}), primaryCtaText: val } as HeaderCMSData,
                     }))
                   }
                 />
@@ -319,7 +319,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                   onChange={(val) =>
                     setFormData((prev) => ({
                       ...prev,
-                      header: { ...(prev.header || {}), primaryCtaHref: val } as any,
+                      header: { ...(prev.header || {}), primaryCtaHref: val } as HeaderCMSData,
                     }))
                   }
                 />
@@ -418,7 +418,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 onChange={(val) =>
                   setFormData((prev) => ({
                     ...prev,
-                    footer: { ...(prev.footer || {}), brandName: val } as any,
+                    footer: { ...(prev.footer || {}), brandName: val } as FooterCMSData,
                   }))
                 }
               />
@@ -428,7 +428,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 onChange={(val) =>
                   setFormData((prev) => ({
                     ...prev,
-                    footer: { ...(prev.footer || {}), contactEmail: val } as any,
+                    footer: { ...(prev.footer || {}), contactEmail: val } as FooterCMSData,
                   }))
                 }
               />
@@ -439,7 +439,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
               onChange={(val) =>
                 setFormData((prev) => ({
                   ...prev,
-                  footer: { ...(prev.footer || {}), tagline: val } as any,
+                  footer: { ...(prev.footer || {}), tagline: val } as FooterCMSData,
                 }))
               }
             />
