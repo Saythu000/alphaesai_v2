@@ -181,6 +181,43 @@ export default function ForwardDeployedEngineeringPage() {
     ? cmsFde.capabilitiesBadges
     : defaultPillars;
 
+  const displayCoreApartPoints = cmsFde?.coreApartPoints?.length
+    ? cmsFde.coreApartPoints
+    : [
+        "Embedded senior engineers inside your workflow",
+        "Direct code ownership, not high-level strategy slides",
+        "Zero lock-in: full documentation & knowledge transfer",
+        "Accountable for P99 latency, security & GPU cost",
+      ];
+
+  const gapIcons = [Workflow, Lock, Zap, TrendingUp];
+  const displayGaps = cmsFde?.realityGaps?.length
+    ? cmsFde.realityGaps.map((gap, idx) => ({
+        ...gap,
+        icon: gapIcons[idx % gapIcons.length],
+      }))
+    : gaps;
+
+  const displayPhases = cmsFde?.phases?.length ? cmsFde.phases : phases;
+
+  const expertiseIcons = [Cpu, Server, ShieldCheck, Layers];
+  const displayExpertise = cmsFde?.competencies?.length
+    ? cmsFde.competencies.map((item, idx) => ({
+        ...item,
+        icon: expertiseIcons[idx % expertiseIcons.length],
+      }))
+    : expertise;
+
+  const diffIcons = [Code2, Sparkles, Layers, CheckCircle2];
+  const displayDifferentiators = cmsFde?.differentiators?.length
+    ? cmsFde.differentiators.map((diff, idx) => ({
+        ...diff,
+        icon: diffIcons[idx % diffIcons.length],
+      }))
+    : differentiators;
+
+  const displayFaqs = cmsFde?.faqs?.length ? cmsFde.faqs : faqs;
+
   return (
     <div className="min-h-screen bg-[#fff8f5] text-[#241913] font-['Inter'] selection:bg-[#964900] selection:text-white">
       <main className="pt-24 sm:pt-28 pb-20">
@@ -295,8 +332,8 @@ export default function ForwardDeployedEngineeringPage() {
         {/* INTERACTIVE ENGINE SHOWCASE (HUB & SPOKE DIAGRAM) */}
         <section id="interactive-engine" className="py-12 px-6 sm:px-12 max-w-6xl mx-auto">
           <FdeInteractiveHub
-            badgeText="AlphaesAI FDE Engine"
-            title="Working alongside you, every step"
+            badgeText={cmsFde?.engineBadge || "AlphaesAI FDE Engine"}
+            title={cmsFde?.engineTitle || "Working alongside you, every step"}
           />
         </section>
 
@@ -306,23 +343,23 @@ export default function ForwardDeployedEngineeringPage() {
             <div className="lg:col-span-7 space-y-6">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffeade] text-[#964900] text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-wider">
                 <Cpu className="w-3.5 h-3.5" />
-                <span>The Core: Engineering Ownership</span>
+                <span>{cmsFde?.coreSubtitle || "The Core: Engineering Ownership"}</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold font-['JetBrains_Mono'] text-[#241913] leading-tight">
-                Forward Deployed Engineering (FDE)
+                {cmsFde?.coreTitle || "Forward Deployed Engineering (FDE)"}
               </h2>
               <p className="text-base sm:text-lg text-[#564336] leading-relaxed">
-                Forward Deployed Engineering (FDE) is our alternative to the &apos;pilot purgatory&apos; that traps most enterprise AI initiatives. We don’t just advise; we operate. Our senior engineers integrate directly into your organization, working shoulder-to-shoulder with your team to architect, build, and deploy production-grade AI and cloud infrastructure.
+                {cmsFde?.coreDescription1 || "Forward Deployed Engineering (FDE) is our alternative to the 'pilot purgatory' that traps most enterprise AI initiatives. We don’t just advise; we operate. Our senior engineers integrate directly into your organization, working shoulder-to-shoulder with your team to architect, build, and deploy production-grade AI and cloud infrastructure."}
               </p>
               <p className="text-base sm:text-lg text-[#564336] leading-relaxed">
-                We don’t walk away after the pitch—we stay until the system is stable, scalable, and operational in your environment.
+                {cmsFde?.coreDescription2 || "We don’t walk away after the pitch—we stay until the system is stable, scalable, and operational in your environment."}
               </p>
               <div className="pt-2">
                 <Link
-                  href="/contact"
+                  href={cmsFde?.coreCtaHref || "/contact"}
                   className="inline-flex items-center gap-2 text-sm font-['JetBrains_Mono'] font-bold text-[#964900] hover:text-[#723600] group"
                 >
-                  <span>Schedule an Executive Briefing</span>
+                  <span>{cmsFde?.coreCtaText || "Schedule an Executive Briefing"}</span>
                   <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
@@ -332,15 +369,10 @@ export default function ForwardDeployedEngineeringPage() {
             <div className="lg:col-span-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-3xl p-8 shadow-xl relative overflow-hidden">
               <div className="absolute -top-12 -right-12 w-40 h-40 bg-[#964900]/10 rounded-full blur-2xl" />
               <h3 className="text-lg font-['JetBrains_Mono'] font-bold text-[#241913] mb-4">
-                What Sets FDE Apart
+                {cmsFde?.coreApartTitle || "What Sets FDE Apart"}
               </h3>
               <ul className="space-y-4">
-                {[
-                  "Embedded senior engineers inside your workflow",
-                  "Direct code ownership, not high-level strategy slides",
-                  "Zero lock-in: full documentation & knowledge transfer",
-                  "Accountable for P99 latency, security & GPU cost",
-                ].map((item, i) => (
+                {displayCoreApartPoints.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm text-[#564336]">
                     <CheckCircle2 className="w-5 h-5 text-[#964900] shrink-0 mt-0.5" />
                     <span>{item}</span>
@@ -355,20 +387,20 @@ export default function ForwardDeployedEngineeringPage() {
         <section className="py-20 px-6 sm:px-12 max-w-6xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffeade] text-[#964900] text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-wider mb-4">
-              <span>The Reality</span>
+              <span>{cmsFde?.realitySubtitle || "The Reality"}</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-extrabold font-['JetBrains_Mono'] text-[#241913] tracking-tight">
-              The Demo-to-Production Gap
+              {cmsFde?.realityTitle || "The Demo-to-Production Gap"}
             </h2>
             <p className="mt-4 text-base sm:text-lg text-[#564336] leading-relaxed">
-              Most AI initiatives fail not because the technology is flawed, but because the delivery model is. A prototype is not a product. Bringing AI into a complex enterprise environment requires more than a clever algorithm—it demands rigorous engineering, robust security, and seamless integration.
+              {cmsFde?.realityDescription || "Most AI initiatives fail not because the technology is flawed, but because the delivery model is. A prototype is not a product. Bringing AI into a complex enterprise environment requires more than a clever algorithm—it demands rigorous engineering, robust security, and seamless integration."}
             </p>
           </div>
 
           {/* 4 Gaps Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {gaps.map((gap, idx) => {
-              const IconComp = gap.icon;
+            {displayGaps.map((gap, idx) => {
+              const IconComp = gap.icon || Workflow;
               return (
                 <motion.div
                   key={gap.title}
@@ -396,13 +428,13 @@ export default function ForwardDeployedEngineeringPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#964900]/30 border border-[#964900] text-[#ffb07c] text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-wider mb-4">
-                <span>Methodology</span>
+                <span>{cmsFde?.methodologySubtitle || "Methodology"}</span>
               </div>
               <h2 className="text-3xl sm:text-5xl font-extrabold font-['JetBrains_Mono'] text-white tracking-tight">
-                Our 5-Phase Deployment Model
+                {cmsFde?.methodologyTitle || "Our 5-Phase Deployment Model"}
               </h2>
               <p className="mt-4 text-base sm:text-lg text-[#ddc1b0] leading-relaxed">
-                We follow a structured, disciplined process designed to minimize technical risk and accelerate time-to-market.
+                {cmsFde?.methodologyDescription || "We follow a structured, disciplined process designed to minimize technical risk and accelerate time-to-market."}
               </p>
             </div>
 
@@ -410,11 +442,11 @@ export default function ForwardDeployedEngineeringPage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
               {/* Left Selector List */}
               <div className="lg:col-span-5 flex flex-col gap-3">
-                {phases.map((p, index) => {
+                {displayPhases.map((p, index) => {
                   const isActive = activePhase === index;
                   return (
                     <button
-                      key={p.step}
+                      key={p.step || index}
                       onClick={() => setActivePhase(index)}
                       className={`text-left p-5 rounded-2xl border transition-all flex items-start gap-4 ${
                         isActive
@@ -443,40 +475,42 @@ export default function ForwardDeployedEngineeringPage() {
               </div>
 
               {/* Right Detail Preview Box */}
-              <div className="lg:col-span-7 bg-[#1b120c] border border-[#443329] rounded-3xl p-8 lg:p-10 min-h-[360px] flex flex-col justify-between relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 text-8xl font-['JetBrains_Mono'] font-black text-[#38261b] select-none pointer-events-none">
-                  {phases[activePhase].step}
-                </div>
-
-                <div className="relative z-10 space-y-6">
-                  <div className="inline-block text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-widest text-[#ffb07c]">
-                    Phase {phases[activePhase].step} Detail
+              {displayPhases[activePhase] && (
+                <div className="lg:col-span-7 bg-[#1b120c] border border-[#443329] rounded-3xl p-8 lg:p-10 min-h-[360px] flex flex-col justify-between relative overflow-hidden">
+                  <div className="absolute top-0 right-0 p-8 text-8xl font-['JetBrains_Mono'] font-black text-[#38261b] select-none pointer-events-none">
+                    {displayPhases[activePhase].step}
                   </div>
-                  <h3 className="text-2xl sm:text-3xl font-['JetBrains_Mono'] font-bold text-white">
-                    {phases[activePhase].name}
-                  </h3>
-                  <p className="text-base sm:text-lg text-[#ddc1b0] leading-relaxed">
-                    {phases[activePhase].summary}
-                  </p>
-                  <div className="p-4 rounded-xl bg-[#2d2019] border border-[#443329] text-sm text-[#e8d5cb] leading-relaxed">
-                    <strong className="text-white font-['JetBrains_Mono']">Key Deliverables: </strong>
-                    {phases[activePhase].detail}
+
+                  <div className="relative z-10 space-y-6">
+                    <div className="inline-block text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-widest text-[#ffb07c]">
+                      Phase {displayPhases[activePhase].step} Detail
+                    </div>
+                    <h3 className="text-2xl sm:text-3xl font-['JetBrains_Mono'] font-bold text-white">
+                      {displayPhases[activePhase].name}
+                    </h3>
+                    <p className="text-base sm:text-lg text-[#ddc1b0] leading-relaxed">
+                      {displayPhases[activePhase].summary}
+                    </p>
+                    <div className="p-4 rounded-xl bg-[#2d2019] border border-[#443329] text-sm text-[#e8d5cb] leading-relaxed">
+                      <strong className="text-white font-['JetBrains_Mono']">Key Deliverables: </strong>
+                      {displayPhases[activePhase].detail}
+                    </div>
+                  </div>
+
+                  <div className="relative z-10 pt-6 border-t border-[#443329] flex items-center justify-between mt-6">
+                    <span className="text-xs font-['JetBrains_Mono'] text-[#a88f80]">
+                      Phase {activePhase + 1} of {displayPhases.length}
+                    </span>
+                    <Link
+                      href={cmsFde?.phaseCtaHref || "/contact"}
+                      className="inline-flex items-center gap-1.5 text-xs font-['JetBrains_Mono'] font-bold text-[#ffb07c] hover:underline"
+                    >
+                      <span>{cmsFde?.phaseCtaText || "Start Discovery Briefing"}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </Link>
                   </div>
                 </div>
-
-                <div className="relative z-10 pt-6 border-t border-[#443329] flex items-center justify-between mt-6">
-                  <span className="text-xs font-['JetBrains_Mono'] text-[#a88f80]">
-                    Phase {activePhase + 1} of 5
-                  </span>
-                  <Link
-                    href="/contact"
-                    className="inline-flex items-center gap-1.5 text-xs font-['JetBrains_Mono'] font-bold text-[#ffb07c] hover:underline"
-                  >
-                    <span>Start Discovery Briefing</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
+              )}
             </div>
           </div>
         </section>
@@ -485,19 +519,19 @@ export default function ForwardDeployedEngineeringPage() {
         <section className="py-20 px-6 sm:px-12 max-w-6xl mx-auto">
           <div className="text-center max-w-3xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffeade] text-[#964900] text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-wider mb-4">
-              <span>Core Competencies</span>
+              <span>{cmsFde?.competenciesSubtitle || "Core Competencies"}</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-extrabold font-['JetBrains_Mono'] text-[#241913] tracking-tight">
-              Expertise in Practice
+              {cmsFde?.competenciesTitle || "Expertise in Practice"}
             </h2>
             <p className="mt-4 text-base sm:text-lg text-[#564336] leading-relaxed">
-              We specialize across 4 essential domains of modern enterprise software and AI engineering.
+              {cmsFde?.competenciesDescription || "We specialize across 4 essential domains of modern enterprise software and AI engineering."}
             </p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {expertise.map((item) => {
-              const IconComp = item.icon;
+            {displayExpertise.map((item) => {
+              const IconComp = item.icon || Cpu;
               return (
                 <div
                   key={item.category}
@@ -517,7 +551,7 @@ export default function ForwardDeployedEngineeringPage() {
                     </p>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-4 border-t border-[#ddc1b0]/40">
-                    {item.tags.map((t) => (
+                    {item.tags?.map((t) => (
                       <span
                         key={t}
                         className="px-2.5 py-1 rounded-md bg-[#fff8f5] border border-[#ddc1b0]/60 text-[11px] font-['JetBrains_Mono'] text-[#964900] font-semibold"
@@ -537,16 +571,16 @@ export default function ForwardDeployedEngineeringPage() {
           <div className="max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-16">
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffeade] text-[#964900] text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-wider mb-4">
-                <span>Our Differentiator</span>
+                <span>{cmsFde?.differentiatorSubtitle || "Our Differentiator"}</span>
               </div>
               <h2 className="text-3xl sm:text-5xl font-extrabold font-['JetBrains_Mono'] text-[#241913] tracking-tight">
-                Why Choose AlphaesAI?
+                {cmsFde?.differentiatorTitle || "Why Choose AlphaesAI?"}
               </h2>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {differentiators.map((d, i) => {
-                const IconComp = d.icon;
+              {displayDifferentiators.map((d, i) => {
+                const IconComp = d.icon || Code2;
                 return (
                   <motion.div
                     key={d.title}
@@ -577,15 +611,15 @@ export default function ForwardDeployedEngineeringPage() {
           <div className="text-center max-w-2xl mx-auto mb-16">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#ffeade] text-[#964900] text-xs font-['JetBrains_Mono'] font-bold uppercase tracking-wider mb-4">
               <HelpCircle className="w-3.5 h-3.5" />
-              <span>Frequently Asked Questions</span>
+              <span>{cmsFde?.faqSubtitle || "Frequently Asked Questions"}</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold font-['JetBrains_Mono'] text-[#241913] tracking-tight">
-              Got Questions?
+              {cmsFde?.faqTitle || "Got Questions?"}
             </h2>
           </div>
 
           <div className="space-y-4">
-            {faqs.map((faq, index) => {
+            {displayFaqs.map((faq, index) => {
               const isOpen = openFaq === index;
               return (
                 <div
@@ -628,18 +662,18 @@ export default function ForwardDeployedEngineeringPage() {
           <div className="bg-gradient-to-r from-[#241913] via-[#38261b] to-[#964900] text-white rounded-3xl p-10 sm:p-14 text-center shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 right-0 w-80 h-80 bg-white/5 rounded-full blur-3xl" />
             <h2 className="text-3xl sm:text-5xl font-extrabold font-['JetBrains_Mono'] mb-4 tracking-tight">
-              Ready to Move from Experiment to Production?
+              {cmsFde?.finalCtaTitle || "Ready to Move from Experiment to Production?"}
             </h2>
             <p className="text-lg sm:text-xl text-[#ffeedd] max-w-xl mx-auto mb-8 font-normal">
-              Let’s build something that works. Book a technical discovery briefing with our senior engineers today.
+              {cmsFde?.finalCtaDescription || "Let’s build something that works. Book a technical discovery briefing with our senior engineers today."}
             </p>
             <Link
-              href="/contact"
+              href={cmsFde?.finalCtaHref || "/contact"}
               className="group relative inline-flex items-center shadow-2xl hover:scale-105 transition-transform"
             >
               <span className="absolute right-0 inset-y-0 w-[calc(100%-1.25rem)] rounded-xl bg-[#964900]" />
               <span className="relative z-10 px-8 py-4 rounded-xl bg-[#fff8f5] text-[#241913] text-sm font-['JetBrains_Mono'] font-bold tracking-wide">
-                Schedule an Executive Briefing
+                {cmsFde?.finalCtaText || "Schedule an Executive Briefing"}
               </span>
               <span className="relative -left-px z-10 w-12 h-12 rounded-xl flex items-center justify-center text-white bg-[#964900]">
                 <ArrowDownRight className="w-5 h-5 transition-transform duration-300 group-hover:-rotate-45" />
@@ -651,3 +685,4 @@ export default function ForwardDeployedEngineeringPage() {
     </div>
   );
 }
+

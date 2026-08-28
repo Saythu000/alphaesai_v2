@@ -342,6 +342,32 @@ export interface ServiceEngagementTierCMS {
   deliverables: string[];
 }
 
+export interface RealityGapCMS {
+  title: string;
+  desc: string;
+  iconName?: string;
+}
+
+export interface PhaseCMS {
+  step: string;
+  name: string;
+  summary: string;
+  detail: string;
+}
+
+export interface CompetencyCMS {
+  category: string;
+  desc: string;
+  tags: string[];
+  iconName?: string;
+}
+
+export interface DifferentiatorCMS {
+  title: string;
+  desc: string;
+  iconName?: string;
+}
+
 export interface ServiceSubpageDetailCMS {
   heroBadge: string;
   title: string;
@@ -357,6 +383,48 @@ export interface ServiceSubpageDetailCMS {
   aiDifferencePoints: { title: string; desc: string; iconName: string }[];
   engagementTiers: ServiceEngagementTierCMS[];
   faqs: { q: string; a: string }[];
+
+  // Subpage Extended Section Fields
+  engineBadge?: string;
+  engineTitle?: string;
+
+  coreSubtitle?: string;
+  coreTitle?: string;
+  coreDescription1?: string;
+  coreDescription2?: string;
+  coreCtaText?: string;
+  coreCtaHref?: string;
+  coreApartTitle?: string;
+  coreApartPoints?: string[];
+
+  realitySubtitle?: string;
+  realityTitle?: string;
+  realityDescription?: string;
+  realityGaps?: RealityGapCMS[];
+
+  methodologySubtitle?: string;
+  methodologyTitle?: string;
+  methodologyDescription?: string;
+  phases?: PhaseCMS[];
+  phaseCtaText?: string;
+  phaseCtaHref?: string;
+
+  competenciesSubtitle?: string;
+  competenciesTitle?: string;
+  competenciesDescription?: string;
+  competencies?: CompetencyCMS[];
+
+  differentiatorSubtitle?: string;
+  differentiatorTitle?: string;
+  differentiators?: DifferentiatorCMS[];
+
+  faqSubtitle?: string;
+  faqTitle?: string;
+
+  finalCtaTitle?: string;
+  finalCtaDescription?: string;
+  finalCtaText?: string;
+  finalCtaHref?: string;
 }
 
 export interface ServiceSubpagesCMSData {
@@ -1346,28 +1414,169 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
         primaryCtaText: "Request FDE Deployment",
         primaryCtaHref: "/contact",
         secondaryCtaText: "View FDE Process",
-        secondaryCtaHref: "#process",
-        frictionPoints: [
-          { title: "Consulting Handoff Friction", tag: "DELIVERY GAP", desc: "External advice that never gets translated into actual shipping production code.", iconName: "AlertTriangle" },
-          { title: "Runaway AI Pilots", tag: "PILOT PURGATORY", desc: "Prototypes that work in Jupyter notebooks but stall when scaled to real enterprise concurrency.", iconName: "Cpu" },
+        secondaryCtaHref: "#interactive-engine",
+        frictionPoints: [],
+        capabilities: [],
+        aiDifferencePoints: [],
+        engagementTiers: [],
+
+        engineBadge: "AlphaesAI FDE Engine",
+        engineTitle: "Working alongside you, every step",
+
+        coreSubtitle: "The Core: Engineering Ownership",
+        coreTitle: "Forward Deployed Engineering (FDE)",
+        coreDescription1: "Forward Deployed Engineering (FDE) is our alternative to the 'pilot purgatory' that traps most enterprise AI initiatives. We don’t just advise; we operate. Our senior engineers integrate directly into your organization, working shoulder-to-shoulder with your team to architect, build, and deploy production-grade AI and cloud infrastructure.",
+        coreDescription2: "We don’t walk away after the pitch—we stay until the system is stable, scalable, and operational in your environment.",
+        coreCtaText: "Schedule an Executive Briefing",
+        coreCtaHref: "/contact",
+        coreApartTitle: "What Sets FDE Apart",
+        coreApartPoints: [
+          "Embedded senior engineers inside your workflow",
+          "Direct code ownership, not high-level strategy slides",
+          "Zero lock-in: full documentation & knowledge transfer",
+          "Accountable for P99 latency, security & GPU cost",
         ],
-        capabilities: [
+
+        realitySubtitle: "The Reality",
+        realityTitle: "The Demo-to-Production Gap",
+        realityDescription: "Most AI initiatives fail not because the technology is flawed, but because the delivery model is. A prototype is not a product. Bringing AI into a complex enterprise environment requires more than a clever algorithm—it demands rigorous engineering, robust security, and seamless integration.",
+        realityGaps: [
           {
-            id: "agents",
-            badge: "Autonomous Agents",
-            title: "Multi-Agent Swarm Orchestration",
-            desc: "Building deterministic state graphs and subagent swarms that execute complex workflows safely.",
-            highlights: ["Antigravity SDK loop integration", "Tool schema allowlisting", "Human-in-the-loop approval gateways"],
-            iconName: "Bot",
+            title: "Systemic Integration",
+            desc: "We embed AI into your existing tech stack, avoiding siloed solutions and brittle wrappers.",
+            iconName: "Workflow",
+          },
+          {
+            title: "Operational Readiness",
+            desc: "We solve for data dependencies, governance, and security from Day 1—not as an afterthought.",
+            iconName: "Lock",
+          },
+          {
+            title: "Infrastructure Efficiency",
+            desc: "We manage the 'hidden' costs of AI, from inference optimization to cloud overhead reduction.",
+            iconName: "Zap",
+          },
+          {
+            title: "The Last Mile",
+            desc: "We transform successful demos into resilient, production systems that deliver measurable ROI.",
+            iconName: "TrendingUp",
           },
         ],
-        aiDifferencePoints: [
-          { title: "Direct Git Access", desc: "Our engineers submit pull requests and build CI/CD pipelines directly inside your repos.", iconName: "Terminal" },
+
+        methodologySubtitle: "Methodology",
+        methodologyTitle: "Our 5-Phase Deployment Model",
+        methodologyDescription: "We follow a structured, disciplined process designed to minimize technical risk and accelerate time-to-market.",
+        phaseCtaText: "Start Discovery Briefing",
+        phaseCtaHref: "/contact",
+        phases: [
+          {
+            step: "01",
+            name: "Discovery & Audit",
+            summary: "We analyze your bottlenecks and identify high-leverage opportunities aligned with your core business objectives.",
+            detail: "Deep dive into data pipelines, security boundaries, cloud infrastructure, and current pain points to define exact success metrics.",
+          },
+          {
+            step: "02",
+            name: "Rapid Prototyping",
+            summary: "We build high-fidelity proofs of concept using your real data, validating technical viability before committing to scale.",
+            detail: "Rapidly test agentic loops, RAG accuracy, and data flows in a sandboxed environment to eliminate architecture risk early.",
+          },
+          {
+            step: "03",
+            name: "Production Implementation",
+            summary: "We deploy secure, scalable systems integrated directly into your existing enterprise infrastructure.",
+            detail: "Full-stack engineering: model hosting, zero-downtime CI/CD pipelines, container orchestration, and real-time observability.",
+          },
+          {
+            step: "04",
+            name: "Enablement",
+            summary: "We don't just hand off code; we train your internal team to operate, monitor, and extend the system with complete confidence.",
+            detail: "Runbooks, interactive workshops, architecture documentation, and paired coding sessions to ensure operational independence.",
+          },
+          {
+            step: "05",
+            name: "Continuous Engineering",
+            summary: "We remain your embedded partner, providing optimization, tuning, and feature expansion as your requirements evolve.",
+            detail: "Ongoing model performance audits, latency reduction, cost engineering, and seamless integration of emerging AI capabilities.",
+          },
         ],
-        engagementTiers: [],
+
+        competenciesSubtitle: "Core Competencies",
+        competenciesTitle: "Expertise in Practice",
+        competenciesDescription: "We specialize across 4 essential domains of modern enterprise software and AI engineering.",
+        competencies: [
+          {
+            category: "AI & Agents",
+            desc: "Deploying agentic workflows, RAG systems, and lead-gen automation (powered by our OneAI Assist engine).",
+            iconName: "Cpu",
+            tags: ["Agentic Frameworks", "Production RAG", "OneAI Assist Engine"],
+          },
+          {
+            category: "Cloud & Platform",
+            desc: "Modernizing infrastructure with secure, resilient, and CI/CD-ready cloud architectures.",
+            iconName: "Server",
+            tags: ["AWS / Azure / GCP", "Kubernetes", "Infrastructure as Code"],
+          },
+          {
+            category: "Governance & Security",
+            desc: "Engineering 'secure-by-design' AI frameworks that satisfy compliance requirements and mitigate model risks.",
+            iconName: "ShieldCheck",
+            tags: ["PII Sanitization", "RBAC Controls", "Model Audit Trails"],
+          },
+          {
+            category: "FinOps & Cost Engineering",
+            desc: "We optimize GPU and cloud utilization to ensure scaling does not compromise your operational budget.",
+            iconName: "Layers",
+            tags: ["Inference Cost Cuts", "GPU Scheduling", "Cloud Right-Sizing"],
+          },
+        ],
+
+        differentiatorSubtitle: "Our Differentiator",
+        differentiatorTitle: "Why Choose AlphaesAI?",
+        differentiators: [
+          {
+            title: "Code Over Decks",
+            desc: "We are builders who advise, not consultants who theorize. Every engagement ends in working, production code.",
+            iconName: "Code2",
+          },
+          {
+            title: "Proven by Practice",
+            desc: "OneAI Assist and DrGodly are living testaments to the engineering rigor and architecture standards we bring to your team.",
+            iconName: "Sparkles",
+          },
+          {
+            title: "Full-Stack Ownership",
+            desc: "We treat AI, security, and cloud infrastructure as a single, cohesive engineering system with end-to-end accountability.",
+            iconName: "Layers",
+          },
+          {
+            title: "Designed for Independence",
+            desc: "Our goal is your self-sufficiency. We document everything, transfer complete knowledge, and leave your team empowered.",
+            iconName: "CheckCircle2",
+          },
+        ],
+
+        faqSubtitle: "Frequently Asked Questions",
+        faqTitle: "Got Questions?",
         faqs: [
-          { q: "How does the FDE model work?", a: "Senior AlphaesAI engineers embed into your team's Slack, Jira, and Git repository, writing production code alongside your staff." },
+          {
+            q: "How does FDE differ from traditional consulting?",
+            a: "Consulting delivers decks and high-level strategy slides; we deliver working code and production systems. We stay embedded in your environment until the project is operational, accountable for the real-world performance, security, and reliability of the final solution.",
+          },
+          {
+            q: "Is this staff augmentation?",
+            a: "No. Staff augmentation simply fills a seat with extra hours. Our Forward Deployed Engineers bring a specific methodology, pre-tested architecture components, and senior-level domain expertise to take complete ownership of delivery and outcomes.",
+          },
+          {
+            q: "How soon can we start?",
+            a: "Engagement starts with a technical discovery briefing to align your infrastructure with your core business goals. We typically move from initial audit to first working proof of concept in weeks, not months.",
+          },
         ],
+
+        finalCtaTitle: "Ready to Move from Experiment to Production?",
+        finalCtaDescription: "Let’s build something that works. Book a technical discovery briefing with our senior engineers today.",
+        finalCtaText: "Schedule an Executive Briefing",
+        finalCtaHref: "/contact",
       },
       dataAnnotation: {
         heroBadge: "DATA ANNOTATION · RLHF · MULTI-MODAL ALIGNMENT",

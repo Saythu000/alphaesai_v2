@@ -476,6 +476,464 @@ export const ServicesTab: React.FC<Props> = ({ formData, setFormData }) => {
                 }
               />
             </div>
+
+            {/* FDE SPECIALIZED SECTION EDITORS */}
+            {selectedTabKey === "fde" && (
+              <div className="space-y-8 pt-6 border-t border-[#964900]/30">
+                {/* 1. INTERACTIVE ENGINE / FDE HUB */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Layers className="w-4 h-4" />
+                    <span>Interactive Hub / FDE Engine Header</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Engine Badge Pill"
+                      value={currentSubpage.engineBadge || "AlphaesAI FDE Engine"}
+                      onChange={(val) => updateSubpage("fde", { engineBadge: val })}
+                    />
+                    <FormField
+                      label="Engine Title"
+                      value={currentSubpage.engineTitle || "Working alongside you, every step"}
+                      onChange={(val) => updateSubpage("fde", { engineTitle: val })}
+                    />
+                  </div>
+                </div>
+
+                {/* 2. CORE PHILOSOPHY / ENGINEERING OWNERSHIP */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Briefcase className="w-4 h-4" />
+                    <span>Section: Core Philosophy (Engineering Ownership)</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle / Badge"
+                      value={currentSubpage.coreSubtitle || "The Core: Engineering Ownership"}
+                      onChange={(val) => updateSubpage("fde", { coreSubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.coreTitle || "Forward Deployed Engineering (FDE)"}
+                      onChange={(val) => updateSubpage("fde", { coreTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Description Paragraph 1"
+                    type="textarea"
+                    rows={3}
+                    value={currentSubpage.coreDescription1 || ""}
+                    onChange={(val) => updateSubpage("fde", { coreDescription1: val })}
+                  />
+                  <FormField
+                    label="Description Paragraph 2"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.coreDescription2 || ""}
+                    onChange={(val) => updateSubpage("fde", { coreDescription2: val })}
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Core Section CTA Text"
+                      value={currentSubpage.coreCtaText || "Schedule an Executive Briefing"}
+                      onChange={(val) => updateSubpage("fde", { coreCtaText: val })}
+                    />
+                    <FormField
+                      label="Core Section CTA Href"
+                      type="mono"
+                      value={currentSubpage.coreCtaHref || "/contact"}
+                      onChange={(val) => updateSubpage("fde", { coreCtaHref: val })}
+                    />
+                  </div>
+                  <div className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3">
+                    <FormField
+                      label="What Sets FDE Apart Card Title"
+                      value={currentSubpage.coreApartTitle || "What Sets FDE Apart"}
+                      onChange={(val) => updateSubpage("fde", { coreApartTitle: val })}
+                    />
+                    <FormField
+                      label="Bullet Points (one item per line)"
+                      type="textarea"
+                      rows={4}
+                      value={(currentSubpage.coreApartPoints || []).join("\n")}
+                      onChange={(val) =>
+                        updateSubpage("fde", {
+                          coreApartPoints: val.split("\n").map((s) => s.trim()).filter(Boolean),
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                {/* 3. THE REALITY / DEMO-TO-PRODUCTION GAP */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Section: The Reality (Demo-to-Production Gap)</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.realitySubtitle || "The Reality"}
+                      onChange={(val) => updateSubpage("fde", { realitySubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.realityTitle || "The Demo-to-Production Gap"}
+                      onChange={(val) => updateSubpage("fde", { realityTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Description"
+                    type="textarea"
+                    rows={3}
+                    value={currentSubpage.realityDescription || ""}
+                    onChange={(val) => updateSubpage("fde", { realityDescription: val })}
+                  />
+
+                  <div className="space-y-3 pt-2">
+                    <div className="text-xs font-mono font-bold text-[#964900] uppercase">Gap Cards (4 Cards)</div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {(currentSubpage.realityGaps || []).map((gap, i) => (
+                        <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-2">
+                          <FormField
+                            label={`Card ${i + 1} Title`}
+                            value={gap.title}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.realityGaps || [])];
+                              updated[i] = { ...updated[i], title: val };
+                              updateSubpage("fde", { realityGaps: updated });
+                            }}
+                          />
+                          <FormField
+                            label={`Card ${i + 1} Description`}
+                            type="textarea"
+                            rows={2}
+                            value={gap.desc}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.realityGaps || [])];
+                              updated[i] = { ...updated[i], desc: val };
+                              updateSubpage("fde", { realityGaps: updated });
+                            }}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. METHODOLOGY / 5-PHASE DEPLOYMENT MODEL */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <LayoutGrid className="w-4 h-4" />
+                    <span>Section: Methodology (5-Phase Deployment Model)</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.methodologySubtitle || "Methodology"}
+                      onChange={(val) => updateSubpage("fde", { methodologySubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.methodologyTitle || "Our 5-Phase Deployment Model"}
+                      onChange={(val) => updateSubpage("fde", { methodologyTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Description"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.methodologyDescription || ""}
+                    onChange={(val) => updateSubpage("fde", { methodologyDescription: val })}
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Phase Box CTA Text"
+                      value={currentSubpage.phaseCtaText || "Start Discovery Briefing"}
+                      onChange={(val) => updateSubpage("fde", { phaseCtaText: val })}
+                    />
+                    <FormField
+                      label="Phase Box CTA Href"
+                      type="mono"
+                      value={currentSubpage.phaseCtaHref || "/contact"}
+                      onChange={(val) => updateSubpage("fde", { phaseCtaHref: val })}
+                    />
+                  </div>
+
+                  <div className="space-y-4 pt-2">
+                    <div className="text-xs font-mono font-bold text-[#964900] uppercase">Deployment Phases</div>
+                    {(currentSubpage.phases || []).map((phase, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                          <FormField
+                            label="Phase Step (e.g. 01)"
+                            value={phase.step}
+                            onChange={(val) => {
+                              const updated = [...(currentSubpage.phases || [])];
+                              updated[i] = { ...updated[i], step: val };
+                              updateSubpage("fde", { phases: updated });
+                            }}
+                          />
+                          <div className="md:col-span-2">
+                            <FormField
+                              label="Phase Name"
+                              value={phase.name}
+                              onChange={(val) => {
+                                const updated = [...(currentSubpage.phases || [])];
+                                updated[i] = { ...updated[i], name: val };
+                                updateSubpage("fde", { phases: updated });
+                              }}
+                            />
+                          </div>
+                        </div>
+                        <FormField
+                          label="Phase Summary"
+                          type="textarea"
+                          rows={2}
+                          value={phase.summary}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.phases || [])];
+                            updated[i] = { ...updated[i], summary: val };
+                            updateSubpage("fde", { phases: updated });
+                          }}
+                        />
+                        <FormField
+                          label="Key Deliverables Detail"
+                          type="textarea"
+                          rows={2}
+                          value={phase.detail}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.phases || [])];
+                            updated[i] = { ...updated[i], detail: val };
+                            updateSubpage("fde", { phases: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 5. CORE COMPETENCIES / EXPERTISE IN PRACTICE */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <Database className="w-4 h-4" />
+                    <span>Section: Core Competencies (Expertise in Practice)</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.competenciesSubtitle || "Core Competencies"}
+                      onChange={(val) => updateSubpage("fde", { competenciesSubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.competenciesTitle || "Expertise in Practice"}
+                      onChange={(val) => updateSubpage("fde", { competenciesTitle: val })}
+                    />
+                  </div>
+                  <FormField
+                    label="Description"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.competenciesDescription || ""}
+                    onChange={(val) => updateSubpage("fde", { competenciesDescription: val })}
+                  />
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    {(currentSubpage.competencies || []).map((comp, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3">
+                        <FormField
+                          label={`Domain ${i + 1} Category`}
+                          value={comp.category}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.competencies || [])];
+                            updated[i] = { ...updated[i], category: val };
+                            updateSubpage("fde", { competencies: updated });
+                          }}
+                        />
+                        <FormField
+                          label="Description"
+                          type="textarea"
+                          rows={2}
+                          value={comp.desc}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.competencies || [])];
+                            updated[i] = { ...updated[i], desc: val };
+                            updateSubpage("fde", { competencies: updated });
+                          }}
+                        />
+                        <FormField
+                          label="Tags (comma-separated)"
+                          value={(comp.tags || []).join(", ")}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.competencies || [])];
+                            updated[i] = {
+                              ...updated[i],
+                              tags: val.split(",").map((s) => s.trim()).filter(Boolean),
+                            };
+                            updateSubpage("fde", { competencies: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 6. OUR DIFFERENTIATORS / WHY CHOOSE ALPHAESAI */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <CheckSquare className="w-4 h-4" />
+                    <span>Section: Differentiators (Why Choose AlphaesAI?)</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Section Subtitle"
+                      value={currentSubpage.differentiatorSubtitle || "Our Differentiator"}
+                      onChange={(val) => updateSubpage("fde", { differentiatorSubtitle: val })}
+                    />
+                    <FormField
+                      label="Section Title"
+                      value={currentSubpage.differentiatorTitle || "Why Choose AlphaesAI?"}
+                      onChange={(val) => updateSubpage("fde", { differentiatorTitle: val })}
+                    />
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    {(currentSubpage.differentiators || []).map((diff, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-2">
+                        <FormField
+                          label={`Card ${i + 1} Title`}
+                          value={diff.title}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.differentiators || [])];
+                            updated[i] = { ...updated[i], title: val };
+                            updateSubpage("fde", { differentiators: updated });
+                          }}
+                        />
+                        <FormField
+                          label="Description"
+                          type="textarea"
+                          rows={2}
+                          value={diff.desc}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.differentiators || [])];
+                            updated[i] = { ...updated[i], desc: val };
+                            updateSubpage("fde", { differentiators: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 7. FREQUENTLY ASKED QUESTIONS (FAQ) */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Section: Frequently Asked Questions (FAQ)</span>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="FAQ Subtitle"
+                      value={currentSubpage.faqSubtitle || "Frequently Asked Questions"}
+                      onChange={(val) => updateSubpage("fde", { faqSubtitle: val })}
+                    />
+                    <FormField
+                      label="FAQ Section Title"
+                      value={currentSubpage.faqTitle || "Got Questions?"}
+                      onChange={(val) => updateSubpage("fde", { faqTitle: val })}
+                    />
+                  </div>
+
+                  <div className="space-y-4 pt-2">
+                    <div className="flex items-center justify-between">
+                      <div className="text-xs font-mono font-bold text-[#964900] uppercase">FAQ Items</div>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = [...(currentSubpage.faqs || []), { q: "New Question?", a: "New Answer detail..." }];
+                          updateSubpage("fde", { faqs: updated });
+                        }}
+                        className="px-3 py-1 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#7a3b00] transition-colors"
+                      >
+                        + Add FAQ
+                      </button>
+                    </div>
+
+                    {(currentSubpage.faqs || []).map((faq, i) => (
+                      <div key={i} className="p-4 bg-white border border-[#ddc1b0] rounded-xl space-y-3 relative">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono font-bold text-[#564336]">FAQ #{i + 1}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              const updated = (currentSubpage.faqs || []).filter((_, idx) => idx !== i);
+                              updateSubpage("fde", { faqs: updated });
+                            }}
+                            className="text-xs text-red-600 font-bold hover:underline"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                        <FormField
+                          label="Question"
+                          value={faq.q}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.faqs || [])];
+                            updated[i] = { ...updated[i], q: val };
+                            updateSubpage("fde", { faqs: updated });
+                          }}
+                        />
+                        <FormField
+                          label="Answer"
+                          type="textarea"
+                          rows={3}
+                          value={faq.a}
+                          onChange={(val) => {
+                            const updated = [...(currentSubpage.faqs || [])];
+                            updated[i] = { ...updated[i], a: val };
+                            updateSubpage("fde", { faqs: updated });
+                          }}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 8. FINAL CALL TO ACTION BANNER */}
+                <div className="p-5 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4">
+                  <div className="flex items-center gap-2 text-[#964900] font-mono text-xs font-bold uppercase tracking-wider">
+                    <MousePointer className="w-4 h-4" />
+                    <span>Section: Bottom CTA Banner</span>
+                  </div>
+                  <FormField
+                    label="Banner Title"
+                    value={currentSubpage.finalCtaTitle || "Ready to Move from Experiment to Production?"}
+                    onChange={(val) => updateSubpage("fde", { finalCtaTitle: val })}
+                  />
+                  <FormField
+                    label="Banner Description"
+                    type="textarea"
+                    rows={2}
+                    value={currentSubpage.finalCtaDescription || "Let’s build something that works. Book a technical discovery briefing with our senior engineers today."}
+                    onChange={(val) => updateSubpage("fde", { finalCtaDescription: val })}
+                  />
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <FormField
+                      label="Button Text"
+                      value={currentSubpage.finalCtaText || "Schedule an Executive Briefing"}
+                      onChange={(val) => updateSubpage("fde", { finalCtaText: val })}
+                    />
+                    <FormField
+                      label="Button Href"
+                      type="mono"
+                      value={currentSubpage.finalCtaHref || "/contact"}
+                      onChange={(val) => updateSubpage("fde", { finalCtaHref: val })}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         )}
       </div>
