@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Network, MapPin, Phone, Mail, Calendar } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
 import Logo from "@/components/ui/Logo";
@@ -8,6 +9,11 @@ import Logo from "@/components/ui/Logo";
 export const Footer = () => {
   const { data } = useCMS();
   const { footer } = data;
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
 
   return (
     <footer className="bg-[#241913] text-[#fff8f5] w-full py-16 border-t border-[#ddc1b0]/20">

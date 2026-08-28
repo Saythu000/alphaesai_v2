@@ -32,6 +32,10 @@ export const Navbar = () => {
     setAcademyOpen(false);
   }, [pathname]);
 
+  if (pathname?.startsWith("/admin")) {
+    return null;
+  }
+
   const isActive = (href: string) => {
     if (!pathname) return false;
     if (href === "/") return pathname === "/";
