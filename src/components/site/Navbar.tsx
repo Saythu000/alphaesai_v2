@@ -46,7 +46,6 @@ export const Navbar = () => {
       title: "AI & Engineering",
       items: [
         { id: "item-1", name: "Forward Deployed AI (FDE)", desc: "", badge: "Popular", href: "/services/forward-deployed-ai-engineering", iconName: "Cpu" },
-        { id: "item-2", name: "Autonomous AI Agents", desc: "", badge: "SOTA", href: "/services/forward-deployed-ai-engineering", iconName: "Bot" },
       ],
       featuredTitle: "Forward Deployed AI",
       featuredDesc: "Embed elite AI engineers directly into your product engineering workflows.",
@@ -66,11 +65,15 @@ export const Navbar = () => {
     { id: "acad-3", title: "Databricks Lakehouse Mastery", desc: "", href: "/academy/databricks" },
   ];
 
-  const directLinks = [
-    { href: "/blog", label: "Blog" },
-    { href: "/partners", label: "Partners" },
-    { href: "/about", label: "About" },
+  // Dynamic top-level links (excluding Services which is rendered as a dropdown)
+  const headerNavLinks = data.header?.navLinks || [
+    { id: "nav-6", label: "Blog", href: "/blog" },
+    { id: "nav-4", label: "Partners", href: "/partners" },
+    { id: "nav-5", label: "About", href: "/about" },
   ];
+  const directLinks = headerNavLinks.filter(
+    (link) => link.label.toLowerCase() !== "services" && link.href !== "/services"
+  );
 
   return (
     <motion.header

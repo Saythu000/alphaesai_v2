@@ -473,19 +473,49 @@ export interface PagesCMSData {
   academySubpages: AcademySubpagesCMSData;
 }
 
+export interface CustomCMSPage {
+  id: string;
+  slug: string;
+  title: string;
+  category: string; // e.g. "top-level" | "cat-ai" | "cat-data" | "cat-solutions" | "products" | "academy"
+  badge?: string;
+  hero: {
+    badge?: string;
+    title: string;
+    subtitle: string;
+    description: string;
+    ctaText?: string;
+    ctaHref?: string;
+  };
+  contentBlocks: Array<{
+    id: string;
+    title: string;
+    description: string;
+    iconName?: string;
+  }>;
+  seo?: {
+    title: string;
+    description: string;
+  };
+}
+
 export interface FullCMSData {
   header: HeaderCMSData;
   footer: FooterCMSData;
   homepage: HomepageCMSData;
   pages: PagesCMSData;
   blog: BlogCMSData;
+  customPages?: CustomCMSPage[];
 }
 
+// -----------------------------------------------------------------------------
+// DEFAULT CMS DATA SEED
+// -----------------------------------------------------------------------------
 export const DEFAULT_CMS_DATA: FullCMSData = {
   header: {
-    announcementBarText: "⚡ Introducing AlphaesAI Connect 2026 — The Agentic Cloud Conference.",
-    announcementLinkText: "Learn More",
-    announcementLinkHref: "/contact",
+    announcementBarText: "🚀 Introducing AlphaesAI Core v2.0: Deploy Senior AI Engineers directly into your enterprise cloud & codebase.",
+    announcementLinkText: "Learn about FDE Model",
+    announcementLinkHref: "/services/forward-deployed-ai-engineering",
     navLinks: [
       { id: "nav-1", label: "Services", href: "/services" },
       { id: "nav-2", label: "OneAI Assist", href: "/oneai-assist" },
@@ -510,22 +540,6 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
               badge: "Popular",
               href: "/services/forward-deployed-ai-engineering",
               iconName: "Cpu",
-            },
-            {
-              id: "item-agents",
-              name: "Autonomous AI Agents",
-              desc: "Tool-calling swarms and self-healing agentic workflows.",
-              badge: "SOTA",
-              href: "/services/forward-deployed-ai-engineering",
-              iconName: "Bot",
-            },
-            {
-              id: "item-rag",
-              name: "RAG & Vector DB Systems",
-              desc: "Hybrid vector search, reranking, and knowledge graph DBs.",
-              badge: "Enterprise",
-              href: "/services/forward-deployed-ai-engineering",
-              iconName: "Layers",
             },
           ],
           featuredTitle: "Forward Deployed AI Model",
@@ -1765,16 +1779,19 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
         },
       },
       blog: {
-        heroBadge: parsed.blog?.heroBadge || DEFAULT_CMS_DATA.blog.heroBadge,
-        title: parsed.blog?.title || DEFAULT_CMS_DATA.blog.title,
-        subtitle: parsed.blog?.subtitle || DEFAULT_CMS_DATA.blog.subtitle,
+        heroBadge: parsed.blog?.heroBadge || (DEFAULT_CMS_DATA.blog?.heroBadge ?? ""),
+        title: parsed.blog?.title || (DEFAULT_CMS_DATA.blog?.title ?? ""),
+        subtitle: parsed.blog?.subtitle || (DEFAULT_CMS_DATA.blog?.subtitle ?? ""),
         categories: Array.isArray(parsed.blog?.categories)
           ? parsed.blog.categories
-          : DEFAULT_CMS_DATA.blog.categories,
+          : (DEFAULT_CMS_DATA.blog?.categories ?? []),
         articles: Array.isArray(parsed.blog?.articles)
           ? parsed.blog.articles
-          : DEFAULT_CMS_DATA.blog.articles,
+          : (DEFAULT_CMS_DATA.blog?.articles ?? []),
       },
+      customPages: Array.isArray(parsed.customPages)
+        ? parsed.customPages
+        : (DEFAULT_CMS_DATA.customPages || []),
     };
   } catch (err) {
     console.error("Failed to sanitize CMS data:", err);
