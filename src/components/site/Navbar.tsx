@@ -6,6 +6,7 @@ import Link from "next/link";
 import {
   Menu,
   X,
+  Plus,
   ChevronDown,
   ChevronRight,
   ArrowDownRight,
@@ -150,7 +151,7 @@ export const Navbar = () => {
   const { data } = useCMS();
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
-  const [activeServiceTab, setActiveServiceTab] = useState(0);
+  const [activeServiceTab, setActiveServiceTab] = useState<number | null>(null);
   const [productsOpen, setProductsOpen] = useState(false);
   const [academyOpen, setAcademyOpen] = useState(false);
   const pathname = usePathname();
@@ -211,11 +212,14 @@ export const Navbar = () => {
 
         {/* Center Desktop Navigation Links & Dropdowns */}
         <nav className="hidden md:flex items-center gap-2 lg:gap-3">
-          {/* CapeStart-Style Categorized Mega Dropdown for Services */}
+          {/* CapeStart-Style Cascading Flyout Dropdown for Services */}
           <div
             className="relative"
             onMouseEnter={() => setServicesOpen(true)}
-            onMouseLeave={() => setServicesOpen(false)}
+            onMouseLeave={() => {
+              setServicesOpen(false);
+              setActiveServiceTab(null);
+            }}
           >
             <button
               onClick={() => setServicesOpen(!servicesOpen)}
@@ -231,129 +235,70 @@ export const Navbar = () => {
 
             {servicesOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                initial={{ opacity: 0, y: 8, scale: 0.97 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.98 }}
+                exit={{ opacity: 0, y: 8, scale: 0.97 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="absolute top-full -left-[100px] lg:-left-[140px] mt-2 w-[720px] lg:w-[760px] bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-3xl shadow-2xl overflow-hidden z-50 p-4"
+                className="absolute top-full left-0 mt-2 w-64 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2 z-50"
               >
-                <div className="grid grid-cols-12 gap-4">
-                  {/* Left Column: Category Selector Sidebar */}
-                  <div className="col-span-5 flex flex-col gap-1 border-r border-[#ddc1b0]/40 pr-3">
-                    <div className="text-[10px] font-['Hanken_Grotesk'] font-extrabold uppercase tracking-wider text-[#964900] px-3 py-1">
-                      Service Domains
-                    </div>
-                    {servicesCategories.map((cat, idx) => {
-                      const IconComponent = cat.icon;
-                      const isActive = activeServiceTab === idx;
-                      return (
-                        <button
-                          key={cat.id}
-                          onMouseEnter={() => setActiveServiceTab(idx)}
-                          onClick={() => setActiveServiceTab(idx)}
-                          className={`flex items-center justify-between px-3 py-2.5 rounded-2xl text-left transition-all ${
-                            isActive
-                              ? "bg-[#241913] text-white shadow-md"
-                              : "text-[#564336] hover:bg-[#ffeade]/60 hover:text-[#241913]"
-                          }`}
-                        >
-                          <div className="flex items-center gap-2.5 min-w-0">
-                            <div
-                              className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
-                                isActive ? "bg-[#964900] text-white" : "bg-[#964900]/10 text-[#964900]"
-                              }`}
-                            >
-                              <IconComponent className="w-3.5 h-3.5" />
-                            </div>
-                            <span className="text-xs font-['Inter'] font-bold truncate">
-                              {cat.category}
-                            </span>
-                          </div>
-                          <ChevronRight
-                            className={`w-3.5 h-3.5 transition-transform ${
-                              isActive ? "text-[#964900] translate-x-0.5" : "text-gray-400 opacity-0"
-                            }`}
-                          />
-                        </button>
-                      );
-                    })}
-                  </div>
-
-                  {/* Right Column: Active Category Details & Featured Spotlight */}
-                  <div className="col-span-7 flex flex-col justify-between pl-2 pr-1 py-1">
-                    <AnimatePresence mode="wait">
-                      <motion.div
-                        key={servicesCategories[activeServiceTab].id}
-                        initial={{ opacity: 0, x: 8 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -8 }}
-                        transition={{ duration: 0.15 }}
-                        className="flex flex-col gap-3"
+                {/* Primary Category List */}
+                <div className="flex flex-col gap-1">
+                  {servicesCategories.map((cat, idx) => {
+                    const isActive = activeServiceTab === idx;
+                    return (
+                      <div
+                        key={cat.id}
+                        onMouseEnter={() => setActiveServiceTab(idx)}
+                        onClick={() => setActiveServiceTab(activeServiceTab === idx ? null : idx)}
+                        className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-['Inter'] font-semibold transition-all cursor-pointer select-none ${
+                          isActive
+                            ? "bg-[#241913]/10 text-[#964900] font-bold shadow-sm"
+                            : "text-[#564336] hover:bg-[#ffeade]/60 hover:text-[#241913]"
+                        }`}
                       >
-                        <div>
-                          <h4 className="text-xs font-['Hanken_Grotesk'] font-extrabold uppercase tracking-wider text-[#241913]">
-                            {servicesCategories[activeServiceTab].category}
-                          </h4>
-                          <p className="text-[11px] font-['Inter'] text-[#564336] mt-0.5 leading-snug">
-                            {servicesCategories[activeServiceTab].description}
-                          </p>
-                        </div>
-
-                        {/* Sub-item Links */}
-                        <div className="flex flex-col gap-1">
-                          {servicesCategories[activeServiceTab].items.map((item) => (
-                            <Link
-                              key={item.label}
-                              href={item.href}
-                              className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:bg-[#ffeade] hover:text-[#964900] transition-all group"
-                            >
-                              <span className="flex items-center gap-2">
-                                {item.label}
-                                {item.badge && (
-                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#964900]/15 text-[#964900]">
-                                    {item.badge}
-                                  </span>
-                                )}
-                              </span>
-                              <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                            </Link>
-                          ))}
-                        </div>
-
-                        {/* Featured Callout Card */}
-                        <div className="p-3 rounded-2xl bg-[#fff1ea] border border-[#ddc1b0]/60 flex flex-col gap-1">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-['JetBrains_Mono'] font-extrabold tracking-wider text-[#964900]">
-                              {servicesCategories[activeServiceTab].featured.tag}
-                            </span>
-                          </div>
-                          <Link
-                            href={servicesCategories[activeServiceTab].featured.href}
-                            className="text-xs font-['Inter'] font-bold text-[#241913] hover:text-[#964900] flex items-center justify-between group"
-                          >
-                            <span>{servicesCategories[activeServiceTab].featured.title}</span>
-                            <ArrowRight className="w-3 h-3 text-[#964900] group-hover:translate-x-0.5 transition-transform" />
-                          </Link>
-                          <p className="text-[10px] text-[#564336] leading-tight">
-                            {servicesCategories[activeServiceTab].featured.desc}
-                          </p>
-                        </div>
-                      </motion.div>
-                    </AnimatePresence>
-                  </div>
+                        <span>{cat.category}</span>
+                        {isActive ? (
+                          <X className="w-3.5 h-3.5 text-[#964900] shrink-0" />
+                        ) : (
+                          <Plus className="w-3.5 h-3.5 text-[#564336]/60 shrink-0" />
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
 
-                {/* Bottom Footer Action Strip */}
-                <div className="mt-3 pt-2.5 border-t border-[#ddc1b0]/50 flex items-center justify-between px-2 text-xs font-['Inter']">
-                  <span className="text-[#564336] text-[11px]">Need custom AI architecture consultation?</span>
-                  <Link
-                    href="/services"
-                    className="inline-flex items-center gap-1 font-bold text-[#964900] hover:text-[#723600] text-[11px]"
+                {/* Secondary Cascading Flyout Card (Popout to Right) */}
+                {activeServiceTab !== null && (
+                  <motion.div
+                    key={servicesCategories[activeServiceTab].id}
+                    initial={{ opacity: 0, x: 8, scale: 0.97 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: 8, scale: 0.97 }}
+                    transition={{ type: "spring", stiffness: 450, damping: 32 }}
+                    className="absolute top-0 left-[calc(100%+0.5rem)] w-72 bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-2xl shadow-xl p-2.5 z-50 flex flex-col gap-1"
                   >
-                    <span>View All Capabilities</span>
-                    <ArrowRight className="w-3 h-3" />
-                  </Link>
-                </div>
+                    <div className="px-3 py-1 text-[10px] font-['JetBrains_Mono'] font-extrabold uppercase tracking-wider text-[#964900]">
+                      {servicesCategories[activeServiceTab].category}
+                    </div>
+                    {servicesCategories[activeServiceTab].items.map((item) => (
+                      <Link
+                        key={item.label}
+                        href={item.href}
+                        className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 transition-all group"
+                      >
+                        <span className="flex items-center gap-2">
+                          {item.label}
+                          {item.badge && (
+                            <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#964900]/15 text-[#964900]">
+                              {item.badge}
+                            </span>
+                          )}
+                        </span>
+                        <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      </Link>
+                    ))}
+                  </motion.div>
+                )}
               </motion.div>
             )}
           </div>
