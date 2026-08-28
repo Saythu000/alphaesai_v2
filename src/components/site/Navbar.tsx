@@ -7,6 +7,7 @@ import {
   Menu,
   X,
   ChevronDown,
+  ChevronRight,
   ArrowDownRight,
   Sparkles,
   Database,
@@ -14,23 +15,33 @@ import {
   FileCheck,
   ArrowRight,
 } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { useCMS } from "@/context/CMSContext";
 import Logo from "@/components/ui/Logo";
 
-const servicesMegaMenu = [
+const servicesCategories = [
   {
+    id: "ai-engineering",
     category: "AI & Engineering",
     icon: Sparkles,
+    description: "Production LLMs, autonomous agentic workflows, and fine-tuned models.",
+    featured: {
+      title: "Forward Deployed AI",
+      tag: "FEATURED CAPABILITY",
+      href: "/services/forward-deployed-ai-engineering",
+      desc: "Embed elite AI engineers directly into your product engineering workflows.",
+    },
     items: [
       {
         href: "/services/forward-deployed-ai-engineering",
         label: "Forward Deployed AI (FDE)",
+        badge: "Popular",
       },
       {
         href: "/services/forward-deployed-ai-engineering#agentic-workflows",
         label: "Autonomous AI Agents",
+        badge: "New",
       },
       {
         href: "/services/forward-deployed-ai-engineering#fine-tuning",
@@ -39,8 +50,16 @@ const servicesMegaMenu = [
     ],
   },
   {
+    id: "data-cloud",
     category: "Data & Cloud Optimization",
     icon: Database,
+    description: "High-performance Lakehouse architectures and real-time streaming ETL.",
+    featured: {
+      title: "Database & Cloud Tuning",
+      tag: "OPTIMIZATION",
+      href: "/services/database-performance-and-cloud-optimization",
+      desc: "Sub-second query performance on Databricks & Snowflake Lakehouses.",
+    },
     items: [
       {
         href: "/services/database-performance-and-cloud-optimization",
@@ -57,8 +76,16 @@ const servicesMegaMenu = [
     ],
   },
   {
+    id: "data-rlhf",
     category: "Data Annotation & RLHF",
     icon: FileCheck,
+    description: "Human-in-the-loop alignment, RLHF, and domain-specific dataset curation.",
+    featured: {
+      title: "RLHF & Safety Alignment",
+      tag: "ACCURACY & ALIGNMENT",
+      href: "/services/data-annotation-and-rlhf#rlhf",
+      desc: "Align enterprise AI with strict safety and accuracy guardrails.",
+    },
     items: [
       {
         href: "/services/data-annotation-and-rlhf",
@@ -75,8 +102,16 @@ const servicesMegaMenu = [
     ],
   },
   {
+    id: "cloud-security",
     category: "Cloud & Cybersecurity",
     icon: ShieldCheck,
+    description: "Zero-downtime cloud migration, MLOps pipelines, and AI security guardrails.",
+    featured: {
+      title: "AI Guardrails & Security",
+      tag: "ENTERPRISE SECURITY",
+      href: "/services/cloud-migration-cyber-security-databricks-snowflake#security",
+      desc: "Enterprise compliance, prompt injection prevention, and zero-trust security.",
+    },
     items: [
       {
         href: "/services/cloud-migration-cyber-security-databricks-snowflake",
@@ -115,6 +150,7 @@ export const Navbar = () => {
   const { data } = useCMS();
   const [open, setOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
+  const [activeServiceTab, setActiveServiceTab] = useState(0);
   const [productsOpen, setProductsOpen] = useState(false);
   const [academyOpen, setAcademyOpen] = useState(false);
   const pathname = usePathname();
@@ -195,54 +231,127 @@ export const Navbar = () => {
 
             {servicesOpen && (
               <motion.div
-                initial={{ opacity: 0, y: 8, scale: 0.97 }}
+                initial={{ opacity: 0, y: 8, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 8, scale: 0.97 }}
+                exit={{ opacity: 0, y: 8, scale: 0.98 }}
                 transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                className="absolute top-full -left-[140px] lg:-left-[180px] mt-2 w-[820px] lg:w-[860px] bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-3xl shadow-2xl p-6 z-50"
+                className="absolute top-full -left-[100px] lg:-left-[140px] mt-2 w-[720px] lg:w-[760px] bg-[#fff8f5]/95 backdrop-blur-xl border border-[#ddc1b0]/80 rounded-3xl shadow-2xl overflow-hidden z-50 p-4"
               >
-                {/* 4-Column Clean Mega Dropdown Grid */}
-                <div className="grid grid-cols-4 gap-6">
-                  {servicesMegaMenu.map((cat) => {
-                    const IconComponent = cat.icon;
-                    return (
-                      <div key={cat.category} className="flex flex-col gap-3">
-                        <div className="flex items-center gap-2 border-b border-[#ddc1b0]/50 pb-2.5">
-                          <div className="w-6 h-6 rounded-lg bg-[#964900]/10 text-[#964900] flex items-center justify-center shrink-0">
-                            <IconComponent className="w-3.5 h-3.5" />
+                <div className="grid grid-cols-12 gap-4">
+                  {/* Left Column: Category Selector Sidebar */}
+                  <div className="col-span-5 flex flex-col gap-1 border-r border-[#ddc1b0]/40 pr-3">
+                    <div className="text-[10px] font-['Hanken_Grotesk'] font-extrabold uppercase tracking-wider text-[#964900] px-3 py-1">
+                      Service Domains
+                    </div>
+                    {servicesCategories.map((cat, idx) => {
+                      const IconComponent = cat.icon;
+                      const isActive = activeServiceTab === idx;
+                      return (
+                        <button
+                          key={cat.id}
+                          onMouseEnter={() => setActiveServiceTab(idx)}
+                          onClick={() => setActiveServiceTab(idx)}
+                          className={`flex items-center justify-between px-3 py-2.5 rounded-2xl text-left transition-all ${
+                            isActive
+                              ? "bg-[#241913] text-white shadow-md"
+                              : "text-[#564336] hover:bg-[#ffeade]/60 hover:text-[#241913]"
+                          }`}
+                        >
+                          <div className="flex items-center gap-2.5 min-w-0">
+                            <div
+                              className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 ${
+                                isActive ? "bg-[#964900] text-white" : "bg-[#964900]/10 text-[#964900]"
+                              }`}
+                            >
+                              <IconComponent className="w-3.5 h-3.5" />
+                            </div>
+                            <span className="text-xs font-['Inter'] font-bold truncate">
+                              {cat.category}
+                            </span>
                           </div>
-                          <span className="text-[11px] font-['Hanken_Grotesk'] font-extrabold text-[#241913] uppercase tracking-wider">
-                            {cat.category}
-                          </span>
+                          <ChevronRight
+                            className={`w-3.5 h-3.5 transition-transform ${
+                              isActive ? "text-[#964900] translate-x-0.5" : "text-gray-400 opacity-0"
+                            }`}
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {/* Right Column: Active Category Details & Featured Spotlight */}
+                  <div className="col-span-7 flex flex-col justify-between pl-2 pr-1 py-1">
+                    <AnimatePresence mode="wait">
+                      <motion.div
+                        key={servicesCategories[activeServiceTab].id}
+                        initial={{ opacity: 0, x: 8 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -8 }}
+                        transition={{ duration: 0.15 }}
+                        className="flex flex-col gap-3"
+                      >
+                        <div>
+                          <h4 className="text-xs font-['Hanken_Grotesk'] font-extrabold uppercase tracking-wider text-[#241913]">
+                            {servicesCategories[activeServiceTab].category}
+                          </h4>
+                          <p className="text-[11px] font-['Inter'] text-[#564336] mt-0.5 leading-snug">
+                            {servicesCategories[activeServiceTab].description}
+                          </p>
                         </div>
+
+                        {/* Sub-item Links */}
                         <div className="flex flex-col gap-1">
-                          {cat.items.map((item) => (
+                          {servicesCategories[activeServiceTab].items.map((item) => (
                             <Link
                               key={item.label}
                               href={item.href}
-                              className="px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:text-[#964900] hover:bg-[#ffeade]/80 transition-all flex items-center justify-between group"
+                              className="flex items-center justify-between px-3 py-2 rounded-xl text-xs font-['Inter'] font-semibold text-[#241913] hover:bg-[#ffeade] hover:text-[#964900] transition-all group"
                             >
-                              <span>{item.label}</span>
+                              <span className="flex items-center gap-2">
+                                {item.label}
+                                {item.badge && (
+                                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-[#964900]/15 text-[#964900]">
+                                    {item.badge}
+                                  </span>
+                                )}
+                              </span>
                               <ArrowRight className="w-3 h-3 text-[#964900] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
                             </Link>
                           ))}
                         </div>
-                      </div>
-                    );
-                  })}
+
+                        {/* Featured Callout Card */}
+                        <div className="p-3 rounded-2xl bg-[#fff1ea] border border-[#ddc1b0]/60 flex flex-col gap-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] font-['JetBrains_Mono'] font-extrabold tracking-wider text-[#964900]">
+                              {servicesCategories[activeServiceTab].featured.tag}
+                            </span>
+                          </div>
+                          <Link
+                            href={servicesCategories[activeServiceTab].featured.href}
+                            className="text-xs font-['Inter'] font-bold text-[#241913] hover:text-[#964900] flex items-center justify-between group"
+                          >
+                            <span>{servicesCategories[activeServiceTab].featured.title}</span>
+                            <ArrowRight className="w-3 h-3 text-[#964900] group-hover:translate-x-0.5 transition-transform" />
+                          </Link>
+                          <p className="text-[10px] text-[#564336] leading-tight">
+                            {servicesCategories[activeServiceTab].featured.desc}
+                          </p>
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                  </div>
                 </div>
 
-                {/* Bottom Full-Width Banner Link */}
-                <div className="mt-5 pt-3.5 border-t border-[#ddc1b0]/60 flex items-center justify-between bg-[#fff1ea]/80 -mx-6 -mb-6 px-6 py-3.5 rounded-b-3xl">
-                  <div className="text-xs font-['Inter'] font-medium text-[#564336]">
-                    Looking for custom enterprise architecture or a tailored scoping session?
-                  </div>
+                {/* Bottom Footer Action Strip */}
+                <div className="mt-3 pt-2.5 border-t border-[#ddc1b0]/50 flex items-center justify-between px-2 text-xs font-['Inter']">
+                  <span className="text-[#564336] text-[11px]">Need custom AI architecture consultation?</span>
                   <Link
                     href="/services"
-                    className="inline-flex items-center gap-1.5 text-xs font-['Inter'] font-bold text-[#964900] hover:text-[#723600] transition-colors"
+                    className="inline-flex items-center gap-1 font-bold text-[#964900] hover:text-[#723600] text-[11px]"
                   >
-                    <span>View All Services</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
+                    <span>View All Capabilities</span>
+                    <ArrowRight className="w-3 h-3" />
                   </Link>
                 </div>
               </motion.div>
@@ -377,7 +486,7 @@ export const Navbar = () => {
               Services & Capabilities
             </div>
             
-            {servicesMegaMenu.map((cat) => (
+            {servicesCategories.map((cat) => (
               <div key={cat.category} className="flex flex-col gap-1.5">
                 <div className="text-xs font-['JetBrains_Mono'] font-bold text-[#241913] px-2 py-1 bg-[#ffeade]/50 rounded-lg">
                   {cat.category}
