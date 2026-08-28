@@ -48,6 +48,7 @@ import {
   Sparkles,
   Clock,
   TrendingDown,
+  Building2,
 } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
 import {
@@ -61,23 +62,12 @@ import {
 import { toast } from "sonner";
 
 type TabType =
-  | "hero"
-  | "showcase"
-  | "architecture"
-  | "techStack"
-  | "fdeHub"
-  | "testimonial"
-  | "cta"
-  | "blog"
+  | "homepage"
   | "services"
-  | "serviceSubpages"
-  | "academySubpages"
-  | "drgodly"
-  | "oneai"
-  | "about"
-  | "partners"
-  | "contact"
-  | "careers"
+  | "academy"
+  | "company"
+  | "blog"
+  | "headerFooter"
   | "navigation"
   | "megamenu"
   | "footer"
@@ -86,40 +76,25 @@ type TabType =
 interface TabItem {
   id: TabType;
   label: string;
-  category: "homepage" | "blog" | "subpages" | "global";
+  category: "pages" | "blog" | "global";
   icon: React.ElementType;
   previewHref?: string;
+  badgeText?: string;
 }
 
 const TABS: TabItem[] = [
-  // Homepage
-  { id: "hero", label: "Hero Banner", category: "homepage", icon: Layout, previewHref: "/" },
-  { id: "showcase", label: "3D Showcase & Metrics", category: "homepage", icon: Box, previewHref: "/#showcase" },
-  { id: "architecture", label: "Global Architecture", category: "homepage", icon: Grid, previewHref: "/#architecture" },
-  { id: "techStack", label: "Tech Stack & Badges", category: "homepage", icon: ShieldCheck, previewHref: "/#tech-stack" },
-  { id: "fdeHub", label: "FDE Process Hub & ROI", category: "homepage", icon: Cpu, previewHref: "/#fde-hub" },
-  { id: "testimonial", label: "Testimonials & Proof", category: "homepage", icon: Quote, previewHref: "/#testimonials" },
-  { id: "cta", label: "CTA Banner", category: "homepage", icon: Zap, previewHref: "/#cta" },
+  // Page Editors
+  { id: "homepage", label: "Homepage Manager (7 Sections)", category: "pages", icon: Layout, previewHref: "/", badgeText: "7 Sections" },
+  { id: "services", label: "Services & Solutions (4)", category: "pages", icon: Briefcase, previewHref: "/services", badgeText: "4 Subpages" },
+  { id: "academy", label: "Academy Tracks (3)", category: "pages", icon: GraduationCap, previewHref: "/academy", badgeText: "3 Tracks" },
+  { id: "company", label: "Company Pages (6)", category: "pages", icon: Info, previewHref: "/about", badgeText: "6 Pages" },
 
-  // Blog
-  { id: "blog", label: "Blog Posts & Articles", category: "blog", icon: Newspaper, previewHref: "/blog" },
+  // Content & Articles
+  { id: "blog", label: "Blog & Research Library", category: "blog", icon: Newspaper, previewHref: "/blog" },
 
-  // Subpages
-  { id: "services", label: "Services Hub", category: "subpages", icon: Briefcase, previewHref: "/services" },
-  { id: "serviceSubpages", label: "Service Subpages (4)", category: "subpages", icon: Layers, previewHref: "/services" },
-  { id: "academySubpages", label: "Academy Tracks (3)", category: "subpages", icon: GraduationCap, previewHref: "/academy" },
-  { id: "drgodly", label: "Dr. Godly Health", category: "subpages", icon: Stethoscope, previewHref: "/drgodly" },
-  { id: "oneai", label: "OneAI Assist", category: "subpages", icon: Bot, previewHref: "/oneai-assist" },
-  { id: "about", label: "About Firm", category: "subpages", icon: Info, previewHref: "/about" },
-  { id: "partners", label: "Partner Network", category: "subpages", icon: Handshake, previewHref: "/partners" },
-  { id: "contact", label: "Contact & FAQs", category: "subpages", icon: PhoneCall, previewHref: "/contact" },
-  { id: "careers", label: "Careers & Open Roles", category: "subpages", icon: Briefcase, previewHref: "/careers" },
-
-  // Global
-  { id: "navigation", label: "Header Announcement", category: "global", icon: Navigation, previewHref: "/" },
-  { id: "megamenu", label: "Header Megamenu & Nav", category: "global", icon: Layers, previewHref: "/" },
-  { id: "footer", label: "Footer Links & Branding", category: "global", icon: Layers, previewHref: "/" },
-  { id: "settings", label: "Backups, Sync & Reset", category: "global", icon: Settings },
+  // Global & Settings
+  { id: "headerFooter", label: "Global Header & Footer", category: "global", icon: Navigation, previewHref: "/" },
+  { id: "settings", label: "Neon DB Sync & Credentials", category: "global", icon: Settings },
 ];
 
 export default function AdminPage() {
@@ -132,16 +107,22 @@ export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isAuthenticating, setIsAuthenticating] = useState(false);
   const [adminUser, setAdminUser] = useState<{ username: string; email?: string } | null>(null);
-  const [activeTab, setActiveTab] = useState<TabType>("hero");
+  const [activeTab, setActiveTab] = useState<TabType>("homepage");
   const [searchQuery, setSearchQuery] = useState("");
 
   // Subpage active tabs
-  const [activeServiceSubpage, setActiveServiceSubpage] = useState<
-    "cloudMigration" | "fde" | "dataAnnotation" | "databaseTuning"
+  const [activeServicesSection, setActiveServicesSection] = useState<
+    "hub" | "cloudMigration" | "fde" | "dataAnnotation" | "databaseTuning"
   >("cloudMigration");
   const [activeAcademySubpage, setActiveAcademySubpage] = useState<
     "agenticAi" | "databricks" | "fullstackAi"
   >("agenticAi");
+  const [activeCompanySubpage, setActiveCompanySubpage] = useState<
+    "about" | "partners" | "contact" | "careers" | "drgodly" | "oneai"
+  >("about");
+  const [activeHeaderFooterSubpage, setActiveHeaderFooterSubpage] = useState<
+    "announcement" | "megamenu" | "footer"
+  >("megamenu");
 
   // Blog Article Form modal/editor state
   const [editingArticle, setEditingArticle] = useState<BlogPostCMSData | null>(null);
@@ -545,13 +526,13 @@ export default function AdminPage() {
           </div>
 
           <div className="flex-1 overflow-y-auto space-y-4 pr-1">
-            {/* HOMEPAGE SECTION */}
+            {/* PAGES EDITOR */}
             <div className="space-y-1">
               <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
-                Homepage Sections
+                Page Content Editors
               </span>
               {filteredTabs
-                .filter((t) => t.category === "homepage")
+                .filter((t) => t.category === "pages")
                 .map((tab) => {
                   const Icon = tab.icon;
                   return (
@@ -568,16 +549,22 @@ export default function AdminPage() {
                         <Icon className="w-4 h-4" />
                         <span>{tab.label}</span>
                       </div>
-                      <ChevronRight className="w-3 h-3 opacity-60" />
+                      {tab.badgeText && (
+                        <span className={`text-[9px] font-mono px-1.5 py-0.5 rounded font-bold ${
+                          activeTab === tab.id ? "bg-white/20 text-white" : "bg-[#fff3eb] text-[#964900]"
+                        }`}>
+                          {tab.badgeText}
+                        </span>
+                      )}
                     </button>
                   );
                 })}
             </div>
 
             {/* BLOG SECTION */}
-            <div className="space-y-1">
+            <div className="space-y-1 pt-2 border-t border-[#ddc1b0]">
               <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
-                Blog & Content
+                Articles & Blog
               </span>
               {filteredTabs
                 .filter((t) => t.category === "blog")
@@ -603,39 +590,10 @@ export default function AdminPage() {
                 })}
             </div>
 
-            {/* SUBPAGES SECTION */}
-            <div className="space-y-1">
-              <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
-                Subpages & Solutions
-              </span>
-              {filteredTabs
-                .filter((t) => t.category === "subpages")
-                .map((tab) => {
-                  const Icon = tab.icon;
-                  return (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveTab(tab.id)}
-                      className={`w-full flex items-center justify-between p-2.5 rounded-xl text-xs font-bold transition-all ${
-                        activeTab === tab.id
-                          ? "bg-[#964900] text-white shadow-sm"
-                          : "text-[#564336] hover:bg-[#fff8f5] hover:text-[#964900]"
-                      }`}
-                    >
-                      <div className="flex items-center gap-2">
-                        <Icon className="w-4 h-4" />
-                        <span>{tab.label}</span>
-                      </div>
-                      <ChevronRight className="w-3 h-3 opacity-60" />
-                    </button>
-                  );
-                })}
-            </div>
-
             {/* GLOBAL SECTION */}
-            <div className="space-y-1">
+            <div className="space-y-1 pt-2 border-t border-[#ddc1b0]">
               <span className="text-[10px] font-mono font-extrabold text-[#964900] uppercase tracking-wider px-2">
-                Global Header, Footer & Settings
+                Global Header & Settings
               </span>
               {filteredTabs
                 .filter((t) => t.category === "global")
@@ -665,9 +623,61 @@ export default function AdminPage() {
 
         {/* MAIN EDITOR CONTENT */}
         <main className="flex-1 overflow-y-auto p-8 space-y-6">
-          {/* TAB 1: HERO */}
-          {activeTab === "hero" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+          {/* TAB 1: HOMEPAGE MANAGER (ALL 7 SECTIONS SEQUENTIAL) */}
+          {activeTab === "homepage" && (
+            <div className="space-y-8">
+              {/* TOP HOMEPAGE MASTER HEADER & QUICK ANCHORS */}
+              <div className="bg-gradient-to-r from-[#241913] to-[#3a291f] text-white p-6 rounded-2xl shadow-md border border-[#964900]/30 space-y-4">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div>
+                    <span className="text-[10px] font-mono font-extrabold uppercase tracking-widest text-[#ddc1b0] bg-white/10 px-2.5 py-1 rounded-md">
+                      Homepage Master CMS Editor
+                    </span>
+                    <h2 className="font-['Hanken_Grotesk'] text-2xl font-extrabold mt-2 flex items-center gap-2">
+                      <Layout className="w-6 h-6 text-[#ff8000]" />
+                      Sequential Live Homepage Editor (7 Sections)
+                    </h2>
+                    <p className="text-xs text-[#ddc1b0] mt-1">
+                      All 7 homepage sections are arranged below in the exact top-to-bottom reading order of your live website.
+                    </p>
+                  </div>
+                  <Link
+                    href="/"
+                    target="_blank"
+                    className="inline-flex items-center gap-2 bg-[#964900] hover:bg-[#b05600] text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow"
+                  >
+                    <span>Preview Full Homepage</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Link>
+                </div>
+
+                <div className="pt-2 border-t border-white/10 flex flex-wrap gap-2">
+                  <a href="#sec-01-hero" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">01.</span> Hero & AI Shell
+                  </a>
+                  <a href="#sec-02-showcase" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">02.</span> 3D Showcase & Stats
+                  </a>
+                  <a href="#sec-03-architecture" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">03.</span> Global Architecture
+                  </a>
+                  <a href="#sec-04-techstack" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">04.</span> Tech Stack & Shields
+                  </a>
+                  <a href="#sec-05-fde" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">05.</span> FDE Hub & ROI Grid
+                  </a>
+                  <a href="#sec-06-testimonials" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">06.</span> Testimonials & Proof
+                  </a>
+                  <a href="#sec-07-cta" className="bg-white/10 hover:bg-[#964900] text-xs font-mono px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+                    <span className="text-[#ff8000] font-bold">07.</span> Bottom CTA Banner
+                  </a>
+                </div>
+              </div>
+
+              {/* SECTION 1: HERO */}
+              <div id="sec-01-hero" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -869,11 +879,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 2: SHOWCASE */}
-          {activeTab === "showcase" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              {/* SECTION 2: SHOWCASE */}
+              <div id="sec-02-showcase" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -1196,11 +1204,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 3: ARCHITECTURE */}
-          {activeTab === "architecture" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              {/* SECTION 3: ARCHITECTURE */}
+              <div id="sec-03-architecture" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -1357,11 +1363,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 4: TECH STACK */}
-          {activeTab === "techStack" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              {/* SECTION 4: TECH STACK */}
+              <div id="sec-04-techstack" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -1672,11 +1676,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 5: FDE HUB & ROI */}
-          {activeTab === "fdeHub" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              {/* SECTION 5: FDE HUB & ROI */}
+              <div id="sec-05-fde" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -1917,11 +1919,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 6: TESTIMONIAL */}
-          {activeTab === "testimonial" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              {/* SECTION 6: TESTIMONIALS */}
+              <div id="sec-06-testimonials" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -2203,11 +2203,9 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
-          )}
 
-          {/* TAB 7: CTA BANNER */}
-          {activeTab === "cta" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+              {/* SECTION 7: CTA BANNER */}
+              <div id="sec-07-cta" className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
@@ -2350,6 +2348,7 @@ export default function AdminPage() {
                 </div>
               </div>
             </div>
+          </div>
           )}
 
           {/* TAB 8: BLOG POSTS MANAGER */}
@@ -2484,321 +2483,340 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 9: SERVICES HUB */}
+          {/* TAB 2: SERVICES & SOLUTIONS MANAGER */}
           {activeTab === "services" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Briefcase className="w-5 h-5" />
-                    Services Hub Main Overview Controls (/services)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Edit Services hub badge, main headline, and core service offerings cards grid.
-                  </p>
-                </div>
-                <Link
-                  href="/services"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /services</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.services.badge}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          services: { ...formData.pages.services, badge: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
+            <div className="space-y-6">
+              {/* Sub-Tab Selector Header */}
+              <div className="bg-white border border-[#ddc1b0] p-4 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-[#964900]" />
+                  <div>
+                    <h2 className="font-['Hanken_Grotesk'] text-lg font-extrabold text-[#964900]">
+                      Services & Solutions Manager
+                    </h2>
+                    <p className="text-xs text-[#564336]">
+                      Select a page view below to edit overview or detailed subpage capabilities.
+                    </p>
+                  </div>
                 </div>
 
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Services Title
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.services.title}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          services: { ...formData.pages.services, title: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
-                  />
-                </div>
-              </div>
-
-              {/* Service Cards */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Service Cards Grid ({formData.pages.services.cards.length})
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formData.pages.services.cards.map((card, idx) => (
-                    <div key={card.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Service #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={card.title}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.services.cards];
-                          updated[idx].title = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              services: { ...formData.pages.services, cards: updated },
-                            },
-                          });
-                        }}
-                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                      />
-                      <textarea
-                        rows={2}
-                        value={card.desc}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.services.cards];
-                          updated[idx].desc = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              services: { ...formData.pages.services, cards: updated },
-                            },
-                          });
-                        }}
-                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                    </div>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "hub" as const, label: "Services Hub Overview", href: "/services" },
+                    { id: "cloudMigration" as const, label: "Cloud Migration", href: "/services/cloud-migration-and-modernization" },
+                    { id: "fde" as const, label: "Forward Deployed AI", href: "/services/forward-deployed-ai-engineering" },
+                    { id: "dataAnnotation" as const, label: "Data Annotation & RLHF", href: "/services/data-annotation-and-rlhf" },
+                    { id: "databaseTuning" as const, label: "Database Performance", href: "/services/database-performance-and-cloud-optimization" },
+                  ].map((st) => (
+                    <button
+                      key={st.id}
+                      onClick={() => setActiveServicesSection(st.id)}
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        activeServicesSection === st.id
+                          ? "bg-[#964900] text-white shadow"
+                          : "bg-[#fff8f5] text-[#564336] border border-[#ddc1b0] hover:bg-[#fff1ea]"
+                      }`}
+                    >
+                      <span>{st.label}</span>
+                    </button>
                   ))}
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* TAB 10: SERVICE SUBPAGES (4) */}
-          {activeTab === "serviceSubpages" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Layers className="w-5 h-5 text-[#964900]" />
-                    Detailed Service Subpages Editor (4 Subpages)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Select a service subpage below to edit its hero, capabilities, friction points, and FAQs.
-                  </p>
-                </div>
-              </div>
-
-              {/* Subpage Tabs */}
-              <div className="flex flex-wrap gap-2 border-b border-[#ddc1b0] pb-3">
-                {([
-                  { id: "cloudMigration", label: "Cloud Migration", href: "/services/cloud-migration-and-modernization" },
-                  { id: "fde", label: "Forward Deployed AI", href: "/services/forward-deployed-ai-engineering" },
-                  { id: "dataAnnotation", label: "Data Annotation & RLHF", href: "/services/data-annotation-and-rlhf" },
-                  { id: "databaseTuning", label: "Database Performance & FinOps", href: "/services/database-performance-and-cloud-optimization" },
-                ] as const).map((st) => (
-                  <button
-                    key={st.id}
-                    onClick={() => setActiveServiceSubpage(st.id)}
-                    className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-                      activeServiceSubpage === st.id
-                        ? "bg-[#964900] text-white shadow"
-                        : "bg-[#fff8f5] text-[#564336] border border-[#ddc1b0] hover:bg-[#fff1ea]"
-                    }`}
-                  >
-                    {st.label}
-                  </button>
-                ))}
-              </div>
-
-              {/* Subpage Form Editor */}
-              {(() => {
-                const subpageKey = activeServiceSubpage;
-                const subpage = formData.pages.serviceSubpages?.[subpageKey];
-                if (!subpage) return null;
-
-                return (
-                  <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      <div>
-                        <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                          Hero Badge
-                        </label>
-                        <input
-                          type="text"
-                          value={subpage.heroBadge}
-                          onChange={(e) => {
-                            setFormData({
-                              ...formData,
-                              pages: {
-                                ...formData.pages,
-                                serviceSubpages: {
-                                  ...formData.pages.serviceSubpages,
-                                  [subpageKey]: { ...subpage, heroBadge: e.target.value },
-                                },
-                              },
-                            });
-                          }}
-                          className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
-                        />
-                      </div>
-
-                      <div className="md:col-span-2">
-                        <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                          Main Subpage Title
-                        </label>
-                        <input
-                          type="text"
-                          value={subpage.title}
-                          onChange={(e) => {
-                            setFormData({
-                              ...formData,
-                              pages: {
-                                ...formData.pages,
-                                serviceSubpages: {
-                                  ...formData.pages.serviceSubpages,
-                                  [subpageKey]: { ...subpage, title: e.target.value },
-                                },
-                              },
-                            });
-                          }}
-                          className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
-                        />
-                      </div>
+              {/* VIEW 1: SERVICES HUB OVERVIEW */}
+              {activeServicesSection === "hub" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-lg font-extrabold text-[#964900] flex items-center gap-2">
+                        <Briefcase className="w-4 h-4" />
+                        Services Hub Main Overview Controls (/services)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Edit Services hub badge, main headline, and core service offerings cards grid.
+                      </p>
                     </div>
+                    <Link
+                      href="/services"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /services</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
 
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div>
                       <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                        Subtitle Paragraph
+                        Badge Text
                       </label>
-                      <textarea
-                        rows={2}
-                        value={subpage.subtitle}
-                        onChange={(e) => {
+                      <input
+                        type="text"
+                        value={formData.pages.services.badge}
+                        onChange={(e) =>
                           setFormData({
                             ...formData,
                             pages: {
                               ...formData.pages,
-                              serviceSubpages: {
-                                ...formData.pages.serviceSubpages,
-                                [subpageKey]: { ...subpage, subtitle: e.target.value },
-                              },
+                              services: { ...formData.pages.services, badge: e.target.value },
                             },
-                          });
-                        }}
+                          })
+                        }
                         className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
                       />
                     </div>
 
-                    <div>
+                    <div className="md:col-span-2">
                       <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                        Detailed Description Body
+                        Services Title
                       </label>
-                      <textarea
-                        rows={3}
-                        value={subpage.description}
-                        onChange={(e) => {
+                      <input
+                        type="text"
+                        value={formData.pages.services.title}
+                        onChange={(e) =>
                           setFormData({
                             ...formData,
                             pages: {
                               ...formData.pages,
-                              serviceSubpages: {
-                                ...formData.pages.serviceSubpages,
-                                [subpageKey]: { ...subpage, description: e.target.value },
-                              },
+                              services: { ...formData.pages.services, title: e.target.value },
                             },
-                          });
-                        }}
-                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-xs"
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
                       />
                     </div>
+                  </div>
 
-                    {/* Capabilities List */}
-                    <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                      <h4 className="text-xs font-bold text-[#964900] uppercase">
-                        Key Engineering Capabilities ({(subpage.capabilities || []).length})
-                      </h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {(subpage.capabilities || []).map((cap, idx) => (
-                          <div key={cap.id || idx} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                            <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                              Capability #{idx + 1}
-                            </span>
-                            <input
-                              type="text"
-                              value={cap.title}
-                              onChange={(e) => {
-                                const updatedCaps = [...subpage.capabilities];
-                                updatedCaps[idx].title = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    serviceSubpages: {
-                                      ...formData.pages.serviceSubpages,
-                                      [subpageKey]: { ...subpage, capabilities: updatedCaps },
-                                    },
-                                  },
-                                });
-                              }}
-                              className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                            />
-                            <textarea
-                              rows={2}
-                              value={cap.desc}
-                              onChange={(e) => {
-                                const updatedCaps = [...subpage.capabilities];
-                                updatedCaps[idx].desc = e.target.value;
-                                setFormData({
-                                  ...formData,
-                                  pages: {
-                                    ...formData.pages,
-                                    serviceSubpages: {
-                                      ...formData.pages.serviceSubpages,
-                                      [subpageKey]: { ...subpage, capabilities: updatedCaps },
-                                    },
-                                  },
-                                });
-                              }}
-                              className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                            />
-                          </div>
-                        ))}
-                      </div>
+                  {/* Service Cards */}
+                  <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                    <h3 className="text-sm font-bold text-[#964900] uppercase">
+                      Service Cards Grid ({formData.pages.services.cards.length})
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {formData.pages.services.cards.map((card, idx) => (
+                        <div key={card.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                          <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                            Service #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={card.title}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.services.cards];
+                              updated[idx].title = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  services: { ...formData.pages.services, cards: updated },
+                                },
+                              });
+                            }}
+                            className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                          />
+                          <textarea
+                            rows={2}
+                            value={card.desc}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.services.cards];
+                              updated[idx].desc = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  services: { ...formData.pages.services, cards: updated },
+                                },
+                              });
+                            }}
+                            className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                          />
+                        </div>
+                      ))}
                     </div>
                   </div>
-                );
-              })()}
+                </div>
+              )}
+
+              {/* VIEW 2: SERVICE SUBPAGES (4) */}
+              {activeServicesSection !== "hub" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  {(() => {
+                    const subpageKey = activeServicesSection;
+                    const subpage = formData.pages.serviceSubpages?.[subpageKey];
+                    if (!subpage) return null;
+
+                    return (
+                      <div className="space-y-6">
+                        <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                          <div>
+                            <h3 className="font-['Hanken_Grotesk'] text-lg font-extrabold text-[#964900] flex items-center gap-2">
+                              <Layers className="w-4 h-4 text-[#964900]" />
+                              Service Subpage: {subpage.title}
+                            </h3>
+                            <p className="text-xs text-[#564336] mt-0.5">
+                              Edit hero badge, main titles, detailed description, and engineering capabilities.
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                              Hero Badge
+                            </label>
+                            <input
+                              type="text"
+                              value={subpage.heroBadge}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    serviceSubpages: {
+                                      ...formData.pages.serviceSubpages,
+                                      [subpageKey]: { ...subpage, heroBadge: e.target.value },
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                            />
+                          </div>
+
+                          <div className="md:col-span-2">
+                            <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                              Main Subpage Title
+                            </label>
+                            <input
+                              type="text"
+                              value={subpage.title}
+                              onChange={(e) => {
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    serviceSubpages: {
+                                      ...formData.pages.serviceSubpages,
+                                      [subpageKey]: { ...subpage, title: e.target.value },
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                            Subtitle Paragraph
+                          </label>
+                          <textarea
+                            rows={2}
+                            value={subpage.subtitle}
+                            onChange={(e) => {
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  serviceSubpages: {
+                                    ...formData.pages.serviceSubpages,
+                                    [subpageKey]: { ...subpage, subtitle: e.target.value },
+                                  },
+                                },
+                              });
+                            }}
+                            className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                            Detailed Description Body
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={subpage.description}
+                            onChange={(e) => {
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  serviceSubpages: {
+                                    ...formData.pages.serviceSubpages,
+                                    [subpageKey]: { ...subpage, description: e.target.value },
+                                  },
+                                },
+                              });
+                            }}
+                            className="w-full border border-[#ddc1b0] rounded-xl p-3 text-xs"
+                          />
+                        </div>
+
+                        {/* Capabilities List */}
+                        <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                          <h4 className="text-xs font-bold text-[#964900] uppercase">
+                            Key Engineering Capabilities ({(subpage.capabilities || []).length})
+                          </h4>
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            {(subpage.capabilities || []).map((cap, idx) => (
+                              <div key={cap.id || idx} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                                <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                                  Capability #{idx + 1}
+                                </span>
+                                <input
+                                  type="text"
+                                  value={cap.title}
+                                  onChange={(e) => {
+                                    const updatedCaps = [...subpage.capabilities];
+                                    updatedCaps[idx].title = e.target.value;
+                                    setFormData({
+                                      ...formData,
+                                      pages: {
+                                        ...formData.pages,
+                                        serviceSubpages: {
+                                          ...formData.pages.serviceSubpages,
+                                          [subpageKey]: { ...subpage, capabilities: updatedCaps },
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                                />
+                                <textarea
+                                  rows={2}
+                                  value={cap.desc}
+                                  onChange={(e) => {
+                                    const updatedCaps = [...subpage.capabilities];
+                                    updatedCaps[idx].desc = e.target.value;
+                                    setFormData({
+                                      ...formData,
+                                      pages: {
+                                        ...formData.pages,
+                                        serviceSubpages: {
+                                          ...formData.pages.serviceSubpages,
+                                          [subpageKey]: { ...subpage, capabilities: updatedCaps },
+                                        },
+                                      },
+                                    });
+                                  }}
+                                  className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                                />
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })()}
+                </div>
+              )}
             </div>
           )}
 
-          {/* TAB 11: ACADEMY SUBPAGES (3) */}
-          {activeTab === "academySubpages" && (
+          {/* TAB 3: ACADEMY TRACKS */}
+          {activeTab === "academy" && (
             <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
               <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
                 <div>
@@ -2971,934 +2989,977 @@ export default function AdminPage() {
             </div>
           )}
 
-          {/* TAB 12: DR GODLY HEALTH */}
-          {activeTab === "drgodly" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Stethoscope className="w-5 h-5" />
-                    Dr. Godly Health Product Controls (/drgodly)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Edit clinical AI agent suite product page badge, hero text, and feature cards.
-                  </p>
-                </div>
-                <Link
-                  href="/drgodly"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /drgodly</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.drgodly.heroBadge}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          drgodly: { ...formData.pages.drgodly, heroBadge: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Main Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.drgodly.title}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          drgodly: { ...formData.pages.drgodly, title: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Subtitle Paragraph
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.pages.drgodly.subtitle}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      pages: {
-                        ...formData.pages,
-                        drgodly: { ...formData.pages.drgodly, subtitle: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
-              </div>
-
-              {/* Features List */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Clinical Features List
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {formData.pages.drgodly.features.map((feat, idx) => (
-                    <div key={feat.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Feature #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={feat.title}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.drgodly.features];
-                          updated[idx].title = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              drgodly: { ...formData.pages.drgodly, features: updated },
-                            },
-                          });
-                        }}
-                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                      />
-                      <textarea
-                        rows={2}
-                        value={feat.desc}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.drgodly.features];
-                          updated[idx].desc = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              drgodly: { ...formData.pages.drgodly, features: updated },
-                            },
-                          });
-                        }}
-                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 13: ONEAI ASSIST */}
-          {activeTab === "oneai" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Bot className="w-5 h-5" />
-                    OneAI Assist Copilot Controls (/oneai-assist)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Edit enterprise documentation assistant headline and feature highlights.
-                  </p>
-                </div>
-                <Link
-                  href="/oneai-assist"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /oneai-assist</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.oneaiAssist.heroBadge}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          oneaiAssist: { ...formData.pages.oneaiAssist, heroBadge: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Main Platform Title
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.oneaiAssist.title}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          oneaiAssist: { ...formData.pages.oneaiAssist, title: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Subtitle Paragraph
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.pages.oneaiAssist.subtitle}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      pages: {
-                        ...formData.pages,
-                        oneaiAssist: { ...formData.pages.oneaiAssist, subtitle: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
-              </div>
-
-              {/* Features List */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Copilot Features List
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  {formData.pages.oneaiAssist.features.map((feat, idx) => (
-                    <div key={feat.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Feature #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={feat.title}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.oneaiAssist.features];
-                          updated[idx].title = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              oneaiAssist: { ...formData.pages.oneaiAssist, features: updated },
-                            },
-                          });
-                        }}
-                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                      />
-                      <textarea
-                        rows={2}
-                        value={feat.desc}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.oneaiAssist.features];
-                          updated[idx].desc = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              oneaiAssist: { ...formData.pages.oneaiAssist, features: updated },
-                            },
-                          });
-                        }}
-                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 14: ABOUT FIRM */}
-          {activeTab === "about" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Info className="w-5 h-5" />
-                    About Firm Page Controls (/about)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Edit company mission, vision, key stats, and core operational values.
-                  </p>
-                </div>
-                <Link
-                  href="/about"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /about</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Hero Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.about.heroBadge}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          about: { ...formData.pages.about, heroBadge: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Main Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.about.title}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          about: { ...formData.pages.about, title: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Subtitle Paragraph
-                </label>
-                <textarea
-                  rows={2}
-                  value={formData.pages.about.subtitle}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      pages: {
-                        ...formData.pages,
-                        about: { ...formData.pages.about, subtitle: e.target.value },
-                      },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
-              </div>
-
-              {/* Mission & Vision */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#ddc1b0]">
-                <div className="space-y-2">
-                  <label className="block text-xs font-bold text-[#964900] uppercase">
-                    Mission Statement
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.about.missionTitle}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          about: { ...formData.pages.about, missionTitle: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm font-bold"
-                  />
-                  <textarea
-                    rows={3}
-                    value={formData.pages.about.missionDesc}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          about: { ...formData.pages.about, missionDesc: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="block text-xs font-bold text-[#964900] uppercase">
-                    Vision Statement
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.about.visionTitle}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          about: { ...formData.pages.about, visionTitle: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm font-bold"
-                  />
-                  <textarea
-                    rows={3}
-                    value={formData.pages.about.visionDesc}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          about: { ...formData.pages.about, visionDesc: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 15: PARTNERS */}
-          {activeTab === "partners" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Handshake className="w-5 h-5" />
-                    Partner Alliance Controls (/partners)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Edit strategic alliances (Databricks, Snowflake, AWS, GCP) and application CTA.
-                  </p>
-                </div>
-                <Link
-                  href="/partners"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /partners</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.partners.heroBadge}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          partners: { ...formData.pages.partners, heroBadge: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-
-                <div className="md:col-span-2">
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Partners Title
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.partners.title}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          partners: { ...formData.pages.partners, title: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-              </div>
-
-              {/* Partner Cards */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Strategic Alliances
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formData.pages.partners.partners.map((partner, idx) => (
-                    <div key={partner.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Partner #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={partner.title}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.partners.partners];
-                          updated[idx].title = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              partners: { ...formData.pages.partners, partners: updated },
-                            },
-                          });
-                        }}
-                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                      />
-                      <textarea
-                        rows={2}
-                        value={partner.desc}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.partners.partners];
-                          updated[idx].desc = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              partners: { ...formData.pages.partners, partners: updated },
-                            },
-                          });
-                        }}
-                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 16: CONTACT & FAQS */}
-          {activeTab === "contact" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <PhoneCall className="w-5 h-5" />
-                    Contact & Scoping Controls (/contact)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Update phone numbers, official email, physical office address, and contact page FAQs.
-                  </p>
-                </div>
-                <Link
-                  href="/contact"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /contact</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Direct Official Email
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.footer.contactEmail}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        footer: { ...formData.footer, contactEmail: e.target.value },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Direct Phone Number
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.footer.contactPhone || "+91 70106 42399"}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        footer: { ...formData.footer, contactPhone: e.target.value },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                  Headquarters Physical Address
-                </label>
-                <textarea
-                  rows={2}
-                  value={
-                    formData.footer.contactAddress ||
-                    "No. 472/7 Balaji Arcade, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095, India"
-                  }
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      footer: { ...formData.footer, contactAddress: e.target.value },
-                    })
-                  }
-                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                />
-              </div>
-
-              {/* FAQs CRUD */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-bold text-[#964900] uppercase">
-                    Frequently Asked Questions (FAQs)
-                  </h3>
-                  <button
-                    onClick={() => {
-                      const newFaq = {
-                        id: `faq-${Date.now()}`,
-                        question: "New FAQ Question?",
-                        answer: "Detailed answer response.",
-                      };
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          contact: {
-                            ...formData.pages.contact,
-                            faqs: [...formData.pages.contact.faqs, newFaq],
-                          },
-                        },
-                      });
-                    }}
-                    className="bg-[#964900] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    <span>Add FAQ</span>
-                  </button>
-                </div>
-
-                <div className="space-y-3">
-                  {formData.pages.contact.faqs.map((faq: FAQItemCMS, idx: number) => (
-                    <div key={faq.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                          FAQ #{idx + 1}
-                        </span>
-                        <button
-                          onClick={() => {
-                            const updated = formData.pages.contact.faqs.filter((_: FAQItemCMS, i: number) => i !== idx);
-                            setFormData({
-                              ...formData,
-                              pages: {
-                                ...formData.pages,
-                                contact: { ...formData.pages.contact, faqs: updated },
-                              },
-                            });
-                          }}
-                          className="text-red-500 hover:text-red-700"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </div>
-
-                      <input
-                        type="text"
-                        value={faq.question}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.contact.faqs];
-                          updated[idx].question = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              contact: { ...formData.pages.contact, faqs: updated },
-                            },
-                          });
-                        }}
-                        className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                      />
-
-                      <textarea
-                        rows={2}
-                        value={faq.answer}
-                        onChange={(e) => {
-                          const updated = [...formData.pages.contact.faqs];
-                          updated[idx].answer = e.target.value;
-                          setFormData({
-                            ...formData,
-                            pages: {
-                              ...formData.pages,
-                              contact: { ...formData.pages.contact, faqs: updated },
-                            },
-                          });
-                        }}
-                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
-                      />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* TAB 17: CAREERS */}
-          {activeTab === "careers" && (
-            <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
-              <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
-                <div>
-                  <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
-                    <Briefcase className="w-5 h-5" />
-                    Careers & Job Postings Controls (/careers)
-                  </h2>
-                  <p className="text-xs text-[#564336] mt-0.5">
-                    Post, edit, and manage open job positions displayed live on the Careers page.
-                  </p>
-                </div>
-                <Link
-                  href="/careers"
-                  target="_blank"
-                  className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
-                >
-                  <span>Preview /careers</span>
-                  <ExternalLink className="w-3 h-3" />
-                </Link>
-              </div>
-
-              {/* Hero Banner Controls */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Hero Badge Text
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.careers?.heroBadge || ""}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          careers: { ...formData.pages.careers, heroBadge: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Hero Page Title
-                  </label>
-                  <input
-                    type="text"
-                    value={formData.pages.careers?.title || "Build the Operating System for Industrial-Scale Agentic AI"}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          careers: { ...formData.pages.careers, title: e.target.value },
-                        },
-                      })
-                    }
-                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
-                  />
-                </div>
-              </div>
-
-              {/* JOB POSTINGS LIST */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
-                <div className="flex items-center justify-between">
+          {/* TAB 4: COMPANY & PRODUCT PAGES MANAGER */}
+          {activeTab === "company" && (
+            <div className="space-y-6">
+              {/* Sub-Tab Selector Header */}
+              <div className="bg-white border border-[#ddc1b0] p-4 rounded-2xl shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div className="flex items-center gap-2">
+                  <Building2 className="w-5 h-5 text-[#964900]" />
                   <div>
-                    <h3 className="text-sm font-bold text-[#964900] uppercase">
-                      Open Job Positions ({formData.pages.careers?.jobs?.length || 0})
-                    </h3>
+                    <h2 className="font-['Hanken_Grotesk'] text-lg font-extrabold text-[#964900]">
+                      Company & Product Pages Manager
+                    </h2>
+                    <p className="text-xs text-[#564336]">
+                      Select a company or product subpage to edit copy, team credentials, open roles, and alliances.
+                    </p>
                   </div>
-                  <button
-                    onClick={() => {
-                      const newJob = {
-                        id: `job-${Date.now()}`,
-                        title: "New Engineering Position",
-                        department: "Agentic AI",
-                        location: "Bengaluru, IN / Remote",
-                        type: "Full-Time",
-                        experience: "3+ Years",
-                        featured: false,
-                        summary: "Description of the open role...",
-                        responsibilities: [
-                          "Lead technical design and development.",
-                          "Collaborate with client engineering teams."
-                        ],
-                        techStack: ["TypeScript", "Python", "Docker"]
-                      };
-                      const currentJobs = formData.pages.careers?.jobs || [];
-                      setFormData({
-                        ...formData,
-                        pages: {
-                          ...formData.pages,
-                          careers: {
-                            ...formData.pages.careers,
-                            jobs: [newJob, ...currentJobs]
-                          }
-                        }
-                      });
-                      toast.success("Added new job opening draft!");
-                    }}
-                    className="bg-[#964900] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow"
-                  >
-                    <Plus className="w-4 h-4" />
-                    <span>Post New Job Opening</span>
-                  </button>
                 </div>
 
-                <div className="space-y-4">
-                  {(formData.pages.careers?.jobs || []).map((job, idx) => (
-                    <div key={job.id} className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-2xl space-y-3 shadow-sm">
-                      <div className="flex items-center justify-between border-b border-[#ddc1b0]/60 pb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="text-[11px] font-mono font-bold bg-[#964900] text-white px-2 py-0.5 rounded">
-                            Job #{idx + 1}
-                          </span>
-                          <span className="text-xs font-bold text-[#964900]">{job.title || "Untitled Role"}</span>
-                        </div>
-                        <button
-                          onClick={() => {
-                            const updatedJobs = (formData.pages.careers?.jobs || []).filter((_, i) => i !== idx);
-                            setFormData({
-                              ...formData,
-                              pages: {
-                                ...formData.pages,
-                                careers: { ...formData.pages.careers, jobs: updatedJobs }
-                              }
-                            });
-                            toast.info("Deleted job posting.");
-                          }}
-                          className="text-red-500 hover:text-red-700 p-1 flex items-center gap-1 text-xs font-semibold"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span>Remove</span>
-                        </button>
-                      </div>
-
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                            Job Title *
-                          </label>
-                          <input
-                            type="text"
-                            value={job.title}
-                            onChange={(e) => {
-                              const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                              updatedJobs[idx].title = e.target.value;
-                              setFormData({
-                                ...formData,
-                                pages: {
-                                  ...formData.pages,
-                                  careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                }
-                              });
-                            }}
-                            className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs font-bold bg-white"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                            Department *
-                          </label>
-                          <input
-                            type="text"
-                            value={job.department}
-                            onChange={(e) => {
-                              const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                              updatedJobs[idx].department = e.target.value;
-                              setFormData({
-                                ...formData,
-                                pages: {
-                                  ...formData.pages,
-                                  careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                }
-                              });
-                            }}
-                            className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
-                            Location *
-                          </label>
-                          <input
-                            type="text"
-                            value={job.location}
-                            onChange={(e) => {
-                              const updatedJobs = [...(formData.pages.careers?.jobs || [])];
-                              updatedJobs[idx].location = e.target.value;
-                              setFormData({
-                                ...formData,
-                                pages: {
-                                  ...formData.pages,
-                                  careers: { ...formData.pages.careers, jobs: updatedJobs }
-                                }
-                              });
-                            }}
-                            className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "about" as const, label: "About Us", href: "/about" },
+                    { id: "partners" as const, label: "Enterprise Alliances", href: "/partners" },
+                    { id: "contact" as const, label: "Contact & Scoping", href: "/contact" },
+                    { id: "careers" as const, label: "Careers & Jobs", href: "/careers" },
+                    { id: "drgodly" as const, label: "Dr. Godly Health", href: "/drgodly" },
+                    { id: "oneai" as const, label: "OneAI Assist", href: "/oneai-assist" },
+                  ].map((st) => (
+                    <button
+                      key={st.id}
+                      onClick={() => setActiveCompanySubpage(st.id)}
+                      className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 ${
+                        activeCompanySubpage === st.id
+                          ? "bg-[#964900] text-white shadow"
+                          : "bg-[#fff8f5] text-[#564336] border border-[#ddc1b0] hover:bg-[#fff1ea]"
+                      }`}
+                    >
+                      <span>{st.label}</span>
+                    </button>
                   ))}
                 </div>
               </div>
+
+              {/* ABOUT FIRM */}
+              {activeCompanySubpage === "about" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                        <Info className="w-5 h-5" />
+                        About Firm Page Controls (/about)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Edit company mission, vision, key stats, and core operational values.
+                      </p>
+                    </div>
+                    <Link
+                      href="/about"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /about</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Hero Badge Text
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.about.heroBadge}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              about: { ...formData.pages.about, heroBadge: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Main Headline
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.about.title}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              about: { ...formData.pages.about, title: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Subtitle Paragraph
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.pages.about.subtitle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pages: {
+                            ...formData.pages,
+                            about: { ...formData.pages.about, subtitle: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  {/* Mission & Vision */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-[#ddc1b0]">
+                    <div className="space-y-2">
+                      <label className="block text-xs font-bold text-[#964900] uppercase">
+                        Mission Statement
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.about.missionTitle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              about: { ...formData.pages.about, missionTitle: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm font-bold"
+                      />
+                      <textarea
+                        rows={3}
+                        value={formData.pages.about.missionDesc}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              about: { ...formData.pages.about, missionDesc: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="block text-xs font-bold text-[#964900] uppercase">
+                        Vision Statement
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.about.visionTitle}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              about: { ...formData.pages.about, visionTitle: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-sm font-bold"
+                      />
+                      <textarea
+                        rows={3}
+                        value={formData.pages.about.visionDesc}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              about: { ...formData.pages.about, visionDesc: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs"
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ENTERPRISE ALLIANCES (PARTNERS) */}
+              {activeCompanySubpage === "partners" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                        <Handshake className="w-5 h-5" />
+                        Partner Alliance Controls (/partners)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Edit strategic alliances (Databricks, Snowflake, AWS, GCP) and application CTA.
+                      </p>
+                    </div>
+                    <Link
+                      href="/partners"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /partners</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Badge Text
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.partners.heroBadge}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              partners: { ...formData.pages.partners, heroBadge: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Partners Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.partners.title}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              partners: { ...formData.pages.partners, title: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Partner Cards */}
+                  <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                    <h3 className="text-sm font-bold text-[#964900] uppercase">
+                      Strategic Alliances
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {formData.pages.partners.partners.map((partner, idx) => (
+                        <div key={partner.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                          <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                            Partner #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={partner.title}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.partners.partners];
+                              updated[idx].title = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  partners: { ...formData.pages.partners, partners: updated },
+                                },
+                              });
+                            }}
+                            className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                          />
+                          <textarea
+                            rows={2}
+                            value={partner.desc}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.partners.partners];
+                              updated[idx].desc = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  partners: { ...formData.pages.partners, partners: updated },
+                                },
+                              });
+                            }}
+                            className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* CONTACT & FAQS */}
+              {activeCompanySubpage === "contact" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                        <PhoneCall className="w-5 h-5" />
+                        Contact & Scoping Controls (/contact)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Update phone numbers, official email, physical office address, and contact page FAQs.
+                      </p>
+                    </div>
+                    <Link
+                      href="/contact"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /contact</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Direct Official Email
+                      </label>
+                      <input
+                        type="email"
+                        value={formData.footer.contactEmail}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            footer: { ...formData.footer, contactEmail: e.target.value },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Direct Phone Number
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.footer.contactPhone || "+91 70106 42399"}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            footer: { ...formData.footer, contactPhone: e.target.value },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Headquarters Physical Address
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={
+                        formData.footer.contactAddress ||
+                        "No. 472/7 Balaji Arcade, Ejipura, Koramangala 4th Block, Bengaluru, Karnataka - 560095, India"
+                      }
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          footer: { ...formData.footer, contactAddress: e.target.value },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  {/* FAQs CRUD */}
+                  <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-sm font-bold text-[#964900] uppercase">
+                        Frequently Asked Questions (FAQs)
+                      </h3>
+                      <button
+                        onClick={() => {
+                          const newFaq = {
+                            id: `faq-${Date.now()}`,
+                            question: "New FAQ Question?",
+                            answer: "Detailed answer response.",
+                          };
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              contact: {
+                                ...formData.pages.contact,
+                                faqs: [...formData.pages.contact.faqs, newFaq],
+                              },
+                            },
+                          });
+                        }}
+                        className="bg-[#964900] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1"
+                      >
+                        <Plus className="w-3.5 h-3.5" />
+                        <span>Add FAQ</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-3">
+                      {formData.pages.contact.faqs.map((faq: FAQItemCMS, idx: number) => (
+                        <div key={faq.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                              FAQ #{idx + 1}
+                            </span>
+                            <button
+                              onClick={() => {
+                                const updated = formData.pages.contact.faqs.filter((_: FAQItemCMS, i: number) => i !== idx);
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    contact: { ...formData.pages.contact, faqs: updated },
+                                  },
+                                });
+                              }}
+                              className="text-red-500 hover:text-red-700"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+
+                          <input
+                            type="text"
+                            value={faq.question}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.contact.faqs];
+                              updated[idx].question = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  contact: { ...formData.pages.contact, faqs: updated },
+                                },
+                              });
+                            }}
+                            className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                          />
+
+                          <textarea
+                            rows={2}
+                            value={faq.answer}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.contact.faqs];
+                              updated[idx].answer = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  contact: { ...formData.pages.contact, faqs: updated },
+                                },
+                              });
+                            }}
+                            className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* CAREERS & JOB POSTINGS */}
+              {activeCompanySubpage === "careers" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                        <Briefcase className="w-5 h-5" />
+                        Careers & Job Postings Controls (/careers)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Post, edit, and manage open job positions displayed live on the Careers page.
+                      </p>
+                    </div>
+                    <Link
+                      href="/careers"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /careers</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+
+                  {/* Hero Banner Controls */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Hero Badge Text
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.careers?.heroBadge || ""}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              careers: { ...formData.pages.careers, heroBadge: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Hero Page Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.careers?.title || "Build the Operating System for Industrial-Scale Agentic AI"}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              careers: { ...formData.pages.careers, title: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  {/* JOB POSTINGS LIST */}
+                  <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h3 className="text-sm font-bold text-[#964900] uppercase">
+                          Open Job Positions ({formData.pages.careers?.jobs?.length || 0})
+                        </h3>
+                      </div>
+                      <button
+                        onClick={() => {
+                          const newJob = {
+                            id: `job-${Date.now()}`,
+                            title: "New Engineering Position",
+                            department: "Agentic AI",
+                            location: "Bengaluru, IN / Remote",
+                            type: "Full-Time",
+                            experience: "3+ Years",
+                            featured: false,
+                            summary: "Description of the open role...",
+                            responsibilities: [
+                              "Lead technical design and development.",
+                              "Collaborate with client engineering teams."
+                            ],
+                            techStack: ["TypeScript", "Python", "Docker"]
+                          };
+                          const currentJobs = formData.pages.careers?.jobs || [];
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              careers: {
+                                ...formData.pages.careers,
+                                jobs: [newJob, ...currentJobs]
+                              }
+                            }
+                          });
+                          toast.success("Added new job opening draft!");
+                        }}
+                        className="bg-[#964900] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow"
+                      >
+                        <Plus className="w-4 h-4" />
+                        <span>Post New Job Opening</span>
+                      </button>
+                    </div>
+
+                    <div className="space-y-4">
+                      {(formData.pages.careers?.jobs || []).map((job, idx) => (
+                        <div key={job.id} className="p-5 border border-[#ddc1b0] bg-[#fff8f5] rounded-2xl space-y-3 shadow-sm">
+                          <div className="flex items-center justify-between border-b border-[#ddc1b0]/60 pb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="text-[11px] font-mono font-bold bg-[#964900] text-white px-2 py-0.5 rounded">
+                                Job #{idx + 1}
+                              </span>
+                              <span className="text-xs font-bold text-[#964900]">{job.title || "Untitled Role"}</span>
+                            </div>
+                            <button
+                              onClick={() => {
+                                const updatedJobs = (formData.pages.careers?.jobs || []).filter((_, i) => i !== idx);
+                                setFormData({
+                                  ...formData,
+                                  pages: {
+                                    ...formData.pages,
+                                    careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                  }
+                                });
+                                toast.info("Deleted job posting.");
+                              }}
+                              className="text-red-500 hover:text-red-700 p-1 flex items-center gap-1 text-xs font-semibold"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                              <span>Remove</span>
+                            </button>
+                          </div>
+
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                            <div>
+                              <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                                Job Title *
+                              </label>
+                              <input
+                                type="text"
+                                value={job.title}
+                                onChange={(e) => {
+                                  const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                  updatedJobs[idx].title = e.target.value;
+                                  setFormData({
+                                    ...formData,
+                                    pages: {
+                                      ...formData.pages,
+                                      careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                    }
+                                  });
+                                }}
+                                className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs font-bold bg-white"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                                Department *
+                              </label>
+                              <input
+                                type="text"
+                                value={job.department}
+                                onChange={(e) => {
+                                  const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                  updatedJobs[idx].department = e.target.value;
+                                  setFormData({
+                                    ...formData,
+                                    pages: {
+                                      ...formData.pages,
+                                      careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                    }
+                                  });
+                                }}
+                                className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="block text-[11px] font-bold text-[#564336] uppercase mb-1">
+                                Location *
+                              </label>
+                              <input
+                                type="text"
+                                value={job.location}
+                                onChange={(e) => {
+                                  const updatedJobs = [...(formData.pages.careers?.jobs || [])];
+                                  updatedJobs[idx].location = e.target.value;
+                                  setFormData({
+                                    ...formData,
+                                    pages: {
+                                      ...formData.pages,
+                                      careers: { ...formData.pages.careers, jobs: updatedJobs }
+                                    }
+                                  });
+                                }}
+                                className="w-full border border-[#ddc1b0] rounded-xl p-2.5 text-xs bg-white"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* DR GODLY HEALTH */}
+              {activeCompanySubpage === "drgodly" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                        <Stethoscope className="w-5 h-5" />
+                        Dr. Godly Health Product Controls (/drgodly)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Edit clinical AI agent suite product page badge, hero text, and feature cards.
+                      </p>
+                    </div>
+                    <Link
+                      href="/drgodly"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /drgodly</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Badge Text
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.drgodly.heroBadge}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              drgodly: { ...formData.pages.drgodly, heroBadge: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Main Headline
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.drgodly.title}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              drgodly: { ...formData.pages.drgodly, title: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Subtitle Paragraph
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.pages.drgodly.subtitle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pages: {
+                            ...formData.pages,
+                            drgodly: { ...formData.pages.drgodly, subtitle: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  {/* Features List */}
+                  <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                    <h3 className="text-sm font-bold text-[#964900] uppercase">
+                      Clinical Features List
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {formData.pages.drgodly.features.map((feat, idx) => (
+                        <div key={feat.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                          <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                            Feature #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={feat.title}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.drgodly.features];
+                              updated[idx].title = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  drgodly: { ...formData.pages.drgodly, features: updated },
+                                },
+                              });
+                            }}
+                            className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                          />
+                          <textarea
+                            rows={2}
+                            value={feat.desc}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.drgodly.features];
+                              updated[idx].desc = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  drgodly: { ...formData.pages.drgodly, features: updated },
+                                },
+                              });
+                            }}
+                            className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ONEAI ASSIST */}
+              {activeCompanySubpage === "oneai" && (
+                <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
+                  <div className="flex items-center justify-between border-b border-[#ddc1b0] pb-4">
+                    <div>
+                      <h3 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
+                        <Bot className="w-5 h-5" />
+                        OneAI Assist Copilot Controls (/oneai-assist)
+                      </h3>
+                      <p className="text-xs text-[#564336] mt-0.5">
+                        Edit enterprise documentation assistant headline and feature highlights.
+                      </p>
+                    </div>
+                    <Link
+                      href="/oneai-assist"
+                      target="_blank"
+                      className="text-xs font-mono font-bold text-[#964900] hover:underline flex items-center gap-1"
+                    >
+                      <span>Preview /oneai-assist</span>
+                      <ExternalLink className="w-3 h-3" />
+                    </Link>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Badge Text
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.oneaiAssist.heroBadge}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              oneaiAssist: { ...formData.pages.oneaiAssist, heroBadge: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+
+                    <div className="md:col-span-2">
+                      <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                        Main Platform Title
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.pages.oneaiAssist.title}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            pages: {
+                              ...formData.pages,
+                              oneaiAssist: { ...formData.pages.oneaiAssist, title: e.target.value },
+                            },
+                          })
+                        }
+                        className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Subtitle Paragraph
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.pages.oneaiAssist.subtitle}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          pages: {
+                            ...formData.pages,
+                            oneaiAssist: { ...formData.pages.oneaiAssist, subtitle: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  {/* Features List */}
+                  <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                    <h3 className="text-sm font-bold text-[#964900] uppercase">
+                      Copilot Features List
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {formData.pages.oneaiAssist.features.map((feat, idx) => (
+                        <div key={feat.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                          <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                            Feature #{idx + 1}
+                          </span>
+                          <input
+                            type="text"
+                            value={feat.title}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.oneaiAssist.features];
+                              updated[idx].title = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  oneaiAssist: { ...formData.pages.oneaiAssist, features: updated },
+                                },
+                              });
+                            }}
+                            className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
+                          />
+                          <textarea
+                            rows={2}
+                            value={feat.desc}
+                            onChange={(e) => {
+                              const updated = [...formData.pages.oneaiAssist.features];
+                              updated[idx].desc = e.target.value;
+                              setFormData({
+                                ...formData,
+                                pages: {
+                                  ...formData.pages,
+                                  oneaiAssist: { ...formData.pages.oneaiAssist, features: updated },
+                                },
+                              });
+                            }}
+                            className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
