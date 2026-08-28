@@ -46,6 +46,8 @@ import {
   Check,
   X,
   Sparkles,
+  Clock,
+  TrendingDown,
 } from "lucide-react";
 import { useCMS } from "@/context/CMSContext";
 import {
@@ -827,6 +829,44 @@ export default function AdminPage() {
                     className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
                   />
                 </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Secondary CTA Button Text
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.hero.secondaryCtaText || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          hero: { ...formData.homepage.hero, secondaryCtaText: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Secondary CTA Link Href
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.hero.secondaryCtaHref || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          hero: { ...formData.homepage.hero, secondaryCtaHref: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -838,10 +878,10 @@ export default function AdminPage() {
                 <div>
                   <h2 className="font-['Hanken_Grotesk'] text-xl font-extrabold text-[#964900] flex items-center gap-2">
                     <Box className="w-5 h-5" />
-                    3D Interactive Chest & Metrics Section
+                    3D Interactive Robot & Metrics Editor
                   </h2>
                   <p className="text-xs text-[#564336] mt-0.5">
-                    Customize 3D chest badge text, interactive overlay titles, and enterprise statistics grid.
+                    Customize section headers, 3D card text, robot chest brand, and performance stat cards.
                   </p>
                 </div>
                 <Link
@@ -854,14 +894,15 @@ export default function AdminPage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Section Header Controls */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-6 border-b border-[#ddc1b0]">
                 <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
                     Badge Text
                   </label>
                   <input
                     type="text"
-                    value={formData.homepage.showcase3d.badgeText}
+                    value={formData.homepage.showcase3d.badgeText || ""}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
@@ -875,13 +916,13 @@ export default function AdminPage() {
                   />
                 </div>
 
-                <div className="md:col-span-2">
+                <div>
                   <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
-                    Section Headline
+                    Section Title
                   </label>
                   <input
                     type="text"
-                    value={formData.homepage.showcase3d.title}
+                    value={formData.homepage.showcase3d.title || ""}
                     onChange={(e) =>
                       setFormData({
                         ...formData,
@@ -894,45 +935,262 @@ export default function AdminPage() {
                     className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
                   />
                 </div>
+
+                <div className="md:col-span-2">
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Section Subtitle
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.showcase3d.subtitle || ""}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          showcase3d: { ...formData.homepage.showcase3d, subtitle: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
               </div>
 
-              {/* Metrics Grid */}
-              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Enterprise ROI Statistics (4 Cards)
+              {/* 3D Robot Card Content Controls */}
+              <div className="space-y-4 pb-6 border-b border-[#ddc1b0]">
+                <h3 className="text-sm font-extrabold text-[#241913] uppercase tracking-wider flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#964900]" />
+                  3D Showcase Card Overlay Controls
                 </h3>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formData.homepage.metrics.map((m, idx) => (
-                    <div key={m.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Stat Card #{idx + 1}
-                      </span>
-                      <input
-                        type="text"
-                        value={m.value}
-                        onChange={(e) => {
-                          const updated = [...formData.homepage.metrics];
-                          updated[idx].value = e.target.value;
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Card Headline
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.homepage.showcase3d.cardHeadline || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, cardHeadline: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Robot Chest Brand Typography (3D Animated)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.homepage.showcase3d.chestBrandText || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, chestBrandText: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono font-bold text-[#964900]"
+                    />
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Card Description
+                    </label>
+                    <textarea
+                      rows={2}
+                      value={formData.homepage.showcase3d.cardDescription || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, cardDescription: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Button 1 Text
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.homepage.showcase3d.cardBtn1Text || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, cardBtn1Text: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Button 1 Link Href
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.homepage.showcase3d.cardBtn1Href || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, cardBtn1Href: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Button 2 Text
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.homepage.showcase3d.cardBtn2Text || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, cardBtn2Text: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                      Button 2 Link Href
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.homepage.showcase3d.cardBtn2Href || ""}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          homepage: {
+                            ...formData.homepage,
+                            showcase3d: { ...formData.homepage.showcase3d, cardBtn2Href: e.target.value },
+                          },
+                        })
+                      }
+                      className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Performance Metrics Cards */}
+              <div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-sm font-extrabold text-[#241913] uppercase tracking-wider">
+                    Performance Metric Stat Cards ({formData.homepage.metrics?.length || 0})
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newMetric = {
+                        id: `m-${Date.now()}`,
+                        value: "99.9%",
+                        description: "High availability SLA across all deployed agent pipelines.",
+                      };
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          metrics: [...(formData.homepage.metrics || []), newMetric],
+                        },
+                      });
+                    }}
+                    className="bg-[#964900] text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 hover:bg-[#723600]"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add Stat Card
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {(formData.homepage.metrics || []).map((m, idx) => (
+                    <div key={m.id || idx} className="p-4 border border-[#ddc1b0] rounded-xl bg-[#fff8f5] relative space-y-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = formData.homepage.metrics.filter((_, i) => i !== idx);
                           setFormData({
                             ...formData,
                             homepage: { ...formData.homepage, metrics: updated },
                           });
                         }}
-                        className="font-bold text-sm bg-white border border-[#ddc1b0] rounded-lg p-2 w-full text-[#964900]"
-                      />
-                      <input
-                        type="text"
-                        value={m.description}
-                        onChange={(e) => {
-                          const updated = [...formData.homepage.metrics];
-                          updated[idx].description = e.target.value;
-                          setFormData({
-                            ...formData,
-                            homepage: { ...formData.homepage, metrics: updated },
-                          });
-                        }}
-                        className="text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 w-full"
-                      />
+                        className="absolute top-3 right-3 text-red-500 hover:text-red-700 p-1"
+                        title="Delete Metric"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                          Metric Value (e.g. 4.5x faster)
+                        </label>
+                        <input
+                          type="text"
+                          value={m.value}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.metrics];
+                            updated[idx] = { ...updated[idx], value: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: { ...formData.homepage, metrics: updated },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-lg p-2.5 text-sm font-bold text-[#964900]"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                          Metric Description
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={m.description}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.metrics];
+                            updated[idx] = { ...updated[idx], description: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: { ...formData.homepage, metrics: updated },
+                            });
+                          }}
+                          className="w-full border border-[#ddc1b0] rounded-lg p-2.5 text-xs"
+                        />
+                      </div>
                     </div>
                   ))}
                 </div>
@@ -1007,15 +1265,61 @@ export default function AdminPage() {
 
               {/* Bento Cards */}
               <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Architecture Pillar Cards
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    Architecture Pillar Cards
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newCard = {
+                        id: `card-${Date.now()}`,
+                        title: "New Agentic Architecture Pillar",
+                        desc: "High-performance enterprise AI component integrated into production workloads.",
+                      };
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          architecture: {
+                            ...formData.homepage.architecture,
+                            cards: [...formData.homepage.architecture.cards, newCard],
+                          },
+                        },
+                      });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00] transition-colors"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add Bento Card
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {formData.homepage.architecture.cards.map((card, idx) => (
-                    <div key={card.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Card #{idx + 1}
-                      </span>
+                    <div key={card.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2 relative">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                          Card #{idx + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.homepage.architecture.cards.filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                architecture: { ...formData.homepage.architecture, cards: updated },
+                              },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                          title="Delete Card"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={card.title}
@@ -1120,21 +1424,216 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              <div>
+                <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                  Section Subtitle
+                </label>
+                <textarea
+                  rows={2}
+                  value={formData.homepage.techStackBar.subtitle}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      homepage: {
+                        ...formData.homepage,
+                        techStackBar: { ...formData.homepage.techStackBar, subtitle: e.target.value },
+                      },
+                    })
+                  }
+                  className="w-full border border-[#ddc1b0] rounded-xl p-3 text-xs"
+                />
+              </div>
+
+              {/* Tech Stack Items */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    Tech Stack Technologies ({formData.homepage.techStackBar.techStack?.length || 0})
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newTech = {
+                        id: `tech-${Date.now()}`,
+                        name: "New Technology",
+                        category: "Data & Compute",
+                        iconName: "Cpu",
+                      };
+                      const updated = [...(formData.homepage.techStackBar.techStack || []), newTech];
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          techStackBar: { ...formData.homepage.techStackBar, techStack: updated },
+                        },
+                      });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00]"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add Tech Stack Item
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  {(formData.homepage.techStackBar.techStack || []).map((tech, idx) => (
+                    <div key={tech.id} className="p-3 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <input
+                          type="text"
+                          value={tech.name}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.techStackBar.techStack];
+                            updated[idx] = { ...updated[idx], name: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                techStackBar: { ...formData.homepage.techStackBar, techStack: updated },
+                              },
+                            });
+                          }}
+                          className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-1.5 w-full mr-2"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.homepage.techStackBar.techStack.filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                techStackBar: { ...formData.homepage.techStackBar, techStack: updated },
+                              },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          placeholder="Category"
+                          value={tech.category}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.techStackBar.techStack];
+                            updated[idx] = { ...updated[idx], category: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                techStackBar: { ...formData.homepage.techStackBar, techStack: updated },
+                              },
+                            });
+                          }}
+                          className="w-1/2 text-[11px] border border-[#ddc1b0] rounded p-1.5 bg-white"
+                        />
+                        <select
+                          value={tech.iconName}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.techStackBar.techStack];
+                            updated[idx] = { ...updated[idx], iconName: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                techStackBar: { ...formData.homepage.techStackBar, techStack: updated },
+                              },
+                            });
+                          }}
+                          className="w-1/2 text-[11px] border border-[#ddc1b0] rounded p-1.5 bg-white font-mono"
+                        >
+                          <option value="Database">Database</option>
+                          <option value="Zap">Zap</option>
+                          <option value="Cpu">Cpu</option>
+                          <option value="Globe">Globe</option>
+                          <option value="Layers">Layers</option>
+                          <option value="Sparkles">Sparkles</option>
+                          <option value="Bot">Bot</option>
+                          <option value="Workflow">Workflow</option>
+                          <option value="Server">Server</option>
+                          <option value="Terminal">Terminal</option>
+                          <option value="ShieldCheck">ShieldCheck</option>
+                          <option value="Activity">Activity</option>
+                          <option value="Lock">Lock</option>
+                          <option value="Code2">Code2</option>
+                        </select>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
               {/* Compliance Shields Editor */}
               <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  Enterprise Compliance Shields (SOC2, HIPAA, ISO27001)
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    Enterprise Compliance Shields (SOC2, HIPAA, ISO27001)
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newShield = {
+                        id: `shield-${Date.now()}`,
+                        title: "New Security Standard",
+                        badge: "CERTIFIED",
+                        description: "Full compliance and audit readiness.",
+                      };
+                      const updated = [...formData.homepage.techStackBar.complianceShields, newShield];
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          techStackBar: { ...formData.homepage.techStackBar, complianceShields: updated },
+                        },
+                      });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00]"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add Compliance Shield
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {formData.homepage.techStackBar.complianceShields.map((shield, idx) => (
                     <div key={shield.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                          Shield #{idx + 1}
-                        </span>
-                        <span className="text-[10px] font-mono font-bold bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded">
-                          {shield.badge}
-                        </span>
+                        <input
+                          type="text"
+                          placeholder="Badge (e.g. SOC 2 TYPE II)"
+                          value={shield.badge}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.techStackBar.complianceShields];
+                            updated[idx].badge = e.target.value;
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                techStackBar: { ...formData.homepage.techStackBar, complianceShields: updated },
+                              },
+                            });
+                          }}
+                          className="font-mono text-[10px] font-bold bg-emerald-100 text-emerald-800 px-2 py-1 rounded border border-emerald-300"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.homepage.techStackBar.complianceShields.filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                techStackBar: { ...formData.homepage.techStackBar, complianceShields: updated },
+                              },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                       <input
                         type="text"
@@ -1185,7 +1684,7 @@ export default function AdminPage() {
                     FDE Interactive Process Hub & ROI Metrics Grid
                   </h2>
                   <p className="text-xs text-[#564336] mt-0.5">
-                    Configure the 4-step forward deployed deployment cycle and enterprise ROI metrics.
+                    Configure the forward deployed engineering deployment cycle and enterprise ROI metrics.
                   </p>
                 </div>
                 <Link
@@ -1200,15 +1699,87 @@ export default function AdminPage() {
 
               {/* FDE Steps List */}
               <div className="space-y-4">
-                <h3 className="text-sm font-bold text-[#964900] uppercase">
-                  4-Step FDE Deployment Process Cycle
-                </h3>
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    FDE Deployment Process Cycle Steps
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newStep = {
+                        id: `step-${Date.now()}`,
+                        number: `0${(formData.homepage.fdeInteractiveHub.steps?.length || 0) + 1}`,
+                        title: "New Deployment Phase",
+                        description: "Description of engineering deliverables for this phase.",
+                        targetNodeIds: ["node-1"],
+                      };
+                      const updated = [...(formData.homepage.fdeInteractiveHub.steps || []), newStep];
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          fdeInteractiveHub: {
+                            ...formData.homepage.fdeInteractiveHub,
+                            steps: updated,
+                          },
+                        },
+                      });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00]"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add FDE Process Step
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {formData.homepage.fdeInteractiveHub.steps.map((step, idx) => (
+                  {(formData.homepage.fdeInteractiveHub.steps || []).map((step, idx) => (
                     <div key={step.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
-                      <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
-                        Step #{step.number} Title
-                      </span>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs font-mono font-bold text-[#964900]">
+                            Step Number:
+                          </span>
+                          <input
+                            type="text"
+                            value={step.number}
+                            onChange={(e) => {
+                              const updated = [...formData.homepage.fdeInteractiveHub.steps];
+                              updated[idx].number = e.target.value;
+                              setFormData({
+                                ...formData,
+                                homepage: {
+                                  ...formData.homepage,
+                                  fdeInteractiveHub: {
+                                    ...formData.homepage.fdeInteractiveHub,
+                                    steps: updated,
+                                  },
+                                },
+                              });
+                            }}
+                            className="w-12 text-xs font-mono font-bold border border-[#ddc1b0] rounded p-1 text-center bg-white"
+                          />
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.homepage.fdeInteractiveHub.steps.filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                fdeInteractiveHub: {
+                                  ...formData.homepage.fdeInteractiveHub,
+                                  steps: updated,
+                                },
+                              },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                       <input
                         type="text"
                         value={step.title}
@@ -1246,6 +1817,100 @@ export default function AdminPage() {
                           });
                         }}
                         className="w-full text-xs border border-[#ddc1b0] rounded-lg p-2 bg-white"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* ROI Metrics Grid Editor */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    Enterprise ROI Metrics Grid ({formData.homepage.roiMetricsGrid?.length || 0})
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newMetric = {
+                        id: `roi-${Date.now()}`,
+                        value: "99.9%",
+                        label: "System Uptime SLA",
+                        description: "Guaranteed production enterprise reliability.",
+                        iconName: "Zap",
+                      };
+                      const updated = [...(formData.homepage.roiMetricsGrid || []), newMetric];
+                      setFormData({
+                        ...formData,
+                        homepage: { ...formData.homepage, roiMetricsGrid: updated },
+                      });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00]"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add ROI Metric Card
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {(formData.homepage.roiMetricsGrid || []).map((roi, idx) => (
+                    <div key={roi.id} className="p-3 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-2">
+                      <div className="flex items-center justify-between">
+                        <input
+                          type="text"
+                          placeholder="Value (e.g. 14 Days)"
+                          value={roi.value}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.roiMetricsGrid];
+                            updated[idx] = { ...updated[idx], value: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: { ...formData.homepage, roiMetricsGrid: updated },
+                            });
+                          }}
+                          className="font-extrabold text-sm text-[#964900] bg-white border border-[#ddc1b0] rounded-lg p-1.5 w-full mr-2"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.homepage.roiMetricsGrid.filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              homepage: { ...formData.homepage, roiMetricsGrid: updated },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        placeholder="Label"
+                        value={roi.label}
+                        onChange={(e) => {
+                          const updated = [...formData.homepage.roiMetricsGrid];
+                          updated[idx] = { ...updated[idx], label: e.target.value };
+                          setFormData({
+                            ...formData,
+                            homepage: { ...formData.homepage, roiMetricsGrid: updated },
+                          });
+                        }}
+                        className="font-bold text-xs bg-white border border-[#ddc1b0] rounded-lg p-1.5 w-full"
+                      />
+                      <textarea
+                        rows={2}
+                        placeholder="Description"
+                        value={roi.description}
+                        onChange={(e) => {
+                          const updated = [...formData.homepage.roiMetricsGrid];
+                          updated[idx] = { ...updated[idx], description: e.target.value };
+                          setFormData({
+                            ...formData,
+                            homepage: { ...formData.homepage, roiMetricsGrid: updated },
+                          });
+                        }}
+                        className="w-full text-xs border border-[#ddc1b0] rounded-lg p-1.5 bg-white"
                       />
                     </div>
                   ))}
@@ -1336,6 +2001,205 @@ export default function AdminPage() {
                     }
                     className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
                   />
+                </div>
+              </div>
+
+              {/* Enhanced Testimonial Items Carousel Editor */}
+              <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-sm font-bold text-[#964900] uppercase">
+                    Client Case Study Spotlight Items ({formData.homepage.enhancedTestimonials?.items?.length || 0})
+                  </h3>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newItem = {
+                        id: `testi-${Date.now()}`,
+                        quote: "AlphaesAI engineered our AI data pipeline seamlessly into production.",
+                        authorName: "Jane Doe",
+                        authorTitle: "VP of Data Engineering",
+                        authorAvatar: "",
+                        domain: "FinTech & Banking",
+                        roiChips: ["10x Pipeline Throughput", "Zero Downtime Migration"],
+                        videoThumbnail: "",
+                        videoTitle: "Watch Executive Case Video",
+                      };
+                      const currentItems = formData.homepage.enhancedTestimonials?.items || [];
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          enhancedTestimonials: {
+                            ...formData.homepage.enhancedTestimonials,
+                            items: [...currentItems, newItem],
+                          },
+                        },
+                      });
+                    }}
+                    className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00]"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    Add Case Spotlight Item
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4">
+                  {(formData.homepage.enhancedTestimonials?.items || []).map((item, idx) => (
+                    <div key={item.id} className="p-4 border border-[#ddc1b0] bg-[#fff8f5] rounded-xl space-y-3 relative">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-mono font-bold text-[#964900] uppercase">
+                          Case Study Item #{idx + 1}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const updated = formData.homepage.enhancedTestimonials.items.filter((_, i) => i !== idx);
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                enhancedTestimonials: {
+                                  ...formData.homepage.enhancedTestimonials,
+                                  items: updated,
+                                },
+                              },
+                            });
+                          }}
+                          className="text-red-500 hover:text-red-700 p-1"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        <div>
+                          <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                            Author Name & Domain
+                          </label>
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              placeholder="Name"
+                              value={item.authorName}
+                              onChange={(e) => {
+                                const updated = [...formData.homepage.enhancedTestimonials.items];
+                                updated[idx] = { ...updated[idx], authorName: e.target.value };
+                                setFormData({
+                                  ...formData,
+                                  homepage: {
+                                    ...formData.homepage,
+                                    enhancedTestimonials: {
+                                      ...formData.homepage.enhancedTestimonials,
+                                      items: updated,
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-1/2 text-xs font-bold bg-white border border-[#ddc1b0] rounded-lg p-2"
+                            />
+                            <input
+                              type="text"
+                              placeholder="Domain (e.g. Healthcare AI)"
+                              value={item.domain}
+                              onChange={(e) => {
+                                const updated = [...formData.homepage.enhancedTestimonials.items];
+                                updated[idx] = { ...updated[idx], domain: e.target.value };
+                                setFormData({
+                                  ...formData,
+                                  homepage: {
+                                    ...formData.homepage,
+                                    enhancedTestimonials: {
+                                      ...formData.homepage.enhancedTestimonials,
+                                      items: updated,
+                                    },
+                                  },
+                                });
+                              }}
+                              className="w-1/2 text-xs bg-white border border-[#ddc1b0] rounded-lg p-2"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                            Author Title / Organization
+                          </label>
+                          <input
+                            type="text"
+                            value={item.authorTitle}
+                            onChange={(e) => {
+                              const updated = [...formData.homepage.enhancedTestimonials.items];
+                              updated[idx] = { ...updated[idx], authorTitle: e.target.value };
+                              setFormData({
+                                ...formData,
+                                homepage: {
+                                  ...formData.homepage,
+                                  enhancedTestimonials: {
+                                    ...formData.homepage.enhancedTestimonials,
+                                    items: updated,
+                                  },
+                                },
+                              });
+                            }}
+                            className="w-full text-xs bg-white border border-[#ddc1b0] rounded-lg p-2"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                          Testimonial Quote
+                        </label>
+                        <textarea
+                          rows={2}
+                          value={item.quote}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.enhancedTestimonials.items];
+                            updated[idx] = { ...updated[idx], quote: e.target.value };
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                enhancedTestimonials: {
+                                  ...formData.homepage.enhancedTestimonials,
+                                  items: updated,
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full text-xs bg-white border border-[#ddc1b0] rounded-lg p-2 italic"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-[10px] font-bold text-[#564336] uppercase mb-1">
+                          ROI Metric Chips (comma separated)
+                        </label>
+                        <input
+                          type="text"
+                          value={Array.isArray(item.roiChips) ? item.roiChips.join(", ") : item.roiChips || ""}
+                          onChange={(e) => {
+                            const updated = [...formData.homepage.enhancedTestimonials.items];
+                            updated[idx] = {
+                              ...updated[idx],
+                              roiChips: e.target.value.split(",").map((s) => s.trim()).filter(Boolean),
+                            };
+                            setFormData({
+                              ...formData,
+                              homepage: {
+                                ...formData.homepage,
+                                enhancedTestimonials: {
+                                  ...formData.homepage.enhancedTestimonials,
+                                  items: updated,
+                                },
+                              },
+                            });
+                          }}
+                          className="w-full text-xs font-mono bg-white border border-[#ddc1b0] rounded-lg p-2"
+                        />
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1437,6 +2301,47 @@ export default function AdminPage() {
                         homepage: {
                           ...formData.homepage,
                           ctaBanner: { ...formData.homepage.ctaBanner, primaryCtaHref: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Secondary CTA Text
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.ctaBanner.secondaryCtaText || "Explore Services & Products"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          ctaBanner: { ...formData.homepage.ctaBanner, secondaryCtaText: e.target.value },
+                        },
+                      })
+                    }
+                    className="w-full border border-[#ddc1b0] rounded-xl p-3 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-bold text-[#564336] uppercase mb-1">
+                    Secondary CTA Href
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.homepage.ctaBanner.secondaryCtaHref || "/services"}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        homepage: {
+                          ...formData.homepage,
+                          ctaBanner: { ...formData.homepage.ctaBanner, secondaryCtaHref: e.target.value },
                         },
                       })
                     }
