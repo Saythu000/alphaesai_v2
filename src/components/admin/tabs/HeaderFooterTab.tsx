@@ -402,7 +402,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 : "border-transparent text-gray-500 hover:text-gray-800"
             }`}
           >
-            Services Megamenu Categories
+            Navbar Dropdowns (Services, Products, Academy)
           </button>
           <button
             type="button"
@@ -519,12 +519,81 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
           </div>
         )}
 
-        {/* TAB 2: MEGAMENU CATEGORIES */}
+        {/* TAB 2: MEGAMENU CATEGORIES & DROPDOWNS */}
         {subTab === "megamenu" && (
           <div className="space-y-6">
             <p className="text-xs text-[#564336]">
-              Manage items inside each Services Megamenu flyout category.
+              Manage main dropdown headers & options inside Services, Products, and Academy flyouts.
             </p>
+
+            {/* Top-Level Header Dropdown Title Controls */}
+            <div className="p-4 bg-white border border-[#ddc1b0] rounded-2xl space-y-3">
+              <h4 className="text-xs font-bold text-[#964900] font-['JetBrains_Mono'] uppercase tracking-wider">
+                ⚙️ Rename Main Navbar Dropdown Headers
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <FormField
+                  label="Services Dropdown Label"
+                  value={formData.header?.megamenu?.servicesLabel || "Services"}
+                  onChange={(val) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      header: {
+                        ...(prev.header || {}),
+                        megamenu: {
+                          ...(prev.header?.megamenu || {
+                            servicesCategories: [],
+                            productsDropdown: [],
+                            academyDropdown: [],
+                          }),
+                          servicesLabel: val,
+                        },
+                      } as HeaderCMSData,
+                    }))
+                  }
+                />
+                <FormField
+                  label="Products Dropdown Label"
+                  value={formData.header?.megamenu?.productsLabel || "Products"}
+                  onChange={(val) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      header: {
+                        ...(prev.header || {}),
+                        megamenu: {
+                          ...(prev.header?.megamenu || {
+                            servicesCategories: [],
+                            productsDropdown: [],
+                            academyDropdown: [],
+                          }),
+                          productsLabel: val,
+                        },
+                      } as HeaderCMSData,
+                    }))
+                  }
+                />
+                <FormField
+                  label="Academy Dropdown Label"
+                  value={formData.header?.megamenu?.academyLabel || "Academy"}
+                  onChange={(val) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      header: {
+                        ...(prev.header || {}),
+                        megamenu: {
+                          ...(prev.header?.megamenu || {
+                            servicesCategories: [],
+                            productsDropdown: [],
+                            academyDropdown: [],
+                          }),
+                          academyLabel: val,
+                        },
+                      } as HeaderCMSData,
+                    }))
+                  }
+                />
+              </div>
+            </div>
 
             <div className="space-y-6">
               {(formData.header?.megamenu?.servicesCategories || []).map((cat) => (

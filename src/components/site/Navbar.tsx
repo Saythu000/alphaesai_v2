@@ -135,7 +135,7 @@ export const Navbar = () => {
               onClick={() => setServicesOpen(!servicesOpen)}
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-['Inter'] font-semibold text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
             >
-              Services
+              {megamenu?.servicesLabel || "Services"}
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
                   servicesOpen ? "rotate-180 text-[#964900]" : ""
@@ -225,7 +225,7 @@ export const Navbar = () => {
               onClick={() => setProductsOpen(!productsOpen)}
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-['Inter'] font-semibold text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
             >
-              Products
+              {megamenu?.productsLabel || "Products"}
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
                   productsOpen ? "rotate-180 text-[#964900]" : ""
@@ -267,7 +267,7 @@ export const Navbar = () => {
               onClick={() => setAcademyOpen(!academyOpen)}
               className="flex items-center gap-1.5 px-3.5 py-2 text-xs font-['Inter'] font-semibold text-[#564336] hover:text-[#241913] rounded-full hover:bg-[#241913]/5 transition-colors"
             >
-              Academy
+              {megamenu?.academyLabel || "Academy"}
               <ChevronDown
                 className={`w-3.5 h-3.5 transition-transform duration-200 ${
                   academyOpen ? "rotate-180 text-[#964900]" : ""
@@ -343,7 +343,7 @@ export const Navbar = () => {
         <div className="md:hidden border-t border-[#ddc1b0]/40 bg-[#fff8f5] px-6 py-4 rounded-b-2xl animate-in slide-in-from-top-2 duration-200 max-h-[80vh] overflow-y-auto">
           <div className="flex flex-col gap-4">
             <div className="text-[10px] font-['JetBrains_Mono'] uppercase tracking-wider text-[#964900] font-bold px-1">
-              Services & Capabilities
+              {megamenu?.servicesLabel || "Services"} & Capabilities
             </div>
             
             {servicesCategories.map((cat) => (
@@ -364,7 +364,7 @@ export const Navbar = () => {
             ))}
 
             <div className="text-[10px] font-['JetBrains_Mono'] uppercase tracking-wider text-[#964900] font-bold px-1 pt-2">
-              Products
+              {megamenu?.productsLabel || "Products"}
             </div>
             {productsDropdown.map((item) => (
               <Link
@@ -377,7 +377,7 @@ export const Navbar = () => {
             ))}
 
             <div className="text-[10px] font-['JetBrains_Mono'] uppercase tracking-wider text-[#964900] font-bold px-1 pt-2">
-              Academy Programs
+              {megamenu?.academyLabel || "Academy"} Programs
             </div>
             {academyDropdown.map((item) => (
               <Link

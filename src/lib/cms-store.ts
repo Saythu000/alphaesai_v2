@@ -99,6 +99,9 @@ export interface MegamenuDropdownItem {
 }
 
 export interface HeaderMegamenuCMSData {
+  servicesLabel?: string;
+  productsLabel?: string;
+  academyLabel?: string;
   servicesCategories: MegamenuCategory[];
   productsDropdown: MegamenuDropdownItem[];
   academyDropdown: MegamenuDropdownItem[];
@@ -710,6 +713,9 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
     primaryCtaText: "Contact Us",
     primaryCtaHref: "/contact",
     megamenu: {
+      servicesLabel: "Services",
+      productsLabel: "Products",
+      academyLabel: "Academy",
       servicesCategories: [
         {
           id: "cat-ai",
@@ -2257,6 +2263,9 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     sanitizedHeader.megamenu = {
       ...DEFAULT_CMS_DATA.header.megamenu,
       ...(parsed.header?.megamenu || {}),
+      servicesLabel: parsed.header?.megamenu?.servicesLabel || DEFAULT_CMS_DATA.header.megamenu.servicesLabel,
+      productsLabel: parsed.header?.megamenu?.productsLabel || DEFAULT_CMS_DATA.header.megamenu.productsLabel,
+      academyLabel: parsed.header?.megamenu?.academyLabel || DEFAULT_CMS_DATA.header.megamenu.academyLabel,
       servicesCategories: sanitizedServicesCategories,
       productsDropdown: Array.isArray(parsed.header?.megamenu?.productsDropdown)
         ? parsed.header.megamenu.productsDropdown
