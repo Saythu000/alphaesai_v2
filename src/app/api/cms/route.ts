@@ -13,10 +13,11 @@ export async function GET() {
     return NextResponse.json({ success: true, data: DEFAULT_CMS_DATA });
   } catch (error) {
     console.error("GET /api/cms error:", error);
-    return NextResponse.json(
-      { success: false, data: DEFAULT_CMS_DATA, error: String(error) },
-      { status: 500 }
-    );
+    return NextResponse.json({
+      success: true,
+      data: DEFAULT_CMS_DATA,
+      warning: "Database unavailable, falling back to default CMS data: " + String(error),
+    });
   }
 }
 

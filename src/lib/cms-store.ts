@@ -703,13 +703,9 @@ export const DEFAULT_CMS_DATA: FullCMSData = {
     announcementLinkText: "Learn about FDE Model",
     announcementLinkHref: "/services/forward-deployed-ai-engineering",
     navLinks: [
-      { id: "nav-1", label: "Services", href: "/services" },
-      { id: "nav-2", label: "OneAI Assist", href: "/oneai-assist" },
-      { id: "nav-3", label: "Dr. Godly Health", href: "/drgodly" },
+      { id: "nav-6", label: "Blog", href: "/blog" },
       { id: "nav-4", label: "Partners", href: "/partners" },
       { id: "nav-5", label: "About", href: "/about" },
-      { id: "nav-6", label: "Blog", href: "/blog" },
-      { id: "nav-7", label: "Contact", href: "/contact" },
     ],
     primaryCtaText: "Contact Us",
     primaryCtaHref: "/contact",
@@ -2244,6 +2240,20 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
     if (!sanitizedHeader.primaryCtaText || /get started|start building/i.test(sanitizedHeader.primaryCtaText)) {
       sanitizedHeader.primaryCtaText = "Contact Us";
     }
+
+    const rawNavLinks = Array.isArray(parsed.header?.navLinks)
+      ? parsed.header.navLinks
+      : DEFAULT_CMS_DATA.header.navLinks;
+
+    sanitizedHeader.navLinks = rawNavLinks.filter((link: { href?: string; label?: string }) => {
+      if (!link || !link.href) return false;
+      const href = (link.href || "").toLowerCase();
+      const label = (link.label || "").toLowerCase();
+      if (href === "/services" || label === "services") return false;
+      if (href === "/oneai-assist" || href === "/drgodly") return false;
+      if (href.startsWith("/academy/")) return false;
+      return true;
+    });
     sanitizedHeader.megamenu = {
       ...DEFAULT_CMS_DATA.header.megamenu,
       ...(parsed.header?.megamenu || {}),
