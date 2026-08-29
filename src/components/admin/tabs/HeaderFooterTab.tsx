@@ -24,6 +24,14 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
   const [newHeroTitle, setNewHeroTitle] = useState("");
   const [newHeroSubtitle, setNewHeroSubtitle] = useState("");
 
+  // Edit / Rename Modal States
+  const [editingNavLink, setEditingNavLink] = useState<{ id: string; label: string; href: string } | null>(null);
+  const [editingMegamenuItem, setEditingMegamenuItem] = useState<{
+    catId: string;
+    item: { id: string; name: string; desc: string; badge: string; href: string };
+  } | null>(null);
+  const [editingCategoryTitle, setEditingCategoryTitle] = useState<{ catId: string; title: string } | null>(null);
+
   const handleSlugAutoFormat = (titleVal: string) => {
     setNewTitle(titleVal);
     const slug = titleVal
@@ -196,6 +204,71 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
     }));
   };
 
+  const handleSaveEditedNavLink = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingNavLink) return;
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        navLinks: (prev.header?.navLinks || []).map((link) =>
+          link.id === editingNavLink.id
+            ? { ...link, label: editingNavLink.label, href: editingNavLink.href }
+            : link
+        ),
+      },
+    }));
+    setEditingNavLink(null);
+  };
+
+  const handleSaveEditedMegamenuItem = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingMegamenuItem) return;
+    const { catId, item } = editingMegamenuItem;
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        megamenu: {
+          ...prev.header.megamenu,
+          servicesCategories: (prev.header.megamenu?.servicesCategories || []).map((cat) => {
+            if (cat.id === catId) {
+              return {
+                ...cat,
+                items: (cat.items || []).map((it) =>
+                  it.id === item.id
+                    ? { ...it, name: item.name, desc: item.desc, badge: item.badge, href: item.href }
+                    : it
+                ),
+              };
+            }
+            return cat;
+          }),
+        },
+      },
+    }));
+    setEditingMegamenuItem(null);
+  };
+
+  const handleSaveEditedCategoryTitle = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingCategoryTitle) return;
+    const { catId, title } = editingCategoryTitle;
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        megamenu: {
+          ...prev.header.megamenu,
+          servicesCategories: (prev.header.megamenu?.servicesCategories || []).map((cat) =>
+            cat.id === catId ? { ...cat, title } : cat
+          ),
+        },
+      },
+    }));
+    setEditingCategoryTitle(null);
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-white border border-[#ddc1b0] p-6 rounded-2xl shadow-sm space-y-6">
@@ -342,14 +415,25 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                       <span className="text-xs font-bold text-[#241913]">{link.label}</span>
                       <code className="text-[11px] text-gray-500 font-['JetBrains_Mono']">{link.href}</code>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteNavLink(link.id)}
-                      className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Delete Navbar Link"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() => setEditingNavLink({ id: link.id, label: link.label, href: link.href })}
+                        className="px-2.5 py-1 text-[#964900] bg-[#fff8f5] hover:bg-[#ffeade] border border-[#ddc1b0] rounded-lg transition-colors flex items-center gap-1 text-xs font-bold font-['JetBrains_Mono']"
+                        title="Rename / Edit Navbar Link"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Rename / Edit</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteNavLink(link.id)}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Delete Navbar Link"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -368,9 +452,20 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
               {(formData.header?.megamenu?.servicesCategories || []).map((cat) => (
                 <div key={cat.id} className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-3">
                   <div className="flex items-center justify-between pb-2 border-b border-[#ddc1b0]">
-                    <span className="text-xs font-bold font-['JetBrains_Mono'] text-[#964900] uppercase tracking-wider">
-                      📁 Category: {cat.title}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-bold font-['JetBrains_Mono'] text-[#964900] uppercase tracking-wider">
+                        📁 Category: {cat.title}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setEditingCategoryTitle({ catId: cat.id, title: cat.title })}
+                        className="px-2 py-0.5 text-[#964900] bg-white hover:bg-[#ffeade] border border-[#ddc1b0] rounded-md text-[10px] font-bold font-['JetBrains_Mono'] flex items-center gap-1 transition-colors"
+                        title="Rename Category Title"
+                      >
+                        <Edit3 className="w-3 h-3" />
+                        <span>Rename Category</span>
+                      </button>
+                    </div>
                     <span className="text-[11px] text-gray-500">
                       {(cat.items || []).length} dropdown option(s)
                     </span>
@@ -391,14 +486,36 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                           )}
                           <code className="text-[10px] text-gray-400 font-['JetBrains_Mono']">{item.href}</code>
                         </div>
-                        <button
-                          type="button"
-                          onClick={() => handleDeleteMegamenuItem(cat.id, item.id)}
-                          className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                          title="Remove item"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setEditingMegamenuItem({
+                                catId: cat.id,
+                                item: {
+                                  id: item.id,
+                                  name: item.name,
+                                  desc: item.desc || "",
+                                  badge: item.badge || "",
+                                  href: item.href || "",
+                                },
+                              })
+                            }
+                            className="px-2.5 py-1 text-[#964900] bg-[#fff8f5] hover:bg-[#ffeade] border border-[#ddc1b0] rounded-lg transition-colors flex items-center gap-1 text-xs font-bold font-['JetBrains_Mono']"
+                            title="Edit / Rename Option"
+                          >
+                            <Edit3 className="w-3.5 h-3.5" />
+                            <span>Rename / Edit</span>
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => handleDeleteMegamenuItem(cat.id, item.id)}
+                            className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                            title="Remove item"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -566,6 +683,193 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 >
                   <Check className="w-4 h-4" />
                   Create Option & Generate Page
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+      {/* MODAL: EDIT / RENAME TOP-LEVEL NAVBAR LINK */}
+      {editingNavLink && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-[#ddc1b0] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ddc1b0]">
+              <h3 className="text-base font-bold font-['JetBrains_Mono'] text-[#241913] flex items-center gap-2">
+                <Edit3 className="w-4 h-4 text-[#964900]" />
+                Rename / Edit Top-Level Navbar Link
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingNavLink(null)}
+                className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedNavLink} className="space-y-4">
+              <FormField
+                label="Link Title / Label"
+                value={editingNavLink.label}
+                onChange={(val) => setEditingNavLink({ ...editingNavLink, label: val })}
+              />
+              <FormField
+                label="Link Href / URL"
+                type="mono"
+                value={editingNavLink.href}
+                onChange={(val) => setEditingNavLink({ ...editingNavLink, href: val })}
+              />
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#ddc1b0]">
+                <button
+                  type="button"
+                  onClick={() => setEditingNavLink(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#964900] text-white text-xs font-bold font-['JetBrains_Mono'] rounded-xl hover:bg-[#723600] transition-colors flex items-center gap-2 shadow-md"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT / RENAME SERVICES MEGAMENU DROPDOWN ITEM */}
+      {editingMegamenuItem && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-[#ddc1b0] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ddc1b0]">
+              <h3 className="text-base font-bold font-['JetBrains_Mono'] text-[#241913] flex items-center gap-2">
+                <Edit3 className="w-4 h-4 text-[#964900]" />
+                Rename / Edit Services Dropdown Option
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingMegamenuItem(null)}
+                className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedMegamenuItem} className="space-y-4">
+              <FormField
+                label="Option Name / Title"
+                value={editingMegamenuItem.item.name}
+                onChange={(val) =>
+                  setEditingMegamenuItem({
+                    ...editingMegamenuItem,
+                    item: { ...editingMegamenuItem.item, name: val },
+                  })
+                }
+              />
+              <FormField
+                label="Link Href / URL"
+                type="mono"
+                value={editingMegamenuItem.item.href}
+                onChange={(val) =>
+                  setEditingMegamenuItem({
+                    ...editingMegamenuItem,
+                    item: { ...editingMegamenuItem.item, href: val },
+                  })
+                }
+              />
+              <FormField
+                label="Badge Tag (Optional)"
+                placeholder="e.g. Popular, FinOps, New, HIPAA Ready"
+                value={editingMegamenuItem.item.badge}
+                onChange={(val) =>
+                  setEditingMegamenuItem({
+                    ...editingMegamenuItem,
+                    item: { ...editingMegamenuItem.item, badge: val },
+                  })
+                }
+              />
+              <div>
+                <label className="block text-xs font-bold text-[#241913] mb-1.5 font-['JetBrains_Mono']">
+                  Short Description:
+                </label>
+                <textarea
+                  rows={2}
+                  value={editingMegamenuItem.item.desc}
+                  onChange={(e) =>
+                    setEditingMegamenuItem({
+                      ...editingMegamenuItem,
+                      item: { ...editingMegamenuItem.item, desc: e.target.value },
+                    })
+                  }
+                  className="w-full px-3.5 py-2.5 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl text-xs font-['Inter'] text-[#241913] focus:outline-none focus:border-[#964900]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#ddc1b0]">
+                <button
+                  type="button"
+                  onClick={() => setEditingMegamenuItem(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#964900] text-white text-xs font-bold font-['JetBrains_Mono'] rounded-xl hover:bg-[#723600] transition-colors flex items-center gap-2 shadow-md"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Option
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT MEGAMENU CATEGORY TITLE */}
+      {editingCategoryTitle && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-[#ddc1b0] rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ddc1b0]">
+              <h3 className="text-base font-bold font-['JetBrains_Mono'] text-[#241913] flex items-center gap-2">
+                <Edit3 className="w-4 h-4 text-[#964900]" />
+                Rename Services Category Title
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingCategoryTitle(null)}
+                className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedCategoryTitle} className="space-y-4">
+              <FormField
+                label="Category Title"
+                placeholder="e.g. AI & Engineering"
+                value={editingCategoryTitle.title}
+                onChange={(val) => setEditingCategoryTitle({ ...editingCategoryTitle, title: val })}
+              />
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#ddc1b0]">
+                <button
+                  type="button"
+                  onClick={() => setEditingCategoryTitle(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#964900] text-white text-xs font-bold font-['JetBrains_Mono'] rounded-xl hover:bg-[#723600] transition-colors flex items-center gap-2 shadow-md"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Category Title
                 </button>
               </div>
             </form>
