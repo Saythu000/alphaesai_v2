@@ -1,8 +1,19 @@
 import { NextResponse } from "next/server";
 import { updateAdminCredentials } from "@/lib/db";
+import { cookies } from "next/headers";
 
 export async function POST(request: Request) {
   try {
+    const cookieStore = await cookies();
+    const session = cookieStore.get("admin_session")?.value;
+
+    if (session !== "authenticated" && process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Admin login session is required." },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { username, password } = body;
 

@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCMSDataFromDB, saveCMSDataToDB } from "@/lib/db";
 import { DEFAULT_CMS_DATA, sanitizeCMSData } from "@/lib/cms-store";
+import { cookies } from "next/headers";
 
 export async function GET() {
   try {
@@ -21,6 +22,16 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const cookieStore = await cookies();
+    const session = cookieStore.get("admin_session")?.value;
+
+    if (session !== "authenticated" && process.env.NODE_ENV === "production") {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized. Admin authentication required to update CMS data." },
+        { status: 401 }
+      );
+    }
+
     const body = await req.json();
     if (!body || typeof body !== "object") {
       return NextResponse.json(
