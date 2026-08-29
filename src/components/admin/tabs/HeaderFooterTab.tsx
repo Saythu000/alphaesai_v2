@@ -31,6 +31,18 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
     item: { id: string; name: string; desc: string; badge: string; href: string };
   } | null>(null);
   const [editingCategoryTitle, setEditingCategoryTitle] = useState<{ catId: string; title: string } | null>(null);
+  const [editingProductItem, setEditingProductItem] = useState<{
+    id: string;
+    title: string;
+    desc: string;
+    href: string;
+  } | null>(null);
+  const [editingAcademyItem, setEditingAcademyItem] = useState<{
+    id: string;
+    title: string;
+    desc: string;
+    href: string;
+  } | null>(null);
 
   const handleSlugAutoFormat = (titleVal: string) => {
     setNewTitle(titleVal);
@@ -267,6 +279,72 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
       },
     }));
     setEditingCategoryTitle(null);
+  };
+
+  const handleDeleteProductItem = (itemId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        megamenu: {
+          ...prev.header.megamenu,
+          productsDropdown: (prev.header.megamenu?.productsDropdown || []).filter((item) => item.id !== itemId),
+        },
+      },
+    }));
+  };
+
+  const handleDeleteAcademyItem = (itemId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        megamenu: {
+          ...prev.header.megamenu,
+          academyDropdown: (prev.header.megamenu?.academyDropdown || []).filter((item) => item.id !== itemId),
+        },
+      },
+    }));
+  };
+
+  const handleSaveEditedProductItem = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingProductItem) return;
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        megamenu: {
+          ...prev.header.megamenu,
+          productsDropdown: (prev.header.megamenu?.productsDropdown || []).map((item) =>
+            item.id === editingProductItem.id
+              ? { ...item, title: editingProductItem.title, desc: editingProductItem.desc, href: editingProductItem.href }
+              : item
+          ),
+        },
+      },
+    }));
+    setEditingProductItem(null);
+  };
+
+  const handleSaveEditedAcademyItem = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingAcademyItem) return;
+    setFormData((prev) => ({
+      ...prev,
+      header: {
+        ...prev.header,
+        megamenu: {
+          ...prev.header.megamenu,
+          academyDropdown: (prev.header.megamenu?.academyDropdown || []).map((item) =>
+            item.id === editingAcademyItem.id
+              ? { ...item, title: editingAcademyItem.title, desc: editingAcademyItem.desc, href: editingAcademyItem.href }
+              : item
+          ),
+        },
+      },
+    }));
+    setEditingAcademyItem(null);
   };
 
   return (
@@ -521,6 +599,120 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Products Dropdown Options */}
+            <div className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#ddc1b0]">
+                <span className="text-xs font-bold font-['JetBrains_Mono'] text-[#964900] uppercase tracking-wider">
+                  📦 Dropdown: Products
+                </span>
+                <span className="text-[11px] text-gray-500">
+                  {(formData.header?.megamenu?.productsDropdown || []).length} product option(s)
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {(formData.header?.megamenu?.productsDropdown || []).map((prod) => (
+                  <div
+                    key={prod.id}
+                    className="flex items-center justify-between p-3 bg-white border border-[#ddc1b0] rounded-xl"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-[#241913]">{prod.title}</span>
+                      {prod.badge && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#964900]/10 text-[#964900] font-bold">
+                          {prod.badge}
+                        </span>
+                      )}
+                      <code className="text-[10px] text-gray-400 font-['JetBrains_Mono']">{prod.href}</code>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditingProductItem({
+                            id: prod.id,
+                            title: prod.title,
+                            desc: prod.desc || "",
+                            href: prod.href || "",
+                          })
+                        }
+                        className="px-2.5 py-1 text-[#964900] bg-[#fff8f5] hover:bg-[#ffeade] border border-[#ddc1b0] rounded-lg transition-colors flex items-center gap-1 text-xs font-bold font-['JetBrains_Mono']"
+                        title="Edit / Rename Product Option"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Rename / Edit</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteProductItem(prod.id)}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Remove product"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Academy Tracks Dropdown Options */}
+            <div className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-[#ddc1b0]">
+                <span className="text-xs font-bold font-['JetBrains_Mono'] text-[#964900] uppercase tracking-wider">
+                  🎓 Dropdown: Academy Tracks
+                </span>
+                <span className="text-[11px] text-gray-500">
+                  {(formData.header?.megamenu?.academyDropdown || []).length} academy track option(s)
+                </span>
+              </div>
+
+              <div className="space-y-2">
+                {(formData.header?.megamenu?.academyDropdown || []).map((acad) => (
+                  <div
+                    key={acad.id}
+                    className="flex items-center justify-between p-3 bg-white border border-[#ddc1b0] rounded-xl"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs font-bold text-[#241913]">{acad.title}</span>
+                      {acad.badge && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#964900]/10 text-[#964900] font-bold">
+                          {acad.badge}
+                        </span>
+                      )}
+                      <code className="text-[10px] text-gray-400 font-['JetBrains_Mono']">{acad.href}</code>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setEditingAcademyItem({
+                            id: acad.id,
+                            title: acad.title,
+                            desc: acad.desc || "",
+                            href: acad.href || "",
+                          })
+                        }
+                        className="px-2.5 py-1 text-[#964900] bg-[#fff8f5] hover:bg-[#ffeade] border border-[#ddc1b0] rounded-lg transition-colors flex items-center gap-1 text-xs font-bold font-['JetBrains_Mono']"
+                        title="Edit / Rename Academy Track Option"
+                      >
+                        <Edit3 className="w-3.5 h-3.5" />
+                        <span>Rename / Edit</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteAcademyItem(acad.id)}
+                        className="p-1.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Remove track"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -870,6 +1062,132 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 >
                   <Check className="w-4 h-4" />
                   Save Category Title
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT PRODUCT ITEM */}
+      {editingProductItem && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-[#ddc1b0] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ddc1b0]">
+              <h3 className="text-base font-bold font-['JetBrains_Mono'] text-[#241913] flex items-center gap-2">
+                <Edit3 className="w-4 h-4 text-[#964900]" />
+                Rename / Edit Product Option
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingProductItem(null)}
+                className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedProductItem} className="space-y-4">
+              <FormField
+                label="Product Title"
+                value={editingProductItem.title}
+                onChange={(val) => setEditingProductItem({ ...editingProductItem, title: val })}
+              />
+              <FormField
+                label="Link Href / URL"
+                type="mono"
+                value={editingProductItem.href}
+                onChange={(val) => setEditingProductItem({ ...editingProductItem, href: val })}
+              />
+              <div>
+                <label className="block text-xs font-bold text-[#241913] mb-1.5 font-['JetBrains_Mono']">
+                  Short Description:
+                </label>
+                <textarea
+                  rows={2}
+                  value={editingProductItem.desc}
+                  onChange={(e) => setEditingProductItem({ ...editingProductItem, desc: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl text-xs font-['Inter'] text-[#241913] focus:outline-none focus:border-[#964900]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#ddc1b0]">
+                <button
+                  type="button"
+                  onClick={() => setEditingProductItem(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#964900] text-white text-xs font-bold font-['JetBrains_Mono'] rounded-xl hover:bg-[#723600] transition-colors flex items-center gap-2 shadow-md"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Product Option
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: EDIT ACADEMY ITEM */}
+      {editingAcademyItem && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white border border-[#ddc1b0] rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-[#ddc1b0]">
+              <h3 className="text-base font-bold font-['JetBrains_Mono'] text-[#241913] flex items-center gap-2">
+                <Edit3 className="w-4 h-4 text-[#964900]" />
+                Rename / Edit Academy Track Option
+              </h3>
+              <button
+                type="button"
+                onClick={() => setEditingAcademyItem(null)}
+                className="p-1.5 text-gray-400 hover:text-gray-700 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveEditedAcademyItem} className="space-y-4">
+              <FormField
+                label="Track Title"
+                value={editingAcademyItem.title}
+                onChange={(val) => setEditingAcademyItem({ ...editingAcademyItem, title: val })}
+              />
+              <FormField
+                label="Link Href / URL"
+                type="mono"
+                value={editingAcademyItem.href}
+                onChange={(val) => setEditingAcademyItem({ ...editingAcademyItem, href: val })}
+              />
+              <div>
+                <label className="block text-xs font-bold text-[#241913] mb-1.5 font-['JetBrains_Mono']">
+                  Short Description:
+                </label>
+                <textarea
+                  rows={2}
+                  value={editingAcademyItem.desc}
+                  onChange={(e) => setEditingAcademyItem({ ...editingAcademyItem, desc: e.target.value })}
+                  className="w-full px-3.5 py-2.5 bg-[#fff8f5] border border-[#ddc1b0] rounded-xl text-xs font-['Inter'] text-[#241913] focus:outline-none focus:border-[#964900]"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#ddc1b0]">
+                <button
+                  type="button"
+                  onClick={() => setEditingAcademyItem(null)}
+                  className="px-4 py-2 text-xs font-bold text-gray-600 hover:text-gray-900 rounded-xl"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="px-5 py-2.5 bg-[#964900] text-white text-xs font-bold font-['JetBrains_Mono'] rounded-xl hover:bg-[#723600] transition-colors flex items-center gap-2 shadow-md"
+                >
+                  <Check className="w-4 h-4" />
+                  Save Track Option
                 </button>
               </div>
             </form>
