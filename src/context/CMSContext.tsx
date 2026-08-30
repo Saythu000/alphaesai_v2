@@ -13,8 +13,8 @@ import {
 
 interface CMSContextType {
   data: FullCMSData;
-  updateData: (newData: FullCMSData) => void;
-  resetData: () => void;
+  updateData: (newData: FullCMSData) => Promise<void>;
+  resetData: () => Promise<void>;
   isLoaded: boolean;
   addBlogPost: (article: BlogPostCMSData) => void;
   updateBlogPost: (id: string, updated: BlogPostCMSData) => void;
@@ -23,8 +23,8 @@ interface CMSContextType {
 
 const CMSContext = createContext<CMSContextType>({
   data: DEFAULT_CMS_DATA,
-  updateData: () => {},
-  resetData: () => {},
+  updateData: async () => {},
+  resetData: async () => {},
   isLoaded: false,
   addBlogPost: () => {},
   updateBlogPost: () => {},
@@ -64,28 +64,49 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       });
   }, []);
 
-  const updateData = (newData: FullCMSData) => {
+  const updateData = async (newData: FullCMSData) => {
     setData(newData);
     saveCMSData(newData);
 
     // Sync update to Neon PostgreSQL database
-    fetch("/api/cms", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(newData),
-    }).catch((err) => console.error("Failed to save CMS data to Neon DB:", err));
+    try {
+      const res = await fetch("/api/cms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newData),
+      });
+
+      const resData = await res.json().catch(() => ({}));
+
+      if (!res.ok || resData.success === false) {
+        const errorMsg = resData.error || `Server returned HTTP ${res.status}`;
+        console.warn("Neon DB Save Warning:", errorMsg);
+        throw new Error(errorMsg);
+      }
+    } catch (err: unknown) {
+      console.error("Failed to save CMS data to Neon DB:", err);
+      throw err;
+    }
   };
 
-  const resetData = () => {
+  const resetData = async () => {
     const defaultData = resetCMSData();
     setData(defaultData);
 
-    // Reset Neon PostgreSQL database content to defaults
-    fetch("/api/cms", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(defaultData),
-    }).catch((err) => console.error("Failed to reset CMS data in Neon DB:", err));
+    try {
+      const res = await fetch("/api/cms", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(defaultData),
+      });
+      const resData = await res.json().catch(() => ({}));
+      if (!res.ok || resData.success === false) {
+        throw new Error(resData.error || `HTTP ${res.status}`);
+      }
+    } catch (err: unknown) {
+      console.error("Failed to reset CMS data in Neon DB:", err);
+      throw err;
+    }
   };
 
   const addBlogPost = (article: BlogPostCMSData) => {

@@ -99,6 +99,7 @@ export default function AdminPage() {
       if (res.ok && resData.success) {
         setIsAuthenticated(true);
         sessionStorage.setItem("alphaes_admin_authed", "true");
+        document.cookie = "admin_session=authenticated; path=/; max-age=604800; SameSite=Lax";
         setAuthError("");
         toast.success("Authenticated into Enterprise CMS");
       } else {
@@ -106,8 +107,9 @@ export default function AdminPage() {
         if (passwordInput === "admin123" || passwordInput === "alphaes2026") {
           setIsAuthenticated(true);
           sessionStorage.setItem("alphaes_admin_authed", "true");
+          document.cookie = "admin_session=authenticated; path=/; max-age=604800; SameSite=Lax";
           setAuthError("");
-          toast.success("Authenticated into Enterprise CMS (Offline)");
+          toast.success("Authenticated into Enterprise CMS");
         } else {
           setAuthError(resData.error || "Invalid Security Passcode");
           toast.error("Authentication Failed");
@@ -117,6 +119,7 @@ export default function AdminPage() {
       if (passwordInput === "admin123" || passwordInput === "alphaes2026") {
         setIsAuthenticated(true);
         sessionStorage.setItem("alphaes_admin_authed", "true");
+        document.cookie = "admin_session=authenticated; path=/; max-age=604800; SameSite=Lax";
         setAuthError("");
         toast.success("Authenticated into Enterprise CMS");
       } else {
@@ -129,6 +132,7 @@ export default function AdminPage() {
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem("alphaes_admin_authed");
+    document.cookie = "admin_session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     toast.info("Logged out of Admin Portal");
   };
 
@@ -139,17 +143,24 @@ export default function AdminPage() {
       setSaveSuccess(true);
       toast.success("CMS Data saved and synchronized!");
       setTimeout(() => setSaveSuccess(false), 3000);
-    } catch (err) {
-      toast.error("Failed to sync CMS data");
+    } catch (err: unknown) {
+      console.error("Save error:", err);
+      const msg = err instanceof Error ? err.message : String(err);
+      toast.error(msg ? `Failed to sync database: ${msg}` : "Failed to sync CMS data");
     } finally {
       setIsSaving(false);
     }
   };
 
-  const handleReset = () => {
+  const handleReset = async () => {
     if (confirm("Reset CMS data back to factory default dataset?")) {
-      resetData();
-      toast.info("CMS data restored to defaults");
+      try {
+        await resetData();
+        toast.info("CMS data restored to defaults");
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        toast.error(msg ? `Reset error: ${msg}` : "Failed to reset database");
+      }
     }
   };
 
