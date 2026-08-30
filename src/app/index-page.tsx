@@ -11,7 +11,6 @@ import { Card } from "@/components/ui/card";
 import { useCMS } from "@/context/CMSContext";
 
 import { SupportedTechStackBar } from "@/components/ui/SupportedTechStackBar";
-import { HubSpokeArchitecture } from "@/components/ui/HubSpokeArchitecture";
 import { RoiMetricsGrid } from "@/components/ui/RoiMetricsGrid";
 import { EnhancedTestimonial } from "@/components/ui/EnhancedTestimonial";
 
@@ -265,11 +264,6 @@ const Index = () => {
           <RoiMetricsGrid />
         </div>
       </section>
-
-      {/* ========================================================================= */}
-      {/* 2B. INTERACTIVE HUB-AND-SPOKE SYSTEM ARCHITECTURE DIAGRAM                 */}
-      {/* ========================================================================= */}
-      <HubSpokeArchitecture />
 
       {/* ========================================================================= */}
       {/* 3. BENTO GRID FEATURES SECTION                                            */}
