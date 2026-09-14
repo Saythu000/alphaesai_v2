@@ -18,6 +18,33 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 
+const DEFAULT_COMPLIANCE_SHIELDS = [
+  {
+    id: "cs-1",
+    badge: "SOC-2 Certified",
+    title: "SOC-2 Type II",
+    description: "Audited security, availability, and confidential data processing controls.",
+  },
+  {
+    id: "cs-2",
+    badge: "HIPAA Compliant",
+    title: "HIPAA Ready",
+    description: "BAA execution, encrypted medical data pipelines & PHI sanitization.",
+  },
+  {
+    id: "cs-3",
+    badge: "ISO Certified",
+    title: "ISO 27001",
+    description: "Global information security management system & risk governance.",
+  },
+  {
+    id: "cs-4",
+    badge: "EU Privacy Shield",
+    title: "GDPR Privacy",
+    description: "Strict data sovereignty, right-to-forget & zero data retention guarantees.",
+  },
+];
+
 export function SupportedTechStackBar() {
   const { data } = useCMS();
   const techStackData = data?.homepage?.techStackBar || {
@@ -25,8 +52,13 @@ export function SupportedTechStackBar() {
     title: "Data Analytics & Enterprise AI Infrastructure Stack",
     subtitle: "Built directly on industry-standard Data Warehouses, Distributed Analytics Engines, and SOTA AI Frameworks.",
     techStack: [],
-    complianceShields: []
+    complianceShields: DEFAULT_COMPLIANCE_SHIELDS
   };
+
+  const complianceShields =
+    techStackData.complianceShields && techStackData.complianceShields.length > 0
+      ? techStackData.complianceShields
+      : DEFAULT_COMPLIANCE_SHIELDS;
 
   return (
     <section className="py-16 px-4 bg-[#fff8f5] border-b border-[#ddc1b0] relative overflow-hidden">
@@ -83,7 +115,7 @@ export function SupportedTechStackBar() {
 
         {/* Security & Compliance Shield Bar */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {(techStackData.complianceShields || []).map((item, idx) => {
+          {complianceShields.map((item, idx) => {
             const ShieldIcon = ShieldCheck;
             return (
               <motion.div
