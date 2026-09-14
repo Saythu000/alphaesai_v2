@@ -2198,36 +2198,7 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
         col?.id !== "col-legal" && col?.title?.toLowerCase() !== "legal"
     );
 
-    const defaultContactCol = DEFAULT_CMS_DATA.footer.columns.find(
-      (c) => c.id === "col-contact"
-    )!;
-    const defaultEcosystemCol = DEFAULT_CMS_DATA.footer.columns.find(
-      (c) => c.id === "col-ecosystem"
-    )!;
-
-    const sanitizedCols = filteredCols.map((col: { id?: string; title?: string }) => {
-      if (col?.id === "col-contact" || col?.title?.toLowerCase().includes("contact")) {
-        return defaultContactCol;
-      }
-      if (col?.id === "col-ecosystem" || col?.title?.toLowerCase().includes("ecosystem")) {
-        return defaultEcosystemCol;
-      }
-      return col;
-    });
-
-    const hasContact = sanitizedCols.some(
-      (col: { id?: string; title?: string }) => col?.id === "col-contact" || col?.title?.toLowerCase().includes("contact")
-    );
-    if (!hasContact) {
-      sanitizedCols.push(defaultContactCol);
-    }
-
-    const hasEcosystem = sanitizedCols.some(
-      (col: { id?: string; title?: string }) => col?.id === "col-ecosystem" || col?.title?.toLowerCase().includes("ecosystem")
-    );
-    if (!hasEcosystem) {
-      sanitizedCols.push(defaultEcosystemCol);
-    }
+    const sanitizedCols = filteredCols;
 
     const rawServicesCategories = Array.isArray(parsed.header?.megamenu?.servicesCategories)
       ? parsed.header.megamenu.servicesCategories
@@ -2290,7 +2261,9 @@ export function sanitizeCMSData(raw: unknown): FullCMSData {
       footer: {
         ...DEFAULT_CMS_DATA.footer,
         ...(parsed.footer || {}),
-        columns: sanitizedCols.length > 0 ? sanitizedCols : DEFAULT_CMS_DATA.footer.columns,
+        columns: Array.isArray(parsed.footer?.columns)
+          ? sanitizedCols
+          : DEFAULT_CMS_DATA.footer.columns,
       },
       homepage: {
         ...DEFAULT_CMS_DATA.homepage,
