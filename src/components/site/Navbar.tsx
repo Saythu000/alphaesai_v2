@@ -70,11 +70,19 @@ export const Navbar = () => {
   ];
 
   // Dynamic top-level links (excluding Services which is rendered as a dropdown)
-  const headerNavLinks = data.header?.navLinks || [
+  const rawNavLinks = data.header?.navLinks || [];
+  const baseNavLinks = rawNavLinks.length > 0 ? rawNavLinks : [
     { id: "nav-6", label: "Blog", href: "/blog" },
     { id: "nav-4", label: "Partners", href: "/partners" },
     { id: "nav-5", label: "About", href: "/about" },
   ];
+
+  // Guarantee "Blog" link is present in Navbar even if saved CMS dataset omitted it
+  const hasBlogInNav = baseNavLinks.some((l) => l.href === "/blog" || l.label.toLowerCase() === "blog");
+  const headerNavLinks = hasBlogInNav
+    ? baseNavLinks
+    : [{ id: "nav-blog-guaranteed", label: "Blog", href: "/blog" }, ...baseNavLinks];
+
   const directLinks = headerNavLinks.filter(
     (link) => link.label.toLowerCase() !== "services" && link.href !== "/services"
   );
