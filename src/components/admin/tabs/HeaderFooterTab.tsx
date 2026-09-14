@@ -788,7 +788,7 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
 
         {/* TAB 3: FOOTER */}
         {subTab === "footer" && (
-          <div className="space-y-4">
+          <div className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <FormField
                 label="Footer Brand Name"
@@ -811,16 +811,220 @@ export const HeaderFooterTab: React.FC<Props> = ({ formData, setFormData }) => {
                 }
               />
             </div>
-            <FormField
-              label="Tagline"
-              value={formData.footer?.tagline || ""}
-              onChange={(val) =>
-                setFormData((prev) => ({
-                  ...prev,
-                  footer: { ...(prev.footer || {}), tagline: val } as FooterCMSData,
-                }))
-              }
-            />
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="Contact Phone"
+                value={formData.footer?.contactPhone || ""}
+                onChange={(val) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    footer: { ...(prev.footer || {}), contactPhone: val } as FooterCMSData,
+                  }))
+                }
+              />
+              <FormField
+                label="Contact Address"
+                value={formData.footer?.contactAddress || ""}
+                onChange={(val) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    footer: { ...(prev.footer || {}), contactAddress: val } as FooterCMSData,
+                  }))
+                }
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <FormField
+                label="Tagline"
+                value={formData.footer?.tagline || ""}
+                onChange={(val) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    footer: { ...(prev.footer || {}), tagline: val } as FooterCMSData,
+                  }))
+                }
+              />
+              <FormField
+                label="Footer Description"
+                value={formData.footer?.description || ""}
+                onChange={(val) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    footer: { ...(prev.footer || {}), description: val } as FooterCMSData,
+                  }))
+                }
+              />
+            </div>
+
+            {/* Footer Columns & Links Editor */}
+            <div className="pt-4 border-t border-[#ddc1b0] space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold font-['JetBrains_Mono'] text-[#964900] uppercase tracking-wider">
+                  Footer Navigation Columns ({(formData.footer?.columns || []).length})
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const newCol = {
+                      id: `col-${Date.now()}`,
+                      title: "New Section",
+                      links: [
+                        { id: `l-${Date.now()}-1`, label: "Sample Link", href: "/contact" }
+                      ]
+                    };
+                    setFormData((prev) => ({
+                      ...prev,
+                      footer: {
+                        ...(prev.footer || {}),
+                        columns: [...(prev.footer?.columns || []), newCol]
+                      } as FooterCMSData
+                    }));
+                  }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold font-['JetBrains_Mono'] rounded-lg hover:bg-[#783a00]"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Add Footer Column
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {(formData.footer?.columns || []).map((col, colIdx) => (
+                  <div
+                    key={col.id || colIdx}
+                    className="p-4 bg-[#fff8f5] border border-[#ddc1b0] rounded-2xl space-y-4 shadow-sm"
+                  >
+                    <div className="flex items-center justify-between pb-2 border-b border-[#ddc1b0]">
+                      <span className="text-xs font-bold font-['JetBrains_Mono'] text-[#964900] uppercase">
+                        Column #{colIdx + 1}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setFormData((prev) => ({
+                            ...prev,
+                            footer: {
+                              ...(prev.footer || {}),
+                              columns: (prev.footer?.columns || []).filter((_, i) => i !== colIdx)
+                            } as FooterCMSData
+                          }));
+                        }}
+                        className="p-1 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                        title="Delete Column"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <FormField
+                      label="Column Title"
+                      value={col.title}
+                      onChange={(val) => {
+                        setFormData((prev) => {
+                          const updatedCols = [...(prev.footer?.columns || [])];
+                          updatedCols[colIdx] = { ...updatedCols[colIdx], title: val };
+                          return {
+                            ...prev,
+                            footer: { ...(prev.footer || {}), columns: updatedCols } as FooterCMSData
+                          };
+                        });
+                      }}
+                    />
+
+                    {/* Column Links list */}
+                    <div className="space-y-3 pt-2">
+                      <div className="flex items-center justify-between">
+                        <span className="text-[11px] font-bold text-[#241913] uppercase font-['JetBrains_Mono']">
+                          Links ({col.links?.length || 0})
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setFormData((prev) => {
+                              const updatedCols = [...(prev.footer?.columns || [])];
+                              const newLink = { id: `l-${Date.now()}`, label: "New Link", href: "/services" };
+                              updatedCols[colIdx] = {
+                                ...updatedCols[colIdx],
+                                links: [...(updatedCols[colIdx].links || []), newLink]
+                              };
+                              return {
+                                ...prev,
+                                footer: { ...(prev.footer || {}), columns: updatedCols } as FooterCMSData
+                              };
+                            });
+                          }}
+                          className="px-2 py-1 text-[11px] font-bold text-[#964900] bg-white border border-[#ddc1b0] rounded-md hover:bg-[#ffeade]"
+                        >
+                          + Add Link
+                        </button>
+                      </div>
+
+                      <div className="space-y-2">
+                        {(col.links || []).map((link, linkIdx) => (
+                          <div key={link.id || linkIdx} className="p-2.5 bg-white border border-[#ddc1b0] rounded-xl space-y-2 relative">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[10px] font-mono text-gray-500">Link #{linkIdx + 1}</span>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setFormData((prev) => {
+                                    const updatedCols = [...(prev.footer?.columns || [])];
+                                    const updatedLinks = (updatedCols[colIdx].links || []).filter((_, i) => i !== linkIdx);
+                                    updatedCols[colIdx] = { ...updatedCols[colIdx], links: updatedLinks };
+                                    return {
+                                      ...prev,
+                                      footer: { ...(prev.footer || {}), columns: updatedCols } as FooterCMSData
+                                    };
+                                  });
+                                }}
+                                className="text-red-500 hover:text-red-700 p-0.5"
+                                title="Remove Link"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </button>
+                            </div>
+                            <FormField
+                              label="Link Label"
+                              value={link.label}
+                              onChange={(val) => {
+                                setFormData((prev) => {
+                                  const updatedCols = [...(prev.footer?.columns || [])];
+                                  const updatedLinks = [...(updatedCols[colIdx].links || [])];
+                                  updatedLinks[linkIdx] = { ...updatedLinks[linkIdx], label: val };
+                                  updatedCols[colIdx] = { ...updatedCols[colIdx], links: updatedLinks };
+                                  return {
+                                    ...prev,
+                                    footer: { ...(prev.footer || {}), columns: updatedCols } as FooterCMSData
+                                  };
+                                });
+                              }}
+                            />
+                            <FormField
+                              label="URL / Href"
+                              type="mono"
+                              value={link.href}
+                              onChange={(val) => {
+                                setFormData((prev) => {
+                                  const updatedCols = [...(prev.footer?.columns || [])];
+                                  const updatedLinks = [...(updatedCols[colIdx].links || [])];
+                                  updatedLinks[linkIdx] = { ...updatedLinks[linkIdx], href: val };
+                                  updatedCols[colIdx] = { ...updatedCols[colIdx], links: updatedLinks };
+                                  return {
+                                    ...prev,
+                                    footer: { ...(prev.footer || {}), columns: updatedCols } as FooterCMSData
+                                  };
+                                });
+                              }}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>
