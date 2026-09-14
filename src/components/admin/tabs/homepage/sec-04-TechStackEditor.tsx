@@ -11,6 +11,13 @@ interface Props {
   setFormData: React.Dispatch<React.SetStateAction<FullCMSData>>;
 }
 
+const DEFAULT_SHIELDS = [
+  { id: "cs-1", title: "SOC-2 Type II", badge: "SOC-2 Certified", description: "Audited security, availability, and confidential data processing controls." },
+  { id: "cs-2", title: "HIPAA Ready", badge: "HIPAA Compliant", description: "BAA execution, encrypted medical data pipelines & PHI sanitization." },
+  { id: "cs-3", title: "ISO 27001", badge: "ISO Certified", description: "Global information security management system & risk governance." },
+  { id: "cs-4", title: "GDPR Privacy", badge: "EU Privacy Shield", description: "Strict data sovereignty, right-to-forget & zero data retention guarantees." },
+];
+
 export const TechStackSectionEditor: React.FC<Props> = ({ formData, setFormData }) => {
   const tech = formData.homepage.techStackBar;
 
@@ -112,6 +119,86 @@ export const TechStackSectionEditor: React.FC<Props> = ({ formData, setFormData 
                   const updated = [...tech.techStack];
                   updated[idx] = { ...updated[idx], category: val };
                   updateTech({ techStack: updated });
+                }}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Security & Compliance Cards Editor */}
+      <div className="pt-4 border-t border-[#ddc1b0] space-y-3">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-bold text-[#964900] uppercase">
+            Security & Compliance Cards ({(tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS).length})
+          </h3>
+          <button
+            type="button"
+            onClick={() => {
+              const current = tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS;
+              const newCard = {
+                id: `cs-${Date.now()}`,
+                badge: "New Badge",
+                title: "New Title",
+                description: "Security & privacy description goes here.",
+              };
+              updateTech({ complianceShields: [...current, newCard] });
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-[#964900] text-white text-xs font-bold rounded-lg hover:bg-[#783a00]"
+          >
+            <Plus className="w-3.5 h-3.5" />
+            Add Compliance Card
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {(tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS).map((c, idx) => (
+            <div key={c.id || idx} className="p-4 border border-[#ddc1b0] bg-white rounded-xl space-y-3 relative shadow-sm">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold text-[#964900] uppercase">
+                  Card #{idx + 1}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const current = tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS;
+                    const updated = current.filter((_, i) => i !== idx);
+                    updateTech({ complianceShields: updated });
+                  }}
+                  className="text-red-500 hover:text-red-700 p-1"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                <FormField
+                  label="Badge Tag"
+                  value={c.badge}
+                  onChange={(val) => {
+                    const current = [...(tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS)];
+                    current[idx] = { ...current[idx], badge: val };
+                    updateTech({ complianceShields: current });
+                  }}
+                />
+                <FormField
+                  label="Title"
+                  value={c.title}
+                  onChange={(val) => {
+                    const current = [...(tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS)];
+                    current[idx] = { ...current[idx], title: val };
+                    updateTech({ complianceShields: current });
+                  }}
+                />
+              </div>
+
+              <FormField
+                label="Description"
+                value={c.description}
+                onChange={(val) => {
+                  const current = [...(tech.complianceShields && tech.complianceShields.length > 0 ? tech.complianceShields : DEFAULT_SHIELDS)];
+                  current[idx] = { ...current[idx], description: val };
+                  updateTech({ complianceShields: current });
                 }}
               />
             </div>
